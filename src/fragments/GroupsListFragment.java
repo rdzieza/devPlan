@@ -1,5 +1,7 @@
 package fragments;
 
+import org.w3c.dom.Text;
+
 import adapters.GroupsListAdapter;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -43,9 +46,14 @@ public class GroupsListFragment extends SherlockFragment implements
 			dbHelper = new DatabaseHelper(parent);
 		}
 	}
-
+	
+	public void update(){
+		list.setAdapter(new GroupsListAdapter(parent, dbHelper
+				.getGroupsCursor()));
+	}
+	
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick( AdapterView<?> parent, View view, int position, long id) {
 		final long selected = id;
 		Builder builder = new Builder(this.parent);
 		builder.setMessage("Set as active?");
@@ -53,7 +61,12 @@ public class GroupsListFragment extends SherlockFragment implements
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				Log.v("t", "agreed: " + String.valueOf(selected));				
+				Log.v("t", "agreed: " + String.valueOf(selected));
+				dbHelper.changeStatus(selected);
+//				((GroupsListAdapter)list.getAdapter()).notifyDataSetChanged();
+//				list.invalidate();
+				update();
+				
 			}
 			
 		});
