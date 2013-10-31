@@ -35,19 +35,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-//		db.execSQL("DROP TABLE GROUPS");
+		db.execSQL("DROP TABLE IF EXISTS GROUPS");
 		// Log.v("t", "groups dropped");
-//		db.execSQL("DROP TABLE EVENTS");
+		db.execSQL("DROP TABLE IF EXISTS EVENTS");
 		// Log.v("t", "events dropped");
 		db.execSQL(CREATE_EVENTS);
 		// Log.v("t", "events created");
 		db.execSQL(CREATE_GROUPS);
 		// Log.v("t", "groups created");
-//		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (1,'krdzis1011',1)");
-//		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (2,'krdzis2011',0)");
-//		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (3,'krdzis3011',0)");
-//		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (337,'krdzis4011',1)");
-//		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (37,'krdzis5011',1)");
+		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (7,'krdzis1011',1)");
+		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (2,'krdzis2011',0)");
+		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (3,'krdzis3011',0)");
+		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (337,'krdzis4011',1)");
+		db.execSQL("insert into groups('_ID','NAME','IS_ACTIVE') values (37,'krdzis5011',1)");
+		db.execSQL("INSERT INTO EVENTS VALUES(0,'orm','lecture','robert','dzieza','4:50-6:20','15-10-2013','F303','krdzis2011')");
+		db.execSQL("INSERT INTO EVENTS VALUES(1,'ask','lecure','robert','dzieza','6:50-8:20','15-10-2013','F3','krdzis2011')");
+		db.execSQL("INSERT INTO EVENTS VALUES(2,'pp5','exercises','robert','dzieza','8:50-10:20','15-10-2013','F35','krdzis2011')");
 	}
 
 	@Override
@@ -66,6 +69,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		return null;
+	}
+	
+	public Cursor getEventsCursor(){
+		String[] columns = {"_ID as _id", "TOPIC", "TYPE","ROOM", "DATE", "HOURS"};
+		Cursor c = getReadableDatabase().query("EVENTS", columns, null, null, null, null, "DATE ASC, HOURS ASC");
+		return c;
 	}
 
 	public void changeStatus(long id) {

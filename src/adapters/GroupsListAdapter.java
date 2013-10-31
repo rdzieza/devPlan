@@ -17,7 +17,7 @@ public class GroupsListAdapter extends CursorAdapter{
 	
 
 	public GroupsListAdapter(Context context, Cursor c) {
-		super(context, c);
+		super(context, c,true);
 		// TODO Auto-generated constructor stub
 	}
 

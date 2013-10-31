@@ -1,7 +1,5 @@
 package fragments;
 
-import org.w3c.dom.Text;
-
 import adapters.GroupsListAdapter;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -50,6 +47,16 @@ public class GroupsListFragment extends SherlockFragment implements
 	public void update(){
 		list.setAdapter(new GroupsListAdapter(parent, dbHelper
 				.getGroupsCursor()));
+	}
+	
+	public void onDetach(){
+		super.onDetach();
+		dbHelper.close();
+	}
+	
+	public void onDestroy(){
+		super.onDestroy();
+		dbHelper.close();
 	}
 	
 	@Override
