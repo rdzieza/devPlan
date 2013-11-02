@@ -28,6 +28,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			+ "ID LONG PRIMARY KEY,"
 			+ "NAME VARCHAR(30) NOT NULL,"
 			+ "IS_ACTIVE INT NOT NULL DEFAULT 0)";
+	private static final String CREATE_SELECTED = "CREATE TABLE IF NOT EXISTS SELECTED ("
+			+ "ID LONG PRIMARY KEY)";
 
 	private DatabaseManager() {
 		super(context, DB_NAME, null, VERSION);
@@ -50,6 +52,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS EVENTS");
 		db.execSQL(CREATE_GROUPS);
 		db.execSQL(CREATE_EVENTS);
+		db.execSQL(CREATE_SELECTED);
 
 		try {
 			db.execSQL("INSERT INTO EVENTS VALUES(0,'orm','lecture','robert','dzieza','4:50-6:20','15-10-2013','F303','krdzis2011')");
@@ -120,6 +123,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put("IS_ACTIVE", 0);
 		String[] args = { String.valueOf(id) };
 		db.update("GROUPS", values, " ID = ?", args);
+		removeFromSelected(id, db);
 	}
 
 	public static void setAsActive(long id, SQLiteDatabase db) {
@@ -127,6 +131,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put("IS_ACTIVE", 1);
 		String[] args = { String.valueOf(id) };
 		db.update("GROUPS", values, " ID = ?", args);
+		addToSelected(id, db);
 	}
 	
 	public static boolean insertGroup(int id, String name){
@@ -139,7 +144,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			return false;
 		}finally{
 //			db.close();
+		}
+	}
 	
+	public static void addToSelected(long id, SQLiteDatabase db){
+		try{
+			db.execSQL("insert into selected values ("+ String.valueOf(id) + ")");
+		}catch(SQLException e){
+			
+		}
+	}
+	
+	public static void removeFromSelected(long id, SQLiteDatabase db){
+		String[] args = {String.valueOf(id)};
+		try{
+			db.delete("selected", "id = ?", args);
+		}catch(SQLException e){
+			
 		}
 	}
 	
