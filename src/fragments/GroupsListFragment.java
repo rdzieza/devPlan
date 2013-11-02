@@ -17,21 +17,20 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.example.timetable.R;
 
-import database.DatabaseHelper;
+import database.DatabaseManager;
 
 public class GroupsListFragment extends SherlockFragment implements
 		OnItemClickListener {
 	private ListView list;
 	private Activity parent;
-	private DatabaseHelper dbHelper;
+//	private DatabaseHelper dbHelper;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.groups_list_view, containter,
 				false);
 		list = (ListView) view.findViewById(R.id.groupsListView);
-		list.setAdapter(new GroupsListAdapter(parent, dbHelper
-				.getGroupsCursor()));
+		list.setAdapter(new GroupsListAdapter(parent, DatabaseManager.getGroupsCursor(DatabaseManager.getConnection().getReadableDatabase())));
 		list.setOnItemClickListener(this);
 		return view;
 	}
@@ -39,25 +38,32 @@ public class GroupsListFragment extends SherlockFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		parent = activity;
-		if (dbHelper == null) {
-			dbHelper = new DatabaseHelper(parent);
-		}
+//		if (dbHelper == null) {
+//			dbHelper = new DatabaseHelper(parent);
+//		}
+//		update();
+	}
+	
+	public void onResume(){
+		super.onResume();
+//		update();
 	}
 	
 	public void update(){
-		list.setAdapter(new GroupsListAdapter(parent, dbHelper
-				.getGroupsCursor()));
+		list.setAdapter(new GroupsListAdapter(parent, DatabaseManager.getGroupsCursor(DatabaseManager.getConnection().getReadableDatabase())));
 	}
 	
 	public void onDetach(){
 		super.onDetach();
-		dbHelper.close();
+		
 	}
 	
 	public void onDestroy(){
 		super.onDestroy();
-		dbHelper.close();
+		
 	}
+	
+	
 	
 	@Override
 	public void onItemClick( AdapterView<?> parent, View view, int position, long id) {
@@ -69,9 +75,7 @@ public class GroupsListFragment extends SherlockFragment implements
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Log.v("t", "agreed: " + String.valueOf(selected));
-				dbHelper.changeStatus(selected);
-//				((GroupsListAdapter)list.getAdapter()).notifyDataSetChanged();
-//				list.invalidate();
+				DatabaseManager.changeStatus(selected, DatabaseManager.getConnection().getReadableDatabase());
 				update();
 				
 			}

@@ -31,5 +31,5 @@
             android:label="@string/title_activity_settings" >
         </activity>
     </application>
-
+	<uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

@@ -1,6 +1,6 @@
 package activities;
 
-import android.content.Intent;
+import network.GroupsDownloader;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -11,6 +11,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.example.timetable.R;
+
+import database.DatabaseManager;
 
 import fragments.GroupsListFragment;
 import fragments.MoreOptionsFragment;
@@ -30,6 +32,9 @@ public class MainView extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		GroupsDownloader down = new GroupsDownloader(this);
+		down.execute();
+		DatabaseManager.initialize(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -87,5 +92,7 @@ public class MainView extends SherlockFragmentActivity implements
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
+	
+	
+	
 }
