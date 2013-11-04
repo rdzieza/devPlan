@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import network.TimetTableCreator;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -21,7 +24,7 @@ import com.example.timetable.R;
 public class MoreOptionsFragment extends SherlockFragment implements OnItemClickListener{
 	private ListView list;
 	private Activity parent;
-	private String[] options = {"Grupy", "Wykładowcy", "Sale", "WebVersion", "Sprawdz aktualnosc", "Info"};
+	private String[] options = {"Podbierz rozklad", "Grupy", "Wykładowcy", "Sale", "WebVersion", "Sprawdz aktualnosc", "Info"};
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
@@ -42,8 +45,14 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 	
 	
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
+	public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
+		switch(position){
+		case 0: {
+			Toast.makeText(this.parent, "Downloading started", Toast.LENGTH_SHORT).show();
+			TimetTableCreator tDown = new TimetTableCreator();
+			tDown.execute();
+		}
+		}
 		
 	}
 }

@@ -23,13 +23,13 @@ public class GroupsListFragment extends SherlockFragment implements
 		OnItemClickListener {
 	private ListView list;
 	private Activity parent;
-//	private DatabaseHelper dbHelper;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.groups_list_view, containter,
 				false);
 		list = (ListView) view.findViewById(R.id.groupsListView);
+		list.setEmptyView(null);
 		list.setAdapter(new GroupsListAdapter(parent, DatabaseManager.getGroupsCursor(DatabaseManager.getConnection().getReadableDatabase())));
 		list.setOnItemClickListener(this);
 		return view;
@@ -38,19 +38,17 @@ public class GroupsListFragment extends SherlockFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		parent = activity;
-//		if (dbHelper == null) {
-//			dbHelper = new DatabaseHelper(parent);
-//		}
-//		update();
+//		list.invalidate();
 	}
 	
 	public void onResume(){
 		super.onResume();
-//		update();
+		list.invalidate();
 	}
 	
 	public void update(){
 		list.setAdapter(new GroupsListAdapter(parent, DatabaseManager.getGroupsCursor(DatabaseManager.getConnection().getReadableDatabase())));
+		list.invalidate();
 	}
 	
 	public void onDetach(){

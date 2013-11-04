@@ -50,10 +50,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("DROP TABLE IF EXISTS EVENTS");
+//		db.execSQL("DROP TABLE IF EXISTS GROUPS");
 		db.execSQL(CREATE_GROUPS);
 		db.execSQL(CREATE_EVENTS);
 		db.execSQL(CREATE_SELECTED);
-
+/**
 		try {
 			db.execSQL("INSERT INTO EVENTS VALUES(0,'orm','lecture','robert','dzieza','4:50-6:20','15-10-2013','F303','krdzis2011')");
 			db.execSQL("INSERT INTO EVENTS VALUES(1,'ask','lecure','robert','dzieza','6:50-8:20','15-10-2013','F3','krdzis2011')");
@@ -63,7 +64,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		} finally {
 			// db.close();
 		}
-
+**/
 	}
 
 	@Override
@@ -161,6 +162,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			db.delete("selected", "id = ?", args);
 		}catch(SQLException e){
 			
+		}
+	}
+	
+	public static Cursor getSelected(SQLiteDatabase db){
+		try{
+			String[] columns = {"ID"};
+			Cursor c = db.query("SELECTED", columns, null, null, null, null, null);
+			return c;
+		}catch(SQLException e){
+			return null;
 		}
 	}
 	

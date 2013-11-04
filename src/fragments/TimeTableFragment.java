@@ -16,11 +16,11 @@ import database.DatabaseManager;
 public class TimeTableFragment extends SherlockFragment{
 	private ListView list;
 	private Activity parent;
-
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter, Bundle savedInstanceState){
-		View view =  inflater.inflate(R.layout.groups_list_view, containter, false);
-		list = (ListView)view.findViewById(R.id.groupsListView);
+		View view =  inflater.inflate(R.layout.time_table_list_view, containter, false);
+		list = (ListView)view.findViewById(R.id.timeTableListView);
+//		list.setEmptyView(inflater.inflate(R.layout.empty_time_table_view, containter));
 		list.setAdapter(new EventsListAdapter(parent, DatabaseManager.getEventsCursor(DatabaseManager.getConnection().getReadableDatabase())));
 		return view;
 	}
@@ -39,6 +39,10 @@ public class TimeTableFragment extends SherlockFragment{
 		super.onDestroy();
 //		dbHelper.close();
 	}
+
+
+	
+	
 	
 	
 }

@@ -1,10 +1,14 @@
 package activities;
 
+import prefereces.PreferenceHelper;
 import network.GroupsDownloader;
+import network.TimeTableDownloader;
+import network.TimetTableCreator;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -32,9 +36,18 @@ public class MainView extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		GroupsDownloader down = new GroupsDownloader(this);
-		down.execute();
+		PreferenceHelper.initialize(getApplicationContext());
+//		PreferenceHelper.saveBoolean("isFirst", true);
+		if (PreferenceHelper.getBoolean("isFirst")) {
+			GroupsDownloader down = new GroupsDownloader(this);
+			down.execute();
+		}
 		DatabaseManager.initialize(getApplicationContext());
+		
+		/////////////
+		TimeTableDownloader tDown = new TimeTableDownloader();
+		tDown.execute();
+		//////
 		setContentView(R.layout.activity_main);
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -86,13 +99,13 @@ public class MainView extends SherlockFragmentActivity implements
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU && fragmentAttached == 1) {
-			Toast.makeText(getApplicationContext(), "you will have some options in here",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(),
+					"you will have some options in here", Toast.LENGTH_SHORT)
+					.show();
 			Log.v("t", "menu clicked");
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	
-	
+
 }

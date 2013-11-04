@@ -13,6 +13,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import prefereces.PreferenceHelper;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -77,6 +79,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 						DatabaseManager.insertGroup(group.getInt("id"),
 								group.getString("name"));
 					}
+					PreferenceHelper.saveBoolean("isFirst", false);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
