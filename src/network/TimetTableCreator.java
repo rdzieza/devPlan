@@ -84,5 +84,12 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void>{
 		
 		
 	}
+	
+	@Override
+	public void onPostExecute(Void v){
+		super.onPostExecute(null);
+		TimeTableDownloader tDown = new TimeTableDownloader();
+		tDown.execute();
+	}
 
 }

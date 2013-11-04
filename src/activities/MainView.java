@@ -44,10 +44,7 @@ public class MainView extends SherlockFragmentActivity implements
 		}
 		DatabaseManager.initialize(getApplicationContext());
 		
-		/////////////
-		TimeTableDownloader tDown = new TimeTableDownloader();
-		tDown.execute();
-		//////
+
 		setContentView(R.layout.activity_main);
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

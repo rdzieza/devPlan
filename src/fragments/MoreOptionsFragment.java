@@ -21,6 +21,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.timetable.R;
 
+import database.DatabaseManager;
+
 public class MoreOptionsFragment extends SherlockFragment implements OnItemClickListener{
 	private ListView list;
 	private Activity parent;
@@ -49,6 +51,7 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 		switch(position){
 		case 0: {
 			Toast.makeText(this.parent, "Downloading started", Toast.LENGTH_SHORT).show();
+			DatabaseManager.removeTimeTable(DatabaseManager.getConnection().getWritableDatabase());
 			TimetTableCreator tDown = new TimetTableCreator();
 			tDown.execute();
 		}

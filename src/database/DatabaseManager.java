@@ -7,23 +7,27 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.view.View.OnCreateContextMenuListener;
 
 public class DatabaseManager extends SQLiteOpenHelper {
 	private static Context context;
 	private static final String DB_NAME = "TIME_TABLE";
 	private static final int VERSION = 3;
 	private static DatabaseManager instance;
-	private final static String CREATE_EVENTS = "CREATE TABLE IF NOT EXISTS EVENTS("
+	private final static String CREATE_ACTIVITIES = "CREATE TABLE IF NOT EXISTS ACTIVITIES("
 			+ "ID LONG PRIMARY KEY,"
-			+ "TOPIC VARCHAR(60),"
-			+ "TYPE VARCHAR(40),"
-			+ "FIRST_NAME VARCHAR(40),"
-			+ "LAST_NAME VARCHAR(40),"
-			+ "HOURS VARCHAR(10),"
-			+ "DATE VARCHAR(10),"
-			+ "ROOM VARCHAR(15),"
-			+ "GROUP_NAME VARCHAR(15))";
+			+ "GROUP_NAME VARCHAR(60),"
+			+ "GROUP_ID LONG,"
+			+ "TUTOR_ID LONG,"
+			+ "TUTOR_NAME VARCHAR(60),"
+			+ "PLACE_ID LONG,"
+			+ "PLACE_LOCATION VARCHAR(30),"
+			+ "CATEGORY_ID LONG,"
+			+ "CATEGORY_NAME VARCHAR(30),"
+			+ "NAME VARCHAR(60),"
+			+ "STATE INT,"
+			+ "START_AT LONG,"
+			+ "END_AT LONG)";
+
 	private static final String CREATE_GROUPS = "CREATE TABLE IF NOT EXISTS GROUPS("
 			+ "ID LONG PRIMARY KEY,"
 			+ "NAME VARCHAR(30) NOT NULL,"
@@ -49,22 +53,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("DROP TABLE IF EXISTS EVENTS");
-//		db.execSQL("DROP TABLE IF EXISTS GROUPS");
+//		db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
+		// db.execSQL("DROP TABLE IF EXISTS GROUPS");
 		db.execSQL(CREATE_GROUPS);
-		db.execSQL(CREATE_EVENTS);
+		db.execSQL(CREATE_ACTIVITIES);
 		db.execSQL(CREATE_SELECTED);
-/**
-		try {
-			db.execSQL("INSERT INTO EVENTS VALUES(0,'orm','lecture','robert','dzieza','4:50-6:20','15-10-2013','F303','krdzis2011')");
-			db.execSQL("INSERT INTO EVENTS VALUES(1,'ask','lecure','robert','dzieza','6:50-8:20','15-10-2013','F3','krdzis2011')");
-			db.execSQL("INSERT INTO EVENTS VALUES(2,'pp5','exercises','robert','dzieza','8:50-10:20','15-10-2013','F35','krdzis2011')");
-		} catch (SQLException e) {
 
-		} finally {
-			// db.close();
-		}
-**/
 	}
 
 	@Override
@@ -89,10 +83,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	public static Cursor getEventsCursor(SQLiteDatabase db) {
 		try {
-			String[] columns = { "ID as _id", "TOPIC", "TYPE", "ROOM", "DATE",
-					"HOURS" };
-			Cursor c = db.query("EVENTS", columns, null, null, null, null,
-					"DATE ASC, HOURS ASC");
+			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
+					"START_AT", "END_AT", "CATEGORY_NAME" };
+			Cursor c = db.query("ACTIVITIES", columns, null, null, null, null,
+					"START_AT ASC, END_AT ASC");
 			return c;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -100,6 +94,32 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			// db.close();
 		}
 		return null;
+	}
+	
+	public static void removeTimeTable(SQLiteDatabase db){
+		db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
+		db.execSQL(CREATE_ACTIVITIES);
+	}
+	
+	public static boolean addActivity(SQLiteDatabase db, long id, long groupId, String groupName,
+			long tutorId, String tutorName, long placeId, String placeLocation,
+			long categoryId, String categoryName, String name, int state,
+			long startAt, long endAt) {
+		ContentValues values = new ContentValues();
+		values.put("ID", id);
+		values.put("GROUP_ID", groupId);
+		values.put("GROUP_NAME", groupName);
+		values.put("TUTOR_ID", tutorId);
+		values.put("TUTOR_NAME", tutorName);
+		values.put("PLACE_ID", placeId);
+		values.put("PLACE_LOCATION", placeLocation);
+		values.put("CATEGORY_ID", categoryId);
+		values.put("CATEGORY_NAME", categoryName);
+		values.put("NAME", name);
+		values.put("START_AT", startAt);
+		values.put("END_AT", endAt);
+		db.insert("ACTIVITIES", null, values);
+		return true;
 	}
 
 	public static void changeStatus(long id, SQLiteDatabase db) {
@@ -134,45 +154,48 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		db.update("GROUPS", values, " ID = ?", args);
 		addToSelected(id, db);
 	}
-	
-	public static boolean insertGroup(int id, String name){
+
+	public static boolean insertGroup(int id, String name) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		try{
-			String query = "INSERT INTO GROUPS (ID, NAME, IS_ACTIVE) VALUES ("+ String.valueOf(id)+", '"+ name +"', 0)";
+		try {
+			String query = "INSERT INTO GROUPS (ID, NAME, IS_ACTIVE) VALUES ("
+					+ String.valueOf(id) + ", '" + name + "', 0)";
 			db.execSQL(query);
 			return true;
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			return false;
-		}finally{
-//			db.close();
+		} finally {
+			// db.close();
 		}
 	}
-	
-	public static void addToSelected(long id, SQLiteDatabase db){
-		try{
-			db.execSQL("insert into selected values ("+ String.valueOf(id) + ")");
-		}catch(SQLException e){
-			
+
+	public static void addToSelected(long id, SQLiteDatabase db) {
+		try {
+			db.execSQL("insert into selected values (" + String.valueOf(id)
+					+ ")");
+		} catch (SQLException e) {
+
 		}
 	}
-	
-	public static void removeFromSelected(long id, SQLiteDatabase db){
-		String[] args = {String.valueOf(id)};
-		try{
+
+	public static void removeFromSelected(long id, SQLiteDatabase db) {
+		String[] args = { String.valueOf(id) };
+		try {
 			db.delete("selected", "id = ?", args);
-		}catch(SQLException e){
-			
+		} catch (SQLException e) {
+
 		}
 	}
-	
-	public static Cursor getSelected(SQLiteDatabase db){
-		try{
-			String[] columns = {"ID"};
-			Cursor c = db.query("SELECTED", columns, null, null, null, null, null);
+
+	public static Cursor getSelected(SQLiteDatabase db) {
+		try {
+			String[] columns = { "ID" };
+			Cursor c = db.query("SELECTED", columns, null, null, null, null,
+					null);
 			return c;
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			return null;
 		}
 	}
-	
+
 }
