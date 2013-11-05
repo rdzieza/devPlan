@@ -79,7 +79,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 						DatabaseManager.insertGroup(group.getInt("id"),
 								group.getString("name"));
 					}
-					PreferenceHelper.saveBoolean("isFirst", false);
+					PreferenceHelper.saveBoolean("isFirst", true);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

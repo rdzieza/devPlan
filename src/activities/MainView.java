@@ -38,7 +38,7 @@ public class MainView extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		PreferenceHelper.initialize(getApplicationContext());
 //		PreferenceHelper.saveBoolean("isFirst", true);
-		if (PreferenceHelper.getBoolean("isFirst")) {
+		if (!PreferenceHelper.getBoolean("isFirst")) {
 			GroupsDownloader down = new GroupsDownloader(this);
 			down.execute();
 		}
