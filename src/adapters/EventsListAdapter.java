@@ -41,7 +41,7 @@ public class EventsListAdapter extends CursorAdapter {
 		TextView eventRoom = (TextView) view.findViewById(R.id.activityRoom);
 		eventRoom.setText(cursor.getString(cursor
 				.getColumnIndex("PLACE_LOCATION")));
-		SimpleDateFormat dayFormat = new SimpleDateFormat("DD-MM-yyyy");
+		SimpleDateFormat dayFormat = new SimpleDateFormat("DD-MM-yyyy EE");
 		String day = dayFormat.format(new Date(cursor.getLong(cursor
 				.getColumnIndex("START_AT"))));
 		if(day.equals(lastDay)){
@@ -50,6 +50,7 @@ public class EventsListAdapter extends CursorAdapter {
 			separator.setText(day);
 			lastDay = day;
 			separator.setBackgroundColor(Color.parseColor("#0099CC"));
+			separator.setTextColor(Color.GRAY);
 		}
 	}
 
