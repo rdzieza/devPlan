@@ -53,7 +53,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-//		db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
+		// db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
 		// db.execSQL("DROP TABLE IF EXISTS GROUPS");
 		db.execSQL(CREATE_GROUPS);
 		db.execSQL(CREATE_ACTIVITIES);
@@ -95,16 +95,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 		return null;
 	}
-	
-	public static void removeTimeTable(SQLiteDatabase db){
+
+	public static void removeTimeTable(SQLiteDatabase db) {
 		db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
 		db.execSQL(CREATE_ACTIVITIES);
 	}
-	
-	public static boolean addActivity(SQLiteDatabase db, long id, long groupId, String groupName,
-			long tutorId, String tutorName, long placeId, String placeLocation,
-			long categoryId, String categoryName, String name, int state,
-			long startAt, long endAt) {
+
+	public static boolean addActivity(SQLiteDatabase db, long id, long groupId,
+			String groupName, long tutorId, String tutorName, long placeId,
+			String placeLocation, long categoryId, String categoryName,
+			String name, int state, long startAt, long endAt) {
 		ContentValues values = new ContentValues();
 		values.put("ID", id);
 		values.put("GROUP_ID", groupId);
@@ -198,4 +198,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 	}
 
+	public static Cursor getWhereName(SQLiteDatabase db, String name){
+		try{
+			String[] colums = {"NAME", "ID as _id", "IS_ACTIVE"};
+			String[] args = { "%" + name + "%" };
+			Cursor c = db.query("GROUPS", colums, "NAME like ?", args, null, null, "NAME");
+			 c.moveToFirst();
+			 return c;
+		}catch(SQLException e){
+			return null;
+		}
+	}
 }
