@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <TextView 
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="SEPARATOR"
+        android:gravity="center"/>
+    <TextView 
+        android:id="@+id/startTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/separator"/>
+    <TextView 
+        android:id="@+id/activityTopic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/startTime"
+        android:layout_toRightOf="@+id/startTime"
+        android:layout_marginLeft="5dp"/>
+    <TextView 
+        android:id="@+id/activityRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/startTime"
+        android:layout_alignParentRight="true"/>
+    <TextView 
+        android:id="@+id/endTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startTime"
+        android:layout_alignLeft="@+id/startTime"/>
+    <TextView 
+        android:id="@+id/activityType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/endTime"
+        android:layout_toRightOf="@+id/endTime"
+        android:layout_marginLeft="5dp"/>
+    
+
+</RelativeLayout>

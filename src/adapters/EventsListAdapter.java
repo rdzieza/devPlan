@@ -25,55 +25,39 @@ public class EventsListAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		SimpleDateFormat df = new SimpleDateFormat("MM-DD hh:mm");
-		TextView eventTopic = (TextView) view.findViewById(R.id.topic);
+		SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+		TextView separator = (TextView)view.findViewById(R.id.separator);
+		TextView eventTopic = (TextView) view.findViewById(R.id.activityTopic);
 		eventTopic.setText(cursor.getString(cursor.getColumnIndex("NAME")));
-		TextView eventType = (TextView) view.findViewById(R.id.type);
+		TextView eventType = (TextView) view.findViewById(R.id.activityType);
 		eventType.setText(cursor.getString(cursor
 				.getColumnIndex("CATEGORY_NAME")));
-		TextView eventDate = (TextView) view.findViewById(R.id.date);
+		TextView eventDate = (TextView) view.findViewById(R.id.startTime);
 		eventDate.setText(df.format(new Date(cursor.getLong(cursor
 				.getColumnIndex("START_AT")))));
-		TextView eventHours = (TextView) view.findViewById(R.id.hour);
+		TextView eventHours = (TextView) view.findViewById(R.id.endTime);
 		eventHours.setText(df.format(new Date(cursor.getLong(cursor
 				.getColumnIndex("END_AT")))));
-		TextView eventRoom = (TextView) view.findViewById(R.id.room);
+		TextView eventRoom = (TextView) view.findViewById(R.id.activityRoom);
 		eventRoom.setText(cursor.getString(cursor
 				.getColumnIndex("PLACE_LOCATION")));
-
-		SimpleDateFormat dayForm = new SimpleDateFormat("MM-DD");
-		String day = dayForm.format(new Date(cursor.getLong(cursor
+		SimpleDateFormat dayFormat = new SimpleDateFormat("DD-MM-yyyy");
+		String day = dayFormat.format(new Date(cursor.getLong(cursor
 				.getColumnIndex("START_AT"))));
-		if (!day.equals(lastDay)) {
-			lastDay = day;
-			if (lastUsed == 0) {
-				eventHours.setTextColor(Color.parseColor("#0099CC"));
-				eventDate.setTextColor(Color.parseColor("#0099CC"));
-				lastUsed = 1;
-			}else{
-				eventHours.setTextColor(Color.GRAY);
-				eventDate.setTextColor(Color.GRAY);
-				lastUsed = 0;
-			}
+		if(day.equals(lastDay)){
+			separator.setVisibility(View.GONE);
 		}else{
-			if (lastUsed == 1) {
-				eventHours.setTextColor(Color.parseColor("#0099CC"));
-				eventDate.setTextColor(Color.parseColor("#0099CC"));
-				lastUsed = 1;
-			}else{
-				eventHours.setTextColor(Color.GRAY);
-				eventDate.setTextColor(Color.GRAY);
-				lastUsed = 0;
-			}
+			separator.setText(day);
+			lastDay = day;
+			separator.setBackgroundColor(Color.parseColor("#0099CC"));
 		}
-
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.single_event_row_view, parent,
+		View view = inflater.inflate(R.layout.single_event_view_separator, parent,
 				false);
 		return view;
 	}
