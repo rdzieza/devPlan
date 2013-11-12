@@ -50,7 +50,6 @@ public class EventsListAdapter extends CursorAdapter {
 			separator.setText(day);
 			lastDay = day;
 			separator.setBackgroundColor(Color.parseColor("#0099CC"));
-			separator.setTextColor(Color.GRAY);
 		}
 	}
 

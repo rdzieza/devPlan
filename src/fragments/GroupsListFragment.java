@@ -35,6 +35,7 @@ public class GroupsListFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.groups_list_view, containter,
 				false);
 		filterField = new EditText(parent);
+		filterField.setHint("Wprowadz nazwe grupy");
 		final GroupsListAdapter adapter = new GroupsListAdapter(parent,
 				DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
 						.getReadableDatabase()));

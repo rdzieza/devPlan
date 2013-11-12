@@ -5,8 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import network.TimetTableCreator;
-
+import activities.InfoActivity;
+import activities.MainView;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +21,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.timetable.R;
 
 import database.DatabaseManager;
 
 public class MoreOptionsFragment extends SherlockFragment implements OnItemClickListener{
 	private ListView list;
-	private Activity parent;
-	private String[] options = {"Podbierz rozklad", "Grupy", "Wykładowcy", "Sale", "WebVersion", "Sprawdz aktualnosc", "Info"};
+	private MainView parent;
+	private String[] options = {"Podbierz rozklad", "Wykładowcy", "Sale", "WebVersion", "Sprawdz aktualnosc", "Info"};
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 	
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
-		this.parent = activity;
+		this.parent = (MainView)activity;
 	}
 	
 	
@@ -54,8 +56,33 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 			DatabaseManager.removeTimeTable(DatabaseManager.getConnection().getWritableDatabase());
 			TimetTableCreator tDown = new TimetTableCreator();
 			tDown.execute();
+		}break;
+		case 1:{
+			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/tutors";
+			openBrowser(url);			
+		}break;
+		case 2:{
+			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/places";
+			openBrowser(url);		
+		}break;
+		case 3:{
+			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/";
+			openBrowser(url);
+		}break;
+		case 4:{
+			Toast.makeText(this.parent, "Aktualne", Toast.LENGTH_SHORT).show();
+		}break;
+		case 5:{
+			Intent intent = new Intent(parent.getContext(), InfoActivity.class);
+			startActivity(intent);
 		}
 		}
 		
+	}
+	
+	public void openBrowser(String url){
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.parse(url));
+		startActivity(intent);
 	}
 }
