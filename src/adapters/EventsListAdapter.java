@@ -6,6 +6,7 @@ import java.util.Date;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,29 +26,26 @@ public class EventsListAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+		String day = cursor.getString(cursor.getColumnIndex("DAY"));
+		String dayOfWeek = cursor.getString(cursor.getColumnIndex("DAY_OF_WEEK"));
 		TextView separator = (TextView)view.findViewById(R.id.separator);
 		TextView eventTopic = (TextView) view.findViewById(R.id.activityTopic);
-		eventTopic.setText(cursor.getString(cursor.getColumnIndex("NAME")));
+		String name = cursor.getString(cursor.getColumnIndex("NAME"));
+		eventTopic.setText(name);
 		TextView eventType = (TextView) view.findViewById(R.id.activityType);
 		eventType.setText(cursor.getString(cursor
 				.getColumnIndex("CATEGORY_NAME")));
 		TextView eventDate = (TextView) view.findViewById(R.id.startTime);
-		eventDate.setText(df.format(new Date(cursor.getLong(cursor
-				.getColumnIndex("START_AT")))));
+		eventDate.setText(cursor.getString(cursor.getColumnIndex("START_AT")));
 		TextView eventHours = (TextView) view.findViewById(R.id.endTime);
-		eventHours.setText(df.format(new Date(cursor.getLong(cursor
-				.getColumnIndex("END_AT")))));
+		eventHours.setText(cursor.getString(cursor.getColumnIndex("END_AT")));
 		TextView eventRoom = (TextView) view.findViewById(R.id.activityRoom);
 		eventRoom.setText(cursor.getString(cursor
 				.getColumnIndex("PLACE_LOCATION")));
-		SimpleDateFormat dayFormat = new SimpleDateFormat("DD-MM-yyyy EE");
-		String day = dayFormat.format(new Date(cursor.getLong(cursor
-				.getColumnIndex("START_AT"))));
 		if(day.equals(lastDay)){
 			separator.setVisibility(View.GONE);
 		}else{
-			separator.setText(day);
+			separator.setText(day + " " + dayOfWeek);
 			lastDay = day;
 			separator.setBackgroundColor(Color.parseColor("#0099CC"));
 		}

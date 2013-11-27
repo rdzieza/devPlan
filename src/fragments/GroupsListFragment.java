@@ -36,6 +36,7 @@ public class GroupsListFragment extends SherlockFragment implements
 				false);
 		filterField = new EditText(parent);
 		filterField.setHint("Wprowadz nazwe grupy");
+		filterField.setSingleLine();
 		final GroupsListAdapter adapter = new GroupsListAdapter(parent,
 				DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
 						.getReadableDatabase()));

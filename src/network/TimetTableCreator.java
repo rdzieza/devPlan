@@ -15,6 +15,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,8 +67,11 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void>{
 				line = sb.toString();
 				Log.v("T", line);
 				JSONObject json = new JSONObject(line);
+//				JSONArray array = new JSONArray(line);
+//				JSONObject json = array.getJSONObject(0);
 				String hash = json.getString("_id");
 				Log.v("t", hash);
+//				String hash = "52911dceecd7da68fb000002";
 				PreferenceHelper.saveString("timeTableHash", hash);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();

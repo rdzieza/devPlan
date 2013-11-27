@@ -1,11 +1,14 @@
 package database;
 
+import java.text.SimpleDateFormat;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 public class DatabaseManager extends SQLiteOpenHelper {
@@ -19,14 +22,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			+ "GROUP_ID LONG,"
 			+ "TUTOR_ID LONG,"
 			+ "TUTOR_NAME VARCHAR(60),"
+			+ "TUTOR_URL VARCHAR(60),"
 			+ "PLACE_ID LONG,"
 			+ "PLACE_LOCATION VARCHAR(30),"
-			+ "CATEGORY_ID LONG,"
 			+ "CATEGORY_NAME VARCHAR(30),"
 			+ "NAME VARCHAR(60),"
+			+ "NOTES VARCHAR(60),"
 			+ "STATE INT,"
-			+ "START_AT LONG,"
-			+ "END_AT LONG)";
+			+ "START_AT VARCHAR(20),"
+			+ "END_AT  VARCHAR(20),"
+			+ "DAY  VARCHAR(20),"
+			+ "DAY_OF_WEEK VARCHAR(20))";
 
 	private static final String CREATE_GROUPS = "CREATE TABLE IF NOT EXISTS GROUPS("
 			+ "ID LONG PRIMARY KEY,"
@@ -53,7 +59,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
+//		 db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
 		// db.execSQL("DROP TABLE IF EXISTS GROUPS");
 		db.execSQL(CREATE_GROUPS);
 		db.execSQL(CREATE_ACTIVITIES);
@@ -83,10 +89,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	public static Cursor getEventsCursor(SQLiteDatabase db) {
 		try {
+			
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
-					"START_AT", "END_AT", "CATEGORY_NAME" };
+					"START_AT", "END_AT", "CATEGORY_NAME", "DAY", "DAY_OF_WEEK" };
 			Cursor c = db.query("ACTIVITIES", columns, null, null, null, null,
-					"START_AT ASC, END_AT ASC");
+					"DAY ASC");
 			return c;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -102,22 +109,25 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	}
 
 	public static boolean addActivity(SQLiteDatabase db, long id, long groupId,
-			String groupName, long tutorId, String tutorName, long placeId,
-			String placeLocation, long categoryId, String categoryName,
-			String name, int state, long startAt, long endAt) {
+			String groupName, long tutorId, String tutorName, String tutorUrl, long placeId,
+			String placeLocation, String categoryName, String notes,
+			String name, int state, String day, String dayOfWeek, String startAt, String endAt) {
 		ContentValues values = new ContentValues();
 		values.put("ID", id);
 		values.put("GROUP_ID", groupId);
 		values.put("GROUP_NAME", groupName);
 		values.put("TUTOR_ID", tutorId);
 		values.put("TUTOR_NAME", tutorName);
+		values.put("TUTOR_URL", tutorUrl);
 		values.put("PLACE_ID", placeId);
 		values.put("PLACE_LOCATION", placeLocation);
-		values.put("CATEGORY_ID", categoryId);
 		values.put("CATEGORY_NAME", categoryName);
 		values.put("NAME", name);
 		values.put("START_AT", startAt);
 		values.put("END_AT", endAt);
+		values.put("DAY", day);
+		values.put("NOTES", notes);
+		values.put("DAY_OF_WEEK", dayOfWeek);
 		db.insert("ACTIVITIES", null, values);
 		return true;
 	}

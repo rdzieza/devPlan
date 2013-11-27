@@ -22,6 +22,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 	private HttpClient client;
 	private StringBuilder sb;
 	private BufferedReader br;
+	int i = 0;
 
 	@Override
 	protected void onPreExecute() {
@@ -34,24 +35,30 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		String url = "http://knp.uek.krakow.pl:3000/v0_1/timetables/" + hash;
 		Log.v("t", url);
-		HttpGet get = new HttpGet("http://knp.uek.krakow.pl:3000/v0_1/timetables/" + hash);
-		try{
+		HttpGet get = new HttpGet(
+				"http://knp.uek.krakow.pl:3000/v0_1/timetables/" + hash);
+		try {
 			HttpResponse response = client.execute(get);
-			br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			br = new BufferedReader(new InputStreamReader(response.getEntity()
+					.getContent()));
 			sb = new StringBuilder();
 			String line = "";
-			while((line = br.readLine()) != null){
+			while ((line = br.readLine()) != null) {
 				sb.append(line);
 			}
-//			String json = sb.toString();
-//			Log.v("t", json);
+			// String json = sb.toString();
+			// Log.v("t", json);
 			JSONObject object = new JSONObject(sb.toString());
 			JSONArray activities = object.getJSONArray("activities");
-			for(int i = 0; i < activities.length(); i++){
+			for (int i = 0; i < activities.length(); i++) {
 				JSONObject activity = activities.getJSONObject(i);
+				Log.v("t", activity.toString());
+				String name = activity.getString("name");
+				if (name.equals("Język obcy")) {
+					continue;
+				}
 				int id = activity.getInt("id");
 				Log.v("t", "id: " + String.valueOf(id));
-				String name = activity.getString("name");
 				Log.v("t", "name : " + name);
 				JSONObject group = activity.getJSONObject("group");
 				int groupId = group.getInt("id");
@@ -63,26 +70,48 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 				Log.v("t", "tutor id: " + tutorId);
 				String tutorName = tutor.getString("name");
 				Log.v("t", "tutor name: " + tutorName);
-				JSONObject place = activity.getJSONObject("place");
-				int placeId = place.getInt("id");
-				Log.v("t", "place id: " + placeId);
-				String placeLocation = place.getString("location");
+				String tutorUrl = tutor.getString("moodle_url");
+				Log.v("t", "tutor url: " + tutorUrl);
+				String placeLocation = null;
+				int placeId = 0;
+				try {
+					JSONObject place = activity.getJSONObject("place");
+					placeId = place.getInt("id");
+					Log.v("t", "place id: " + placeId);
+					placeLocation = place.getString("location");
+				} catch (JSONException e) {
+					placeLocation = activity.getString("place");
+				}
 				Log.v("t", "place location: " + placeLocation);
-				JSONObject category = activity.getJSONObject("category");
-				int categoryId = category.getInt("id");
-				Log.v("t", "category id: " + categoryId);
-				String categoryName = category.getString("name");
+				// JSONObject category = activity.getJSONObject("category");
+				// int categoryId = category.getInt("id");
+				// Log.v("t", "category id: " + categoryId);
+				String categoryName = activity.getString("category");
 				Log.v("t", "category name: " + categoryName);
 				int state = activity.getInt("state");
 				Log.v("t", "state: " + String.valueOf(state));
-				long startAt = activity.getLong("start_at");
-				Log.v("t", "start: " + String.valueOf(startAt));
-				long endAt = activity.getLong("end_at");
+				String startAt = activity.getString("starts_at");
+				Log.v("t", "start: " + startAt);
+				String endAt = activity.getString("ends_at");
 				Log.v("t", "end: " + String.valueOf(endAt));
+				String day = activity.getString("date");
+				Log.v("t", "Date: " + day);
+				String notes = activity.getString("notes");
+				Log.v("t", "Notes: " + notes);
+				String dayOfWeek = activity.getString("day_of_week");
+				Log.v("t", "Day of week: " + dayOfWeek);
 				Log.v("t", "////////////////////////");
-				DatabaseManager.addActivity(DatabaseManager.getConnection().getWritableDatabase(), id, groupId, groupName, tutorId, tutorName, placeId, placeLocation, categoryId, categoryName, name, state, startAt, endAt);
+				 DatabaseManager.addActivity(DatabaseManager.getConnection().getWritableDatabase(),
+				 id, groupId, groupName, tutorId, tutorName, tutorUrl, placeId,
+				 placeLocation, categoryName, notes, name, state, day, dayOfWeek,
+				 startAt, endAt);
+//				 if(i == 8){
+//					 break;
+//				 }else{
+//					 i++;
+//				 }
 			}
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
