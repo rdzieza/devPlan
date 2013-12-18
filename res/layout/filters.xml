@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5sp"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dayFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show day"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#000000" />
+
+    <TextView
+        android:id="@+id/daysFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show between days"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#000000" />
+
+    <TextView
+        android:id="@+id/nameFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter by name"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#000000" />
+	<TextView
+        android:id="@+id/noFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Full semester"
+        android:textSize="20sp" />
+	<View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#000000" />
+	<TextView
+        android:id="@+id/sinceToday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Since today"
+        android:textSize="20sp" />
+</LinearLayout>

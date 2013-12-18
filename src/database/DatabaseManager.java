@@ -1,5 +1,6 @@
 package database;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,8 +36,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			+ "STATE INT,"
 			+ "START_AT VARCHAR(20),"
 			+ "END_AT  VARCHAR(20),"
-			+ "DAY  VARCHAR(20)," + "DAY_OF_WEEK VARCHAR(20)," 
-			+ "TIME LONG)";
+			+ "DAY  VARCHAR(20)," + "DAY_OF_WEEK VARCHAR(20)," + "TIME LONG)";
 
 	private static final String CREATE_GROUPS = "CREATE TABLE IF NOT EXISTS GROUPS("
 			+ "ID LONG PRIMARY KEY,"
@@ -44,7 +44,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			+ "IS_ACTIVE INT NOT NULL DEFAULT 0)";
 	private static final String CREATE_SELECTED = "CREATE TABLE IF NOT EXISTS SELECTED ("
 			+ "ID LONG PRIMARY KEY)";
-//	private static final Strning CREATE_INDEX = ""
+
+	// private static final Strning CREATE_INDEX = ""
 
 	private DatabaseManager() {
 		super(context, DB_NAME, null, VERSION);
@@ -61,10 +62,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 		return instance;
 	}
-	
+
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-//		 db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
+		// db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
 		// db.execSQL("DROP TABLE IF EXISTS GROUPS");
 		db.execSQL(CREATE_GROUPS);
 		db.execSQL(CREATE_ACTIVITIES);
@@ -91,32 +92,36 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 		return null;
 	}
-	
-	public static ArrayList<Item> getEventsList(SQLiteDatabase db) {
+
+	public static ArrayList<Item> getEventsListFromRange(SQLiteDatabase db, String from, String to) {
 		try {
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
-					"START_AT", "END_AT", "CATEGORY_NAME", "DAY", 
+					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
 					"DAY_OF_WEEK", "TIME" };
-			Cursor cursor = db.query("ACTIVITIES", columns, null,  null , null, null,
-					"TIME"); 
+			String[] args = { from, to};
+			Cursor cursor = db.query("ACTIVITIES", columns, "DAY BETWEEN ? AND ?", args,
+					null, null, "TIME");
 
 			String lastDay = "00-00";
 			ArrayList<Item> items = new ArrayList<Item>();
 			Log.v("t", String.valueOf(cursor.getCount()));
-			while(cursor.moveToNext()){
+			while (cursor.moveToNext()) {
 				String day = cursor.getString(cursor.getColumnIndex("DAY"));
-				if(!lastDay.equals(day)){
+				if (!lastDay.equals(day)) {
 					lastDay = day;
-					String weekDay = cursor.getString(cursor.getColumnIndex("DAY_OF_WEEK"));
+					String weekDay = cursor.getString(cursor
+							.getColumnIndex("DAY_OF_WEEK"));
 					Separator separator = new Separator(day + " " + weekDay);
 					items.add(separator);
 				}
-				Event event = new Event(cursor.getInt(cursor.getColumnIndex("_id")),
+				Event event = new Event(
+						cursor.getInt(cursor.getColumnIndex("_id")),
 						cursor.getString(cursor.getColumnIndex("NAME")),
 						cursor.getString(cursor.getColumnIndex("START_AT")),
 						cursor.getString(cursor.getColumnIndex("END_AT")),
 						cursor.getLong(cursor.getColumnIndex("TIME")),
-						cursor.getString(cursor.getColumnIndex("PLACE_LOCATION")),
+						cursor.getString(cursor
+								.getColumnIndex("PLACE_LOCATION")),
 						cursor.getString(cursor.getColumnIndex("CATEGORY_NAME")));
 				items.add(event);
 			}
@@ -129,20 +134,188 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		return null;
 	}
 	
-	public static Cursor getEventDetails(SQLiteDatabase db, long id){
-		try{
-			String[] columns = {"ID as _id", "NAME", "PLACE_LOCATION",
+	public static ArrayList<Item> getEventsListSincetToday(SQLiteDatabase db) {
+		try {
+			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
 					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
-					"DAY_OF_WEEK", "TUTOR_NAME", "TUTOR_URL" };
-			String[] args = { String.valueOf(id) };
-			Cursor cursor = db.query("ACTIVITIES", columns, "ID = ?", args, null, null, null);
-			return cursor;
-		}catch(SQLException e){
+					"DAY_OF_WEEK", "TIME" };
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date today = new Date();
+			String[] args = { sdf.format(today) };
+			Cursor cursor = db.query("ACTIVITIES", columns, "DAY >= ?", args,
+					null, null, "TIME");
+
+			String lastDay = "00-00";
+			ArrayList<Item> items = new ArrayList<Item>();
+			Log.v("t", String.valueOf(cursor.getCount()));
+			while (cursor.moveToNext()) {
+				String day = cursor.getString(cursor.getColumnIndex("DAY"));
+				if (!lastDay.equals(day)) {
+					lastDay = day;
+					String weekDay = cursor.getString(cursor
+							.getColumnIndex("DAY_OF_WEEK"));
+					Separator separator = new Separator(day + " " + weekDay);
+					items.add(separator);
+				}
+				Event event = new Event(
+						cursor.getInt(cursor.getColumnIndex("_id")),
+						cursor.getString(cursor.getColumnIndex("NAME")),
+						cursor.getString(cursor.getColumnIndex("START_AT")),
+						cursor.getString(cursor.getColumnIndex("END_AT")),
+						cursor.getLong(cursor.getColumnIndex("TIME")),
+						cursor.getString(cursor
+								.getColumnIndex("PLACE_LOCATION")),
+						cursor.getString(cursor.getColumnIndex("CATEGORY_NAME")));
+				items.add(event);
+			}
+			return items;
+		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			// db.close();
 		}
 		return null;
 	}
 	
+	public static ArrayList<Item> getEventsList(SQLiteDatabase db) {
+		try {
+			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
+					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
+					"DAY_OF_WEEK", "TIME" };
+			Cursor cursor = db.query("ACTIVITIES", columns, null, null,
+					null, null, "TIME");
+
+			String lastDay = "00-00";
+			ArrayList<Item> items = new ArrayList<Item>();
+			Log.v("t", String.valueOf(cursor.getCount()));
+			while (cursor.moveToNext()) {
+				String day = cursor.getString(cursor.getColumnIndex("DAY"));
+				if (!lastDay.equals(day)) {
+					lastDay = day;
+					String weekDay = cursor.getString(cursor
+							.getColumnIndex("DAY_OF_WEEK"));
+					Separator separator = new Separator(day + " " + weekDay);
+					items.add(separator);
+				}
+				Event event = new Event(
+						cursor.getInt(cursor.getColumnIndex("_id")),
+						cursor.getString(cursor.getColumnIndex("NAME")),
+						cursor.getString(cursor.getColumnIndex("START_AT")),
+						cursor.getString(cursor.getColumnIndex("END_AT")),
+						cursor.getLong(cursor.getColumnIndex("TIME")),
+						cursor.getString(cursor
+								.getColumnIndex("PLACE_LOCATION")),
+						cursor.getString(cursor.getColumnIndex("CATEGORY_NAME")));
+				items.add(event);
+			}
+			return items;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// db.close();
+		}
+		return null;
+	}
+
+	public static ArrayList<Item> getEventsListByDay(SQLiteDatabase db,
+			String dayFilter) {
+		try {
+			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
+					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
+					"DAY_OF_WEEK", "TIME" };
+			String[] args = { dayFilter };
+			Cursor cursor = db.query("ACTIVITIES", columns, "DAY = ?", args,
+					null, null, "TIME");
+
+			ArrayList<Item> items = new ArrayList<Item>();
+			Log.v("t", String.valueOf(cursor.getCount()));
+			int counter = 0;
+			while (cursor.moveToNext()) {
+				if (counter == 0) {
+					String day = cursor.getString(cursor.getColumnIndex("DAY"));
+					String weekDay = cursor.getString(cursor
+							.getColumnIndex("DAY_OF_WEEK"));
+					Separator separator = new Separator(day + " " + weekDay);
+					items.add(separator);
+				}
+				Event event = new Event(
+						cursor.getInt(cursor.getColumnIndex("_id")),
+						cursor.getString(cursor.getColumnIndex("NAME")),
+						cursor.getString(cursor.getColumnIndex("START_AT")),
+						cursor.getString(cursor.getColumnIndex("END_AT")),
+						cursor.getLong(cursor.getColumnIndex("TIME")),
+						cursor.getString(cursor
+								.getColumnIndex("PLACE_LOCATION")),
+						cursor.getString(cursor.getColumnIndex("CATEGORY_NAME")));
+				items.add(event);
+				counter++;
+			}
+			return items;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// db.close();
+		}
+		return null;
+	}
+
+	public static ArrayList<Item> getEventsListByName(SQLiteDatabase db,
+			String name) {
+		try {
+			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
+					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
+					"DAY_OF_WEEK", "TIME" };
+			String[] args = { "%" + name + "%" };
+			Cursor cursor = db.query("ACTIVITIES", columns, "NAME like ?",
+					args, null, null, "TIME");
+
+			String lastDay = "00-00";
+			ArrayList<Item> items = new ArrayList<Item>();
+			Log.v("t", String.valueOf(cursor.getCount()));
+			while (cursor.moveToNext()) {
+				String day = cursor.getString(cursor.getColumnIndex("DAY"));
+				if (!lastDay.equals(day)) {
+					lastDay = day;
+					String weekDay = cursor.getString(cursor
+							.getColumnIndex("DAY_OF_WEEK"));
+					Separator separator = new Separator(day + " " + weekDay);
+					items.add(separator);
+				}
+				Event event = new Event(
+						cursor.getInt(cursor.getColumnIndex("_id")),
+						cursor.getString(cursor.getColumnIndex("NAME")),
+						cursor.getString(cursor.getColumnIndex("START_AT")),
+						cursor.getString(cursor.getColumnIndex("END_AT")),
+						cursor.getLong(cursor.getColumnIndex("TIME")),
+						cursor.getString(cursor
+								.getColumnIndex("PLACE_LOCATION")),
+						cursor.getString(cursor.getColumnIndex("CATEGORY_NAME")));
+				items.add(event);
+			}
+			return items;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// db.close();
+		}
+		return null;
+	}
+
+	public static Cursor getEventDetails(SQLiteDatabase db, long id) {
+		try {
+			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
+					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
+					"DAY_OF_WEEK", "TUTOR_NAME", "TUTOR_URL" };
+			String[] args = { String.valueOf(id) };
+			Cursor cursor = db.query("ACTIVITIES", columns, "ID = ?", args,
+					null, null, null);
+			return cursor;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public static Cursor getEventsCursor(SQLiteDatabase db) {
 		try {
 			Long time = new Date().getTime();
@@ -150,8 +323,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
 					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
 					"DAY_OF_WEEK", "TIME" };
-			Cursor c = db.query("ACTIVITIES", columns, null, null, null,
-					null, "TIME"); 
+			Cursor c = db.query("ACTIVITIES", columns, null, null, null, null,
+					"TIME");
 			return c;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -167,31 +340,32 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	}
 
 	public static boolean addActivity(SQLiteDatabase db, long id, long groupId,
-			String groupName, long tutorId, String tutorName, String tutorUrl, long placeId,
-			String placeLocation, String categoryName, String notes,
-			String name, int state, String day, String dayOfWeek, String startAt, String endAt, long time) {
-		try{
-		ContentValues values = new ContentValues();
-		values.put("ID", id);
-		values.put("GROUP_ID", groupId);
-		values.put("GROUP_NAME", groupName);
-		values.put("TUTOR_ID", tutorId);
-		values.put("TUTOR_NAME", tutorName);
-		values.put("TUTOR_URL", tutorUrl);
-		values.put("PLACE_ID", placeId);
-		values.put("PLACE_LOCATION", placeLocation);
-		values.put("CATEGORY_NAME", categoryName);
-		values.put("NAME", name);
-		values.put("START_AT", startAt);
-		values.put("END_AT", endAt);
-		values.put("DAY", day);
-		values.put("NOTES", notes);
-		values.put("DAY_OF_WEEK", dayOfWeek);
-		values.put("TIME", time);
-		db.insert("ACTIVITIES", null, values);
-	}catch(SQLException e){
-		e.printStackTrace();
-	}
+			String groupName, long tutorId, String tutorName, String tutorUrl,
+			long placeId, String placeLocation, String categoryName,
+			String notes, String name, int state, String day, String dayOfWeek,
+			String startAt, String endAt, long time) {
+		try {
+			ContentValues values = new ContentValues();
+			values.put("ID", id);
+			values.put("GROUP_ID", groupId);
+			values.put("GROUP_NAME", groupName);
+			values.put("TUTOR_ID", tutorId);
+			values.put("TUTOR_NAME", tutorName);
+			values.put("TUTOR_URL", tutorUrl);
+			values.put("PLACE_ID", placeId);
+			values.put("PLACE_LOCATION", placeLocation);
+			values.put("CATEGORY_NAME", categoryName);
+			values.put("NAME", name);
+			values.put("START_AT", startAt);
+			values.put("END_AT", endAt);
+			values.put("DAY", day);
+			values.put("NOTES", notes);
+			values.put("DAY_OF_WEEK", dayOfWeek);
+			values.put("TIME", time);
+			db.insert("ACTIVITIES", null, values);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return true;
 	}
 
@@ -283,6 +457,5 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			return null;
 		}
 	}
-	
-	
+
 }
