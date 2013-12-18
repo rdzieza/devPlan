@@ -1,5 +1,6 @@
 package fragments;
 
+import knp.rd.timetable.R;
 import adapters.GroupsListAdapter;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -7,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,7 +22,6 @@ import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.example.timetable.R;
 
 import database.DatabaseManager;
 
@@ -29,7 +30,8 @@ public class GroupsListFragment extends SherlockFragment implements
 	private ListView list;
 	private Activity parent;
 	private EditText filterField;
-
+	GroupsListAdapter adapter;
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.groups_list_view, containter,
@@ -37,13 +39,20 @@ public class GroupsListFragment extends SherlockFragment implements
 		filterField = new EditText(parent);
 		filterField.setHint("Wprowadz nazwe grupy");
 		filterField.setSingleLine();
-		final GroupsListAdapter adapter = new GroupsListAdapter(parent,
+		adapter = new GroupsListAdapter(parent,
 				DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
 						.getReadableDatabase()));
 		list = (ListView) view.findViewById(R.id.groupsListView);
 		list.setEmptyView(null);
 		list.addHeaderView(filterField);
 		list.setAdapter(adapter);
+		fixFilter();
+		list.setOnItemClickListener(this);
+
+		return view;
+	}
+	
+	public void fixFilter(){
 		filterField.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -65,6 +74,7 @@ public class GroupsListFragment extends SherlockFragment implements
 //				list = (ListView)parent.findViewById(R.id.groupsListView);
 //				GroupsListAdapter adapter = (GroupsListAdapter)list.getAdapter();
 				adapter.getFilter().filter(s.toString());
+				
 
 			}
 		});
@@ -79,9 +89,6 @@ public class GroupsListFragment extends SherlockFragment implements
 				return c;
 			}
 		});
-		list.setOnItemClickListener(this);
-
-		return view;
 	}
 
 	public void onAttach(Activity activity) {
@@ -96,10 +103,16 @@ public class GroupsListFragment extends SherlockFragment implements
 	}
 
 	public void update() {
-		list.setAdapter(new GroupsListAdapter(parent, DatabaseManager
+//		adapter.notifyDataSetChanged();
+		adapter = new GroupsListAdapter(parent, DatabaseManager
 				.getGroupsCursor(DatabaseManager.getConnection()
-						.getReadableDatabase())));
-		list.invalidate();
+						.getReadableDatabase()));
+		list.setAdapter(adapter);
+		fixFilter();
+//		list.setAdapter(new GroupsListAdapter(parent, DatabaseManager
+//				.getGroupsCursor(DatabaseManager.getConnection()
+//						.getReadableDatabase())));
+		
 	}
 
 	public void onDetach() {
@@ -117,7 +130,7 @@ public class GroupsListFragment extends SherlockFragment implements
 			long id) {
 		final long selected = id;
 		Builder builder = new Builder(this.parent);
-		builder.setMessage("Set as active?");
+		builder.setMessage("Change status?");
 		builder.setPositiveButton("OK", new OnClickListener() {
 
 			@Override
@@ -125,7 +138,10 @@ public class GroupsListFragment extends SherlockFragment implements
 				Log.v("t", "agreed: " + String.valueOf(selected));
 				DatabaseManager.changeStatus(selected, DatabaseManager
 						.getConnection().getReadableDatabase());
+//				adapter.notifyDataSetChanged();
+				
 				update();
+				
 
 			}
 

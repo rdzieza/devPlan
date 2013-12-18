@@ -2,19 +2,14 @@ package adapters;
 
 import java.util.ArrayList;
 
+import knp.rd.timetable.R;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.TextView;
-import classes.Event;
 import classes.Item;
-import classes.Separator;
-
-import com.example.timetable.R;
 
 public class EventsListAdapter extends CursorAdapter {
 	String lastDay = "00-00";

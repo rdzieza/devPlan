@@ -1,11 +1,8 @@
 package activities;
 
-import com.example.timetable.R;
-import com.example.timetable.R.layout;
-import com.example.timetable.R.menu;
-
-import android.os.Bundle;
+import knp.rd.timetable.R;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
 

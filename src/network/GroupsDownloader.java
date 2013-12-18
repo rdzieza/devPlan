@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 
 import prefereces.PreferenceHelper;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -37,6 +39,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		super.onPreExecute();
 		client = new DefaultHttpClient();
 		sb = new StringBuilder();
+		DatabaseManager.removeGroups();
 
 	}
 
@@ -56,6 +59,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 					Toast.LENGTH_SHORT).show();
 			return null;
 		}
+		
 		URI uri = null;
 		/**
 		 * Create URI
@@ -85,18 +89,23 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 				/**
 				 * Parse JSON
 				 */
+				Long startTime = new Date().getTime();
 				try {
 					org.json.JSONArray groups = new org.json.JSONArray(
 							sb.toString());
-					for (int i = 0; i < groups.length(); i++) {
-						JSONObject group = groups.getJSONObject(i);
-						DatabaseManager.insertGroup(group.getInt("id"),
-								group.getString("name"));
-					}
-					PreferenceHelper.saveBoolean("isFirst", true);
+//					for (int i = 0; i < groups.length(); i++) {
+//						JSONObject group = groups.getJSONObject(i);
+//						DatabaseManager.insertGroup(group.getInt("id"),
+//								group.getString("name"));
+//					}
+//					PreferenceHelper.saveBoolean("isFirst", true);
+					DatabaseManager.addAllGroups(groups);
+					PreferenceHelper.saveBoolean("isNotFirst", true);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+				Long endTime = new Date().getTime();
+				Log.v("t", "TIME DIFF: : : : " + String.valueOf(endTime - startTime));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

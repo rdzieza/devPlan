@@ -2,20 +2,16 @@ package adapters;
 
 import java.util.ArrayList;
 
+import knp.rd.timetable.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 import classes.Event;
 import classes.Item;
 import classes.Separator;
-
-import com.example.timetable.R;
 
 public class ActivityAdapter extends ArrayAdapter<Item> {
 	private Context context;

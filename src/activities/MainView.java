@@ -1,5 +1,6 @@
 package activities;
 
+import knp.rd.timetable.R;
 import network.GroupsDownloader;
 import prefereces.PreferenceHelper;
 import android.app.AlertDialog.Builder;
@@ -18,7 +19,6 @@ import android.widget.EditText;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.example.timetable.R;
 
 import database.DatabaseManager;
 import fragments.GroupsListFragment;
@@ -40,13 +40,14 @@ public class MainView extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DatabaseManager.initialize(getApplicationContext());
 		PreferenceHelper.initialize(getApplicationContext());
-		// PreferenceHelper.saveBoolean("isFirst", true);
-		if (!PreferenceHelper.getBoolean("isFirst")) {
+		if (!PreferenceHelper.getBoolean("isNotFirst")) {
 			GroupsDownloader down = new GroupsDownloader(this);
 			down.execute();
+//			PreferenceHelper.saveBoolean("isNot First", true);
 		}
-		DatabaseManager.initialize(getApplicationContext());
+		
 
 		setContentView(R.layout.activity_main);
 		extras = getIntent().getExtras();

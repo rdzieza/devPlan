@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.JSONArray;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -415,7 +419,30 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			// db.close();
 		}
 	}
-
+	
+	public static void addAllGroups(org.json.JSONArray groups) throws JSONException {
+		SQLiteDatabase db = instance.getWritableDatabase();
+		db.beginTransaction();
+		for (int i = 0; i < groups.length(); i++) {
+			JSONObject group = groups.getJSONObject(i);
+			String query = "INSERT INTO GROUPS (ID, NAME, IS_ACTIVE) VALUES ('"
+					+ String.valueOf(group.getInt("id")) + "','"
+					+ group.getString("name") + "', 0)";
+			db.execSQL(query);
+		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		
+	}
+	
+	public static void removeGroups(){
+		SQLiteDatabase db = instance.getWritableDatabase();
+		db.beginTransaction();
+		db.execSQL("DELETE FROM GROUPS");
+		db.setTransactionSuccessful();
+		db.endTransaction();
+	}
+	
 	public static void addToSelected(long id, SQLiteDatabase db) {
 		try {
 			db.execSQL("insert into selected values (" + String.valueOf(id)

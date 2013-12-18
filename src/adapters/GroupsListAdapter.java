@@ -1,9 +1,7 @@
 package adapters;
 
-import com.example.timetable.R;
-
+import knp.rd.timetable.R;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -15,7 +13,8 @@ import android.widget.TextView;
 public class GroupsListAdapter extends CursorAdapter{
 
 	
-
+	
+	
 	public GroupsListAdapter(Context context, Cursor c) {
 		super(context, c,true);
 		// TODO Auto-generated constructor stub

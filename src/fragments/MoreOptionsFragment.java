@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import knp.rd.timetable.R;
 import network.GroupsDownloader;
 import network.TimetTableCreator;
 import activities.InfoActivity;
@@ -22,7 +23,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.example.timetable.R;
 
 import database.DatabaseManager;
 

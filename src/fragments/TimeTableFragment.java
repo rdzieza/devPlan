@@ -1,12 +1,12 @@
 package fragments;
 
+import knp.rd.timetable.R;
 import adapters.ActivityAdapter;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +14,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import classes.Event;
 import classes.Item;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.example.timetable.R;
 
 import database.DatabaseManager;
 
