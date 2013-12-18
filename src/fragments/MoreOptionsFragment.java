@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import network.GroupsDownloader;
 import network.TimetTableCreator;
 import activities.InfoActivity;
 import activities.MainView;
@@ -28,7 +29,7 @@ import database.DatabaseManager;
 public class MoreOptionsFragment extends SherlockFragment implements OnItemClickListener{
 	private ListView list;
 	private MainView parent;
-	private String[] options = {"Podbierz rozklad", "Wykładowcy", "Sale", "WebVersion", "Sprawdz aktualnosc", "Info"};
+	private String[] options = {"Podbierz rozklad", "Wykładowcy", "Sale", "WebVersion", "Sprawdz aktualnosc", "Info", "Aktualizuj grupy"};
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 		case 0: {
 			Toast.makeText(this.parent, "Downloading started", Toast.LENGTH_SHORT).show();
 			DatabaseManager.removeTimeTable(DatabaseManager.getConnection().getWritableDatabase());
-			TimetTableCreator tDown = new TimetTableCreator();
+			TimetTableCreator tDown = new TimetTableCreator(this.parent);
 			tDown.execute();
 		}break;
 		case 1:{
@@ -75,7 +76,10 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 		case 5:{
 			Intent intent = new Intent(parent.getContext(), InfoActivity.class);
 			startActivity(intent);
-		}
+		}case 6: {
+			GroupsDownloader groupDown = new GroupsDownloader(getActivity());
+			groupDown.execute();
+		}break;
 		}
 		
 	}

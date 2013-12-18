@@ -13,30 +13,49 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import prefereces.PreferenceHelper;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 import database.DatabaseManager;
 
 public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
-	private String hash;
+	private String url;
 	private HttpClient client;
 	private StringBuilder sb;
 	private BufferedReader br;
 	int i = 0;
+	private Context context;
+	
+	public TimeTableDownloader(Context context){
+		this.context = context;
+	}
 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		hash = PreferenceHelper.getString("timeTableHash");
+		url = PreferenceHelper.getString("timeTableUrl");
 		client = new DefaultHttpClient();
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		String url = "http://knp.uek.krakow.pl:3000/v0_1/timetables/" + hash;
+		ConnectivityManager cm =
+		        (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		boolean isConnected = activeNetwork != null &&
+		                      activeNetwork.isConnectedOrConnecting();
+		Log.v("t", "Connected: " + String.valueOf(isConnected));
+		if(!isConnected){
+			this.cancel(true);
+			Toast.makeText(context, "There is no internett connection,  turn on the internet!", Toast.LENGTH_SHORT).show();
+			return null;
+		}
 		Log.v("t", url);
-		HttpGet get = new HttpGet(
-				"http://knp.uek.krakow.pl:3000/v0_1/timetables/" + hash);
+		HttpGet get = new HttpGet(url);
 		try {
 			HttpResponse response = client.execute(get);
 			br = new BufferedReader(new InputStreamReader(response.getEntity()
@@ -100,12 +119,14 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 				Log.v("t", "Notes: " + notes);
 				String dayOfWeek = activity.getString("day_of_week");
 				Log.v("t", "Day of week: " + dayOfWeek);
+				Long time = activity.getLong("starts_at_timestamp");
+				Log.v("t", "timestamp: " + String.valueOf(time));
 				Log.v("t", "////////////////////////");
-				 DatabaseManager.addActivity(DatabaseManager.getConnection().getWritableDatabase(),
-				 id, groupId, groupName, tutorId, tutorName, tutorUrl, placeId,
-				 placeLocation, categoryName, notes, name, state, day, dayOfWeek,
-				 startAt, endAt);
-//				 if(i == 8){
+				DatabaseManager.addActivity(DatabaseManager.getConnection().getWritableDatabase(),
+						 id, groupId, groupName, tutorId, tutorName, tutorUrl, placeId,
+						 placeLocation, categoryName, notes, name, state, day, dayOfWeek,
+						 startAt, endAt, time);
+//				 if(i == 30){
 //					 break;
 //				 }else{
 //					 i++;
@@ -117,5 +138,17 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	protected void onPostExecute(Void v) {
+		if (!isCancelled()) {
+			Log.v("t", "finished");
+			Toast.makeText(context, "TimeTable downloaded", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(context, "Sth went wrong", Toast.LENGTH_SHORT)
+					.show();
+		}
+	
 	}
 }

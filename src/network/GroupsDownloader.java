@@ -14,8 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import prefereces.PreferenceHelper;
-
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -41,7 +42,20 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
+		ConnectivityManager cm = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		boolean isConnected = activeNetwork != null
+				&& activeNetwork.isConnectedOrConnecting();
+		Log.v("t", "Connected: " + String.valueOf(isConnected));
+		if (!isConnected) {
+			this.cancel(true);
+			Toast.makeText(context,
+					"There is no internett connection,  turn on the internet!",
+					Toast.LENGTH_SHORT).show();
+			return null;
+		}
 		URI uri = null;
 		/**
 		 * Create URI
@@ -96,8 +110,13 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected void onPostExecute(Void v) {
-		Log.v("t", "finished");
-		Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show();
+		if (!isCancelled()) {
+			Log.v("t", "finished");
+			Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(context, "Sth went wrong", Toast.LENGTH_SHORT)
+					.show();
+		}
 
 	}
 
