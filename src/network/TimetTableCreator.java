@@ -68,7 +68,7 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 			return null;
 		} else {
 			HttpPost post = new HttpPost(
-					"http://knp.uek.krakow.pl:3000/v0_1/timetables");
+					"http://cash.dev.uek.krakow.pl//v0_1/timetables");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			while (selectedCursor.moveToNext()) {
 				params.add(new BasicNameValuePair("group_id[]", selectedCursor
@@ -92,7 +92,7 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 				JSONObject json = new JSONObject(line);
 				// JSONArray array = new JSONArray(line);
 				// JSONObject json = array.getJSONObject(0);
-				String hash = json.getString("access_url");
+				String hash = json.getString("_id");
 				Log.v("t", hash);
 				// String hash = "52911dceecd7da68fb000002";
 				PreferenceHelper.saveString("timeTableUrl", hash);

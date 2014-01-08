@@ -3,6 +3,7 @@ package activities;
 import knp.rd.timetable.R;
 import network.GroupsDownloader;
 import prefereces.PreferenceHelper;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import fragments.TimeTableFragment;
  * @author robert dzieża
  * 
  */
+@SuppressLint("NewApi")
 public class MainView extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
 	private Bundle extras = null;
@@ -150,6 +152,10 @@ public class MainView extends SherlockFragmentActivity implements
 					builder.setTitle("day filter");
 					final DatePicker date = new DatePicker(
 							getApplicationContext());
+					int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+			        if (currentapiVersion >= 11) {
+			            date.setCalendarViewShown(false);
+			        }
 					builder.setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
 
@@ -204,6 +210,7 @@ public class MainView extends SherlockFragmentActivity implements
 			View daysFilter = view.findViewById(R.id.daysFilter);
 			daysFilter.setOnClickListener(new OnClickListener() {
 
+				@SuppressLint("NewApi")
 				@Override
 				public void onClick(View v) {
 					builder.setTitle("day filter");
@@ -212,6 +219,11 @@ public class MainView extends SherlockFragmentActivity implements
 							.findViewById(R.id.dateFrom);
 					final DatePicker toDate = (DatePicker) view
 							.findViewById(R.id.dateTo);
+					int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+			        if (currentapiVersion >= 11) {
+			            fromDate.setCalendarViewShown(false);
+			            toDate.setCalendarViewShown(false);
+			        }
 					builder.setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
 

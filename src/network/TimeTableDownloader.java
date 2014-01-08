@@ -36,7 +36,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		url = PreferenceHelper.getString("timeTableUrl");
+		url = "http://cash.dev.uek.krakow.pl:3000/v0_1/timetables/" + PreferenceHelper.getString("timeTableUrl");
 		client = new DefaultHttpClient();
 	}
 

@@ -65,7 +65,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		 * Create URI
 		 */
 		try {
-			uri = new URI("http", null, "knp.uek.krakow.pl", 3000,
+			uri = new URI("http", null, "cash.dev.uek.krakow.pl", 3000,
 					"/v0_1/groups", null, null);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

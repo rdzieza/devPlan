@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:text="SEPARATOR"
-        android:background="#0099CC"
+        android:background="#800099CC"
         android:clickable="false" />
 
 </LinearLayout>
