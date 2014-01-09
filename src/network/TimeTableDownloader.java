@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import knp.rd.timetable.R;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -13,11 +15,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import prefereces.PreferenceHelper;
+import adapters.ActivityAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 import database.DatabaseManager;
 
@@ -134,8 +139,10 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			this.cancel(true);
 		} catch (JSONException e) {
 			e.printStackTrace();
+			this.cancel(true);
 		}
 		return null;
 	}
@@ -145,6 +152,11 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 		if (!isCancelled()) {
 			Log.v("t", "finished");
 			Toast.makeText(context, "TimeTable downloaded", Toast.LENGTH_SHORT).show();
+			Activity activity = (Activity)context;
+			ListView list = (ListView)activity.findViewById(R.id.timeTableListView);
+			list.setAdapter(new ActivityAdapter(context, DatabaseManager
+					.getEventsListSincetToday(DatabaseManager.getConnection()
+							.getReadableDatabase())));
 		} else {
 			Toast.makeText(context, "Sth went wrong", Toast.LENGTH_SHORT)
 					.show();

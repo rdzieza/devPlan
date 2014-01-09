@@ -1,8 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/groupsListView" 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    >    
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-</ListView>
+    <TextView
+        android:id="@+id/selectedGroupsLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#800099CC"
+        android:gravity="center"
+        android:text="Wybrane grupy"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/selectedGroupsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/addGroupsLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#800099CC"
+        android:gravity="center"
+        android:text="Dodaj grupy"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/groupsListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>

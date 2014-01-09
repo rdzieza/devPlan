@@ -484,5 +484,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			return null;
 		}
 	}
+	
+	public static Cursor getSelectedWithNames(SQLiteDatabase db){
+		try {
+			String[] colums = { "NAME", "ID as _id" };
+			String[] args = { "1" };
+			Cursor c = db.query("GROUPS", colums, "IS_ACTIVE = ?", args, null,
+					null, "NAME");
+			c.moveToFirst();
+			return c;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+	
 
 }

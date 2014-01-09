@@ -98,13 +98,17 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 				PreferenceHelper.saveString("timeTableUrl", hash);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
+				this.cancel(true);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
+				this.cancel(true);
 			} catch (IOException e) {
 				e.printStackTrace();
+				this.cancel(true);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				this.cancel(true);
 			}
 			return null;
 		}

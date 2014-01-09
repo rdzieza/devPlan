@@ -7,20 +7,23 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 
+import knp.rd.timetable.R;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import prefereces.PreferenceHelper;
+import adapters.GroupsListAdapter;
+import android.app.Activity;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 import database.DatabaseManager;
 
@@ -40,7 +43,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		client = new DefaultHttpClient();
 		sb = new StringBuilder();
 		DatabaseManager.removeGroups();
-
+		Toast.makeText(context, "Pobieranie: lista grup\n po zakonczeniu dodaj swoje grupy!", Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -108,9 +111,11 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 				Log.v("t", "TIME DIFF: : : : " + String.valueOf(endTime - startTime));
 			} catch (IOException e) {
 				e.printStackTrace();
+				this.cancel(true);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			this.cancel(true);
 		} finally {
 
 		}
@@ -122,6 +127,12 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		if (!isCancelled()) {
 			Log.v("t", "finished");
 			Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show();
+			GroupsListAdapter adapter = new GroupsListAdapter(context,
+					DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
+							.getReadableDatabase()));
+			Activity activity = (Activity)context;
+			ListView list = (ListView)activity.findViewById(R.id.groupsListView);
+			list.setAdapter(adapter);
 		} else {
 			Toast.makeText(context, "Sth went wrong", Toast.LENGTH_SHORT)
 					.show();

@@ -61,8 +61,12 @@ public class MainView extends SherlockFragmentActivity implements
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("more")
 				.setTabListener(this));
-		actionBar.setSelectedNavigationItem(1);
 		
+		if (!PreferenceHelper.getBoolean("isNotFirst")) {
+			actionBar.setSelectedNavigationItem(0);
+		}else{
+			actionBar.setSelectedNavigationItem(1);
+		}
 
 	}
 

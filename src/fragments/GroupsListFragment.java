@@ -2,13 +2,13 @@ package fragments;
 
 import knp.rd.timetable.R;
 import adapters.GroupsListAdapter;
+import adapters.SelectedGroupsAdapter;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.widget.CursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -31,6 +32,8 @@ public class GroupsListFragment extends SherlockFragment implements
 	private Activity parent;
 	private EditText filterField;
 	GroupsListAdapter adapter;
+	private boolean areSelectedShown;
+	private boolean areAllShown;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
@@ -49,7 +52,48 @@ public class GroupsListFragment extends SherlockFragment implements
 		list.setAdapter(adapter);
 		fixFilter();
 		list.setOnItemClickListener(this);
-
+		/////////////////////////////////////////////////////////////////////////////////////////
+		final ListView selected = (ListView)view.findViewById(R.id.selectedGroupsList);
+		TextView selectedLabel = (TextView)view.findViewById(R.id.selectedGroupsLabel);
+		TextView groupsHeader = (TextView)view.findViewById(R.id.addGroupsLabel);
+		SelectedGroupsAdapter selectedAdapter = new SelectedGroupsAdapter(parent, DatabaseManager.getSelectedWithNames(DatabaseManager.getConnection()
+						.getReadableDatabase()));
+		TextView noSelectedLabel = new TextView(parent);
+		noSelectedLabel.setText("Brak wybranych grup");
+		selected.setEmptyView(noSelectedLabel);
+		selected.setAdapter(selectedAdapter);
+		selected.setVisibility(View.GONE);
+		list.setVisibility(View.GONE);
+		areAllShown = false;
+		areSelectedShown = false;
+		selectedLabel.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(areSelectedShown){
+					selected.setVisibility(View.GONE);
+					areSelectedShown = false;
+				}else{
+					selected.setVisibility(View.VISIBLE);
+					areSelectedShown = true;
+				}
+				
+			}
+		});
+		groupsHeader.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(areSelectedShown){
+					list.setVisibility(View.GONE);
+					areSelectedShown = false;
+				}else{
+					list.setVisibility(View.VISIBLE);
+					areSelectedShown = true;
+				}
+				
+			}
+		});
 		return view;
 	}
 	

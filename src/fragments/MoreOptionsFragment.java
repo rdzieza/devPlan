@@ -33,7 +33,7 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.groups_list_view, containter,
+		View view = inflater.inflate(R.layout.options_list, containter,
 				false);
 		list = (ListView) view.findViewById(R.id.groupsListView);
 		List<String> optionsList = new LinkedList<String>();
