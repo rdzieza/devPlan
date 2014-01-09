@@ -34,7 +34,8 @@ public class GroupsListFragment extends SherlockFragment implements
 	GroupsListAdapter adapter;
 	private boolean areSelectedShown;
 	private boolean areAllShown;
-	
+	ListView selected;
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.groups_list_view, containter,
@@ -52,14 +53,19 @@ public class GroupsListFragment extends SherlockFragment implements
 		list.setAdapter(adapter);
 		fixFilter();
 		list.setOnItemClickListener(this);
-		/////////////////////////////////////////////////////////////////////////////////////////
-		final ListView selected = (ListView)view.findViewById(R.id.selectedGroupsList);
-		TextView selectedLabel = (TextView)view.findViewById(R.id.selectedGroupsLabel);
-		TextView groupsHeader = (TextView)view.findViewById(R.id.addGroupsLabel);
-		SelectedGroupsAdapter selectedAdapter = new SelectedGroupsAdapter(parent, DatabaseManager.getSelectedWithNames(DatabaseManager.getConnection()
-						.getReadableDatabase()));
-		TextView noSelectedLabel = new TextView(parent);
-		noSelectedLabel.setText("Brak wybranych grup");
+		// ///////////////////////////////////////////////////////////////////////////////////////
+		selected = (ListView) view
+				.findViewById(R.id.selectedGroupsList);
+		TextView selectedLabel = (TextView) view
+				.findViewById(R.id.selectedGroupsLabel);
+		TextView groupsHeader = (TextView) view
+				.findViewById(R.id.addGroupsLabel);
+		SelectedGroupsAdapter selectedAdapter = new SelectedGroupsAdapter(
+				parent, DatabaseManager.getSelectedWithNames(DatabaseManager
+						.getConnection().getReadableDatabase()));
+		TextView noSelectedLabel = (TextView) view
+				.findViewById(R.id.noSelectedLabel);
+		// noSelectedLabel.setText("Brak wybranych grup");
 		selected.setEmptyView(noSelectedLabel);
 		selected.setAdapter(selectedAdapter);
 		selected.setVisibility(View.GONE);
@@ -67,37 +73,51 @@ public class GroupsListFragment extends SherlockFragment implements
 		areAllShown = false;
 		areSelectedShown = false;
 		selectedLabel.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(areSelectedShown){
+				if (areSelectedShown) {
 					selected.setVisibility(View.GONE);
 					areSelectedShown = false;
-				}else{
+				} else {
 					selected.setVisibility(View.VISIBLE);
 					areSelectedShown = true;
 				}
-				
+
 			}
 		});
 		groupsHeader.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(areSelectedShown){
+				if (areSelectedShown) {
 					list.setVisibility(View.GONE);
 					areSelectedShown = false;
-				}else{
+				} else {
 					list.setVisibility(View.VISIBLE);
 					areSelectedShown = true;
 				}
-				
+
+			}
+		});
+		selected.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> a, View view, int position,
+					long id) {
+				DatabaseManager.changeStatus(id, DatabaseManager
+						.getConnection().getReadableDatabase());
+				SelectedGroupsAdapter selectedAdapter = new SelectedGroupsAdapter(
+						parent, DatabaseManager
+								.getSelectedWithNames(DatabaseManager
+										.getConnection().getReadableDatabase()));
+				selected.setAdapter(selectedAdapter);
 			}
 		});
 		return view;
 	}
-	
-	public void fixFilter(){
+
+	public void fixFilter() {
 		filterField.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -116,10 +136,10 @@ public class GroupsListFragment extends SherlockFragment implements
 
 			@Override
 			public void afterTextChanged(Editable s) {
-//				list = (ListView)parent.findViewById(R.id.groupsListView);
-//				GroupsListAdapter adapter = (GroupsListAdapter)list.getAdapter();
+				// list = (ListView)parent.findViewById(R.id.groupsListView);
+				// GroupsListAdapter adapter =
+				// (GroupsListAdapter)list.getAdapter();
 				adapter.getFilter().filter(s.toString());
-				
 
 			}
 		});
@@ -148,15 +168,20 @@ public class GroupsListFragment extends SherlockFragment implements
 	}
 
 	public void update() {
-//		adapter.notifyDataSetChanged();
-		adapter = new GroupsListAdapter(parent, DatabaseManager
-				.getGroupsCursor(DatabaseManager.getConnection()
+		// adapter.notifyDataSetChanged();
+		adapter = new GroupsListAdapter(parent,
+				DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
 						.getReadableDatabase()));
 		list.setAdapter(adapter);
 		fixFilter();
-//		list.setAdapter(new GroupsListAdapter(parent, DatabaseManager
-//				.getGroupsCursor(DatabaseManager.getConnection()
-//						.getReadableDatabase())));
+		// list.setAdapter(new GroupsListAdapter(parent, DatabaseManager
+		// .getGroupsCursor(DatabaseManager.getConnection()
+		// .getReadableDatabase())));
+		SelectedGroupsAdapter selectedAdapter = new SelectedGroupsAdapter(
+				parent, DatabaseManager
+						.getSelectedWithNames(DatabaseManager
+								.getConnection().getReadableDatabase()));
+		selected.setAdapter(selectedAdapter);
 		
 	}
 
@@ -183,8 +208,8 @@ public class GroupsListFragment extends SherlockFragment implements
 				Log.v("t", "agreed: " + String.valueOf(selected));
 				DatabaseManager.changeStatus(selected, DatabaseManager
 						.getConnection().getReadableDatabase());
-//				adapter.notifyDataSetChanged();
-				
+				// adapter.notifyDataSetChanged();
+
 				update();
 				
 

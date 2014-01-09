@@ -17,6 +17,15 @@
         android:id="@+id/selectedGroupsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    
+    <TextView
+        android:id="@+id/noSelectedLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Brak wybranych grup!"
+        android:textSize="18sp"
+        android:visibility="gone" />
 
     <View
         android:layout_width="fill_parent"
