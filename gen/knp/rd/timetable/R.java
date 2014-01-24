@@ -910,7 +910,15 @@ containing a value of this type.
         public static final int abs__textfield_searchview_right_holo_dark=0x7f02006d;
         public static final int abs__textfield_searchview_right_holo_light=0x7f02006e;
         public static final int abs__toast_frame=0x7f02006f;
-        public static final int ic_launcher=0x7f020070;
+        public static final int download=0x7f020070;
+        public static final int groups=0x7f020071;
+        public static final int ic_launcher=0x7f020072;
+        public static final int info=0x7f020073;
+        public static final int internet=0x7f020074;
+        public static final int person=0x7f020075;
+        public static final int question=0x7f020076;
+        public static final int room=0x7f020077;
+        public static final int timetable=0x7f020078;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040020;
@@ -952,7 +960,7 @@ containing a value of this type.
         public static final int abs__textButton=0x7f040013;
         public static final int abs__title=0x7f04001b;
         public static final int abs__up=0x7f04000b;
-        public static final int action_settings=0x7f040051;
+        public static final int action_settings=0x7f040053;
         public static final int activityRoom=0x7f04004e;
         public static final int activityTopic=0x7f04004c;
         public static final int activityType=0x7f04004d;
@@ -983,6 +991,8 @@ containing a value of this type.
         public static final int noFilter=0x7f040042;
         public static final int noSelectedLabel=0x7f040046;
         public static final int normal=0x7f040001;
+        public static final int optionIcon=0x7f040050;
+        public static final int optionTitle=0x7f040051;
         public static final int selectedGroupsLabel=0x7f040044;
         public static final int selectedGroupsList=0x7f040045;
         public static final int separator=0x7f040049;
@@ -992,7 +1002,7 @@ containing a value of this type.
         public static final int sinceToday=0x7f040043;
         public static final int startTime=0x7f04004a;
         public static final int tabMode=0x7f040003;
-        public static final int timeTableListView=0x7f040050;
+        public static final int timeTableListView=0x7f040052;
         public static final int useLogo=0x7f040004;
         public static final int wrap_content=0x7f040000;
     }
@@ -1036,7 +1046,8 @@ containing a value of this type.
         public static final int sherlock_spinner_item=0x7f030021;
         public static final int single_event_view_separator=0x7f030022;
         public static final int single_group_row_view=0x7f030023;
-        public static final int time_table_list_view=0x7f030024;
+        public static final int single_option_view=0x7f030024;
+        public static final int time_table_list_view=0x7f030025;
     }
     public static final class menu {
         public static final int info=0x7f0b0000;

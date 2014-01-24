@@ -44,9 +44,16 @@ public class GroupsListFragment extends SherlockFragment implements
 		filterField.setHint("Wprowadz nazwe grupy");
 		filterField.setSingleLine(true);
 		filterField.setSingleLine();
-		adapter = new GroupsListAdapter(parent,
-				DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
-						.getReadableDatabase()));
+		// ///////////////////////////
+		String text = filterField.getText().toString();
+		if (text == null || text.equals("")) {
+			adapter = new GroupsListAdapter(parent,
+					DatabaseManager.getGroupsCursor(DatabaseManager
+							.getConnection().getReadableDatabase()));
+		} else {
+			adapter = new GroupsListAdapter(parent, DatabaseManager.getWhereName(DatabaseManager
+					.getConnection().getReadableDatabase(), text));
+		}
 		list = (ListView) view.findViewById(R.id.groupsListView);
 		list.setEmptyView(null);
 		list.addHeaderView(filterField);
@@ -54,8 +61,7 @@ public class GroupsListFragment extends SherlockFragment implements
 		fixFilter();
 		list.setOnItemClickListener(this);
 		// ///////////////////////////////////////////////////////////////////////////////////////
-		selected = (ListView) view
-				.findViewById(R.id.selectedGroupsList);
+		selected = (ListView) view.findViewById(R.id.selectedGroupsList);
 		TextView selectedLabel = (TextView) view
 				.findViewById(R.id.selectedGroupsLabel);
 		TextView groupsHeader = (TextView) view
@@ -90,12 +96,14 @@ public class GroupsListFragment extends SherlockFragment implements
 
 			@Override
 			public void onClick(View v) {
-				if (areSelectedShown) {
+				if (areAllShown) {
 					list.setVisibility(View.GONE);
-					areSelectedShown = false;
+					areAllShown = false;
 				} else {
+					selected.setVisibility(View.GONE);
+					areSelectedShown = false;
 					list.setVisibility(View.VISIBLE);
-					areSelectedShown = true;
+					areAllShown = true;
 				}
 
 			}
@@ -164,25 +172,46 @@ public class GroupsListFragment extends SherlockFragment implements
 
 	public void onResume() {
 		super.onResume();
-		list.invalidate();
+		// list.invalidate();
+		// String text = filterField.getText().toString();
+		// if (text == null || text.equals("")) {
+		// adapter = new GroupsListAdapter(parent,
+		// DatabaseManager.getGroupsCursor(DatabaseManager
+		// .getConnection().getReadableDatabase()));
+		// list.setAdapter(adapter);
+		// } else {
+		// adapter.getFilter().filter(text);
+		// }
+		// fixFilter();
+
 	}
 
 	public void update() {
 		// adapter.notifyDataSetChanged();
-		adapter = new GroupsListAdapter(parent,
-				DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
-						.getReadableDatabase()));
+//		adapter = new GroupsListAdapter(parent,
+//				DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
+//						.getReadableDatabase()));
+		String text = filterField.getText().toString();
+		if (text == null || text.equals("")) {
+			adapter = new GroupsListAdapter(parent,
+					DatabaseManager.getGroupsCursor(DatabaseManager
+							.getConnection().getReadableDatabase()));
+		} else {
+			adapter = new GroupsListAdapter(parent, DatabaseManager.getWhereName(DatabaseManager
+					.getConnection().getReadableDatabase(), text));
+		}
 		list.setAdapter(adapter);
 		fixFilter();
 		// list.setAdapter(new GroupsListAdapter(parent, DatabaseManager
 		// .getGroupsCursor(DatabaseManager.getConnection()
 		// .getReadableDatabase())));
 		SelectedGroupsAdapter selectedAdapter = new SelectedGroupsAdapter(
-				parent, DatabaseManager
-						.getSelectedWithNames(DatabaseManager
-								.getConnection().getReadableDatabase()));
+				parent, DatabaseManager.getSelectedWithNames(DatabaseManager
+						.getConnection().getReadableDatabase()));
 		selected.setAdapter(selectedAdapter);
-		
+		selected.setVisibility(View.GONE);
+		areSelectedShown = false;
+
 	}
 
 	public void onDetach() {
@@ -211,7 +240,6 @@ public class GroupsListFragment extends SherlockFragment implements
 				// adapter.notifyDataSetChanged();
 
 				update();
-				
 
 			}
 

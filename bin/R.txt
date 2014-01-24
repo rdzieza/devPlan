@@ -241,7 +241,15 @@ int drawable abs__textfield_searchview_holo_light 0x7f02006c
 int drawable abs__textfield_searchview_right_holo_dark 0x7f02006d
 int drawable abs__textfield_searchview_right_holo_light 0x7f02006e
 int drawable abs__toast_frame 0x7f02006f
-int drawable ic_launcher 0x7f020070
+int drawable download 0x7f020070
+int drawable groups 0x7f020071
+int drawable ic_launcher 0x7f020072
+int drawable info 0x7f020073
+int drawable internet 0x7f020074
+int drawable person 0x7f020075
+int drawable question 0x7f020076
+int drawable room 0x7f020077
+int drawable timetable 0x7f020078
 int id abs__action_bar 0x7f040020
 int id abs__action_bar_container 0x7f04001f
 int id abs__action_bar_subtitle 0x7f040011
@@ -281,7 +289,7 @@ int id abs__submit_area 0x7f04002f
 int id abs__textButton 0x7f040013
 int id abs__title 0x7f04001b
 int id abs__up 0x7f04000b
-int id action_settings 0x7f040051
+int id action_settings 0x7f040053
 int id activityRoom 0x7f04004e
 int id activityTopic 0x7f04004c
 int id activityType 0x7f04004d
@@ -312,6 +320,8 @@ int id nameFilter 0x7f040041
 int id noFilter 0x7f040042
 int id noSelectedLabel 0x7f040046
 int id normal 0x7f040001
+int id optionIcon 0x7f040050
+int id optionTitle 0x7f040051
 int id selectedGroupsLabel 0x7f040044
 int id selectedGroupsList 0x7f040045
 int id separator 0x7f040049
@@ -321,7 +331,7 @@ int id showTitle 0x7f040007
 int id sinceToday 0x7f040043
 int id startTime 0x7f04004a
 int id tabMode 0x7f040003
-int id timeTableListView 0x7f040050
+int id timeTableListView 0x7f040052
 int id useLogo 0x7f040004
 int id wrap_content 0x7f040000
 int integer abs__max_action_buttons 0x7f080000
@@ -361,7 +371,8 @@ int layout sherlock_spinner_dropdown_item 0x7f030020
 int layout sherlock_spinner_item 0x7f030021
 int layout single_event_view_separator 0x7f030022
 int layout single_group_row_view 0x7f030023
-int layout time_table_list_view 0x7f030024
+int layout single_option_view 0x7f030024
+int layout time_table_list_view 0x7f030025
 int menu info 0x7f0b0000
 int menu main 0x7f0b0001
 int menu settings 0x7f0b0002

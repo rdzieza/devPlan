@@ -19,6 +19,7 @@ import prefereces.PreferenceHelper;
 import adapters.GroupsListAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -32,9 +33,13 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 	private BufferedReader br;
 	private StringBuilder sb;
 	private Context context;
+	SQLiteDatabase db;
+	boolean transactionExists;
 
 	public GroupsDownloader(Context context) {
 		this.context = context;
+		db = DatabaseManager.getConnection().getWritableDatabase();
+		transactionExists = false;
 	}
 
 	@Override
@@ -42,8 +47,10 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		super.onPreExecute();
 		client = new DefaultHttpClient();
 		sb = new StringBuilder();
-		DatabaseManager.removeGroups();
-		Toast.makeText(context, "Pobieranie: lista grup\n po zakonczeniu dodaj swoje grupy!", Toast.LENGTH_LONG).show();
+		// DatabaseManager.removeGroups();
+		Toast.makeText(context,
+				"Pobieranie: lista grup\n po zakonczeniu dodaj swoje grupy!",
+				Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -62,7 +69,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 					Toast.LENGTH_SHORT).show();
 			return null;
 		}
-		
+
 		URI uri = null;
 		/**
 		 * Create URI
@@ -96,19 +103,24 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 				try {
 					org.json.JSONArray groups = new org.json.JSONArray(
 							sb.toString());
-//					for (int i = 0; i < groups.length(); i++) {
-//						JSONObject group = groups.getJSONObject(i);
-//						DatabaseManager.insertGroup(group.getInt("id"),
-//								group.getString("name"));
-//					}
-//					PreferenceHelper.saveBoolean("isFirst", true);
-					DatabaseManager.addAllGroups(groups);
+					// for (int i = 0; i < groups.length(); i++) {
+					// JSONObject group = groups.getJSONObject(i);
+					// DatabaseManager.insertGroup(group.getInt("id"),
+					// group.getString("name"));
+					// }
+					// PreferenceHelper.saveBoolean("isFirst", true);
+
+					db.beginTransaction();
+					transactionExists = true;
+					DatabaseManager.addAllGroups(groups, db);
 					PreferenceHelper.saveBoolean("isNotFirst", true);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				Long endTime = new Date().getTime();
-				Log.v("t", "TIME DIFF: : : : " + String.valueOf(endTime - startTime));
+				Log.v("t",
+						"TIME DIFF: : : : "
+								+ String.valueOf(endTime - startTime));
 			} catch (IOException e) {
 				e.printStackTrace();
 				this.cancel(true);
@@ -125,17 +137,22 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPostExecute(Void v) {
 		if (!isCancelled()) {
+			db.setTransactionSuccessful();
 			Log.v("t", "finished");
 			Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show();
 			GroupsListAdapter adapter = new GroupsListAdapter(context,
-					DatabaseManager.getGroupsCursor(DatabaseManager.getConnection()
-							.getReadableDatabase()));
-			Activity activity = (Activity)context;
-			ListView list = (ListView)activity.findViewById(R.id.groupsListView);
+					DatabaseManager.getGroupsCursor(DatabaseManager
+							.getConnection().getReadableDatabase()));
+			Activity activity = (Activity) context;
+			ListView list = (ListView) activity
+					.findViewById(R.id.groupsListView);
 			list.setAdapter(adapter);
 		} else {
 			Toast.makeText(context, "Sth went wrong", Toast.LENGTH_SHORT)
 					.show();
+		}
+		if (transactionExists) {
+			db.endTransaction();
 		}
 
 	}

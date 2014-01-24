@@ -1,14 +1,13 @@
 package fragments;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 
 import knp.rd.timetable.R;
 import network.GroupsDownloader;
 import network.TimetTableCreator;
 import activities.InfoActivity;
 import activities.MainView;
+import adapters.OptionsListAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,9 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import classes.Option;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -36,10 +35,19 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 		View view = inflater.inflate(R.layout.options_list, containter,
 				false);
 		list = (ListView) view.findViewById(R.id.groupsListView);
-		List<String> optionsList = new LinkedList<String>();
-		optionsList.addAll(Arrays.asList(options));
-		list.setAdapter(new ArrayAdapter<String>(parent, R.layout.single_group_row_view, optionsList));
-		list.setOnItemClickListener(this);
+//		List<String> optionsList = new LinkedList<String>();
+//		optionsList.addAll(Arrays.asList(options));
+//		list.setAdapter(new ArrayAdapter<String>(parent, R.layout.single_group_row_view, optionsList));
+//		list.setOnItemClickListener(this);
+		ArrayList<Option> items = new ArrayList();
+		items.add(new Option(R.drawable.download, "Pobierz rozkład"));
+		items.add(new Option(R.drawable.person, "Wykładowcy"));
+		items.add(new Option(R.drawable.room, "Sale"));
+		items.add(new Option(R.drawable.internet, "Wersja przeglądarkowa"));
+		items.add(new Option(R.drawable.question, "Sprawdź aktualność"));
+		items.add(new Option(R.drawable.info, "Informacje"));
+		items.add(new Option(R.drawable.groups, "Aktualnizuj listę grup"));
+		list.setAdapter(new OptionsListAdapter(parent, items));
 		return view;
 	}
 	

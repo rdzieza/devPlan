@@ -420,9 +420,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 	}
 	
-	public static void addAllGroups(org.json.JSONArray groups) throws JSONException {
-		SQLiteDatabase db = instance.getWritableDatabase();
-		db.beginTransaction();
+	public static void addAllGroups(org.json.JSONArray groups, SQLiteDatabase db) throws JSONException {
+		//SQLiteDatabase db = instance.getWritableDatabase();
+		//db.beginTransaction();
 		for (int i = 0; i < groups.length(); i++) {
 			JSONObject group = groups.getJSONObject(i);
 			String query = "INSERT INTO GROUPS (ID, NAME, IS_ACTIVE) VALUES ('"
@@ -430,8 +430,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					+ group.getString("name") + "', 0)";
 			db.execSQL(query);
 		}
-		db.setTransactionSuccessful();
-		db.endTransaction();
+		//db.setTransactionSuccessful();
+		//db.endTransaction();
 		
 	}
 	
