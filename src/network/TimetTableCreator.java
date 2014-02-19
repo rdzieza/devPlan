@@ -27,15 +27,25 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 import database.DatabaseManager;
+import fragments.AddGroupFragment;
 
 public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 	private HttpClient client;
 	private int numberOfselected;
 	private Cursor selectedCursor;
 	private Context context;
-
+	private AddGroupFragment addGroupFragment;
+	private int code = 1;
+	private String message = "";
+	private boolean isConnected;
+	
 	public TimetTableCreator(Context context) {
 		this.context = context;
+	}
+
+	public TimetTableCreator(Context context, AddGroupFragment addGroupFragment) {
+		this.context = context;
+		this.addGroupFragment = addGroupFragment;
 	}
 
 	@Override
@@ -49,26 +59,22 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... arg0) {
-		ConnectivityManager cm = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-		boolean isConnected = activeNetwork != null
-				&& activeNetwork.isConnectedOrConnecting();
-		Log.v("t", "Connected: " + String.valueOf(isConnected));
+		isConnected = checkConnection();
+		
 		if (!isConnected) {
 			this.cancel(true);
-			Toast.makeText(context,
-					"There is no internett connection,  turn on the internet!",
-					Toast.LENGTH_SHORT).show();
-			return null;
+			message += "Brak połączenia z internetem";
 		}
+		
 		if (numberOfselected == 0) {
 			Log.v("t", "ZEROOOOOOOO");
+			this.cancel(true);
+			message += "Brak wybranych grup!";
 			return null;
 		} else {
 			HttpPost post = new HttpPost(
 					"http://cash.dev.uek.krakow.pl//v0_1/timetables");
+			
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			while (selectedCursor.moveToNext()) {
 				params.add(new BasicNameValuePair("group_id[]", selectedCursor
@@ -90,25 +96,31 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 				line = sb.toString();
 				Log.v("T", line);
 				JSONObject json = new JSONObject(line);
-				// JSONArray array = new JSONArray(line);
-				// JSONObject json = array.getJSONObject(0);
 				String hash = json.getString("_id");
 				Log.v("t", hash);
-				// String hash = "52911dceecd7da68fb000002";
 				PreferenceHelper.saveString("timeTableUrl", hash);
+				code = 0;
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 				this.cancel(true);
+				message += "Błąd kodowania, problem z serwerem";
+				return null;
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 				this.cancel(true);
+				message += "Błąd protokołu, problem z serwerem";
+				return null;
 			} catch (IOException e) {
 				e.printStackTrace();
 				this.cancel(true);
+				message += "Błąd operacji wejścia-wyjścia";
+				return null;
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				this.cancel(true);
+				message += "Problem z serwerem";
+				return null;
 			}
 			return null;
 		}
@@ -118,14 +130,23 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 	@Override
 	public void onPostExecute(Void v) {
 		if (!isCancelled()) {
-			TimeTableDownloader tDown = new TimeTableDownloader(context);
-			tDown.execute();
-			Toast.makeText(context, "groups download finished",
-					Toast.LENGTH_SHORT);
+			Log.v("t", "TimeTable successfully created!");
+			addGroupFragment.downloadTimeTable(code);
 		} else {
-			Toast.makeText(context, "Sth went wrong", Toast.LENGTH_SHORT)
+			Toast.makeText(context, "Wystąpił problem: " + message, Toast.LENGTH_SHORT)
 					.show();
 		}
+	}
+	
+	public boolean checkConnection(){
+		ConnectivityManager cm = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		boolean isConnected = activeNetwork != null
+				&& activeNetwork.isConnectedOrConnecting();
+		Log.v("t", "Connected: " + String.valueOf(isConnected));
+		return isConnected;
 	}
 
 }

@@ -3,11 +3,7 @@ package network;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Date;
-
-import knp.rd.timetable.R;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,8 +12,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 
 import prefereces.PreferenceHelper;
-import adapters.GroupsListAdapter;
+import adapters.ActivityAdapter;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
@@ -27,6 +24,7 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 import database.DatabaseManager;
+import dev.rd.devplan.R;
 
 public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 	private HttpClient client;
@@ -35,6 +33,8 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 	private Context context;
 	SQLiteDatabase db;
 	boolean transactionExists;
+	private String message = "";
+	private boolean isConnected;
 
 	public GroupsDownloader(Context context) {
 		this.context = context;
@@ -47,7 +47,6 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		super.onPreExecute();
 		client = new DefaultHttpClient();
 		sb = new StringBuilder();
-		// DatabaseManager.removeGroups();
 		Toast.makeText(context,
 				"Pobieranie: lista grup\n po zakonczeniu dodaj swoje grupy!",
 				Toast.LENGTH_LONG).show();
@@ -55,32 +54,17 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		ConnectivityManager cm = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		isConnected = checkConnection();
 
-		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-		boolean isConnected = activeNetwork != null
-				&& activeNetwork.isConnectedOrConnecting();
-		Log.v("t", "Connected: " + String.valueOf(isConnected));
 		if (!isConnected) {
 			this.cancel(true);
-			Toast.makeText(context,
-					"There is no internett connection,  turn on the internet!",
-					Toast.LENGTH_SHORT).show();
-			return null;
+			message += "Brak połączenia z internetem";
 		}
 
-		URI uri = null;
 		/**
-		 * Create URI
+		 * Creates server connection
 		 */
-		try {
-			uri = new URI("http", null, "cash.dev.uek.krakow.pl", 3000,
-					"/v0_1/groups", null, null);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		HttpGet get = new HttpGet(uri);
+		HttpGet get = new HttpGet("http://cash.dev.uek.krakow.pl/v0_1/groups");
 		try {
 			/**
 			 * Execute GET request
@@ -96,6 +80,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 				while ((line = br.readLine()) != null) {
 					sb.append(line);
 				}
+				Log.v("t", sb.toString());
 				/**
 				 * Parse JSON
 				 */
@@ -103,19 +88,21 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 				try {
 					org.json.JSONArray groups = new org.json.JSONArray(
 							sb.toString());
-					// for (int i = 0; i < groups.length(); i++) {
-					// JSONObject group = groups.getJSONObject(i);
-					// DatabaseManager.insertGroup(group.getInt("id"),
-					// group.getString("name"));
-					// }
-					// PreferenceHelper.saveBoolean("isFirst", true);
 
-					db.beginTransaction();
-					transactionExists = true;
-					DatabaseManager.addAllGroups(groups, db);
-					PreferenceHelper.saveBoolean("isNotFirst", true);
+					ContentValues results = DatabaseManager
+							.addAllGroups(groups);
+					int code = results.getAsInteger("code");
+					if (code == 1) {
+						message = results.getAsString("message");
+						this.cancel(true);
+					} else {
+						Log.v("t", "groups downlaoded - saved in settings");
+						PreferenceHelper.saveBoolean("areGroupsDownloaded",
+								true);
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
+					message = message + " " + "server problem";
 				}
 				Long endTime = new Date().getTime();
 				Log.v("t",
@@ -124,12 +111,14 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 			} catch (IOException e) {
 				e.printStackTrace();
 				this.cancel(true);
+				message = message + " " + "connection problem";
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			this.cancel(true);
+			message = message + " " + "connection problem";
 		} finally {
-
+			db.close();
 		}
 		return null;
 	}
@@ -137,24 +126,38 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPostExecute(Void v) {
 		if (!isCancelled()) {
-			db.setTransactionSuccessful();
-			Log.v("t", "finished");
-			Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show();
-			GroupsListAdapter adapter = new GroupsListAdapter(context,
-					DatabaseManager.getGroupsCursor(DatabaseManager
-							.getConnection().getReadableDatabase()));
+			Log.v("t", "Grupy zostały pobrane");
+			Toast.makeText(context, "Grupy zostały pobrane", Toast.LENGTH_SHORT).show();
+			
 			Activity activity = (Activity) context;
-			ListView list = (ListView) activity
+			ListView allGroupsList = (ListView) activity
 					.findViewById(R.id.groupsListView);
-			list.setAdapter(adapter);
+			if (allGroupsList != null) {
+				allGroupsList.setAdapter(new ActivityAdapter(context,
+						DatabaseManager.getEventsList(DatabaseManager
+								.getConnection().getReadableDatabase())));
+			}
+			
 		} else {
-			Toast.makeText(context, "Sth went wrong", Toast.LENGTH_SHORT)
-					.show();
-		}
-		if (transactionExists) {
-			db.endTransaction();
+			Toast.makeText(
+					context,
+					"Wystąpił problem: "
+							+ message
+							+ "\nW zakładce opcje możesz \nręcznie pobrać listę grup",
+					Toast.LENGTH_SHORT).show();
 		}
 
+	}
+
+	public boolean checkConnection() {
+		ConnectivityManager cm = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		boolean isConnected = activeNetwork != null
+				&& activeNetwork.isConnectedOrConnecting();
+		Log.v("t", "Connected: " + String.valueOf(isConnected));
+		return isConnected;
 	}
 
 }

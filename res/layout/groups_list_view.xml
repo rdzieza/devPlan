@@ -10,20 +10,20 @@
         android:layout_height="wrap_content"
         android:background="#800099CC"
         android:gravity="center"
-        android:text="Wybrane grupy"
+        android:text="@string/selected_groups_label"
         android:textSize="20sp" />
 
     <ListView
         android:id="@+id/selectedGroupsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    
+
     <TextView
         android:id="@+id/noSelectedLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Brak wybranych grup!"
+        android:text="@string/no_selected_groups_text"
         android:textSize="18sp"
         android:visibility="gone" />
 
@@ -38,13 +38,10 @@
         android:layout_height="wrap_content"
         android:background="#800099CC"
         android:gravity="center"
-        android:text="Dodaj grupy"
+        android:text="@string/add_group_label"
         android:textSize="20sp" />
-
-    <ListView
-        android:id="@+id/groupsListView"
+	<FrameLayout 
+	    android:id="@+id/addGroupsFragmentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

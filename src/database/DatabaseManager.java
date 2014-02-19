@@ -2,13 +2,13 @@ package database;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,6 +20,7 @@ import classes.Event;
 import classes.Item;
 import classes.Separator;
 
+@SuppressLint("NewApi")
 public class DatabaseManager extends SQLiteOpenHelper {
 	private static Context context;
 	private static final String DB_NAME = "TIME_TABLE.db";
@@ -46,13 +47,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			+ "ID LONG PRIMARY KEY,"
 			+ "NAME VARCHAR(30) NOT NULL,"
 			+ "IS_ACTIVE INT NOT NULL DEFAULT 0)";
-	private static final String CREATE_SELECTED = "CREATE TABLE IF NOT EXISTS SELECTED ("
-			+ "ID LONG PRIMARY KEY)";
+
+	// private static final String CREATE_SELECTED =
+	// "CREATE TABLE IF NOT EXISTS SELECTED ("
+	// + "ID LONG PRIMARY KEY)";
 
 	// private static final Strning CREATE_INDEX = ""
 
-	private DatabaseManager() {
+	public DatabaseManager() {
 		super(context, DB_NAME, null, VERSION);
+
 	}
 
 	public static void initialize(Context context) {
@@ -73,7 +77,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		// db.execSQL("DROP TABLE IF EXISTS GROUPS");
 		db.execSQL(CREATE_GROUPS);
 		db.execSQL(CREATE_ACTIVITIES);
-		db.execSQL(CREATE_SELECTED);
+		// db.execSQL(CREATE_SELECTED);
 
 	}
 
@@ -88,6 +92,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			String[] columns = { "NAME", "ID as _id", "IS_ACTIVE" };
 			Cursor c = db.query("GROUPS", columns, null, null, null, null,
 					"NAME");
+			Log.v("t", String.valueOf(c.getCount()));
 			return c;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -97,14 +102,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		return null;
 	}
 
-	public static ArrayList<Item> getEventsListFromRange(SQLiteDatabase db, String from, String to) {
+	public static ArrayList<Item> getEventsListFromRange(SQLiteDatabase db,
+			String from, String to) {
 		try {
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
 					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
 					"DAY_OF_WEEK", "TIME" };
-			String[] args = { from, to};
-			Cursor cursor = db.query("ACTIVITIES", columns, "DAY BETWEEN ? AND ?", args,
-					null, null, "TIME");
+			String[] args = { from, to };
+			Cursor cursor = db.query("ACTIVITIES", columns,
+					"DAY BETWEEN ? AND ?", args, null, null, "TIME");
 
 			String lastDay = "00-00";
 			ArrayList<Item> items = new ArrayList<Item>();
@@ -137,7 +143,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 		return null;
 	}
-	
+
 	public static ArrayList<Item> getEventsListSincetToday(SQLiteDatabase db) {
 		try {
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
@@ -180,14 +186,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 		return null;
 	}
-	
+
 	public static ArrayList<Item> getEventsList(SQLiteDatabase db) {
 		try {
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
 					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
 					"DAY_OF_WEEK", "TIME" };
-			Cursor cursor = db.query("ACTIVITIES", columns, null, null,
-					null, null, "TIME");
+			Cursor cursor = db.query("ACTIVITIES", columns, null, null, null,
+					null, "TIME");
 
 			String lastDay = "00-00";
 			ArrayList<Item> items = new ArrayList<Item>();
@@ -322,8 +328,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	public static Cursor getEventsCursor(SQLiteDatabase db) {
 		try {
-			Long time = new Date().getTime();
-			String[] args = { String.valueOf(time) };
+			// Long time = new Date().getTime();
+			// String[] args = { String.valueOf(time) };
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
 					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
 					"DAY_OF_WEEK", "TIME" };
@@ -395,7 +401,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put("IS_ACTIVE", 0);
 		String[] args = { String.valueOf(id) };
 		db.update("GROUPS", values, " ID = ?", args);
-		removeFromSelected(id, db);
+		// removeFromSelected(id, db);
 	}
 
 	public static void setAsActive(long id, SQLiteDatabase db) {
@@ -403,7 +409,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put("IS_ACTIVE", 1);
 		String[] args = { String.valueOf(id) };
 		db.update("GROUPS", values, " ID = ?", args);
-		addToSelected(id, db);
+		// addToSelected(id, db);
 	}
 
 	public static boolean insertGroup(int id, String name) {
@@ -419,30 +425,43 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			// db.close();
 		}
 	}
-	
-	public static void addAllGroups(org.json.JSONArray groups, SQLiteDatabase db) throws JSONException {
-		//SQLiteDatabase db = instance.getWritableDatabase();
-		//db.beginTransaction();
-		for (int i = 0; i < groups.length(); i++) {
-			JSONObject group = groups.getJSONObject(i);
-			String query = "INSERT INTO GROUPS (ID, NAME, IS_ACTIVE) VALUES ('"
-					+ String.valueOf(group.getInt("id")) + "','"
-					+ group.getString("name") + "', 0)";
-			db.execSQL(query);
-		}
-		//db.setTransactionSuccessful();
-		//db.endTransaction();
-		
-	}
-	
-	public static void removeGroups(){
+
+	// public static void addAllGroups(org.json.JSONArray groups, SQLiteDatabase
+	// db) {
+	// SQLiteDatabase db = instance.getWritableDatabase();
+	// db.beginTransaction();
+	// ContentValues results = new ContentValues();
+	// try {
+	// for (int i = 0; i < groups.length(); i++) {
+	// JSONObject group = groups.getJSONObject(i);
+	// String query = "INSERT INTO GROUPS (ID, NAME, IS_ACTIVE) VALUES ('"
+	// + String.valueOf(group.getInt("id"))
+	// + "','"
+	// + group.getString("name") + "', 0)";
+	// db.execSQL(query);
+	// // Log.v("t", groups.toString());
+	// }
+	// results.put("result", 0);
+	// } catch (JSONException e) {
+	// results.put("result", 1);
+	// results.put("message", "JSON problem");
+	// } catch (SQLException e) {
+	// results.put("result", 1);
+	// results.put("message", "JSON problem");
+	// }
+	// // db.setTransactionSuccessful();
+	// // db.endTransaction();
+	//
+	// }
+
+	public static void removeGroups() {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		db.beginTransaction();
 		db.execSQL("DELETE FROM GROUPS");
 		db.setTransactionSuccessful();
 		db.endTransaction();
 	}
-	
+
 	public static void addToSelected(long id, SQLiteDatabase db) {
 		try {
 			db.execSQL("insert into selected values (" + String.valueOf(id)
@@ -464,8 +483,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public static Cursor getSelected(SQLiteDatabase db) {
 		try {
 			String[] columns = { "ID" };
-			Cursor c = db.query("SELECTED", columns, null, null, null, null,
-					null);
+			Cursor c = db.query("GROUPS", columns, "IS_ACTIVE = ?",
+					new String[] { "1" }, null, null, null);
 			return c;
 		} catch (SQLException e) {
 			return null;
@@ -484,19 +503,154 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			return null;
 		}
 	}
-	
-	public static Cursor getSelectedWithNames(SQLiteDatabase db){
+
+	public static Cursor getSelectedWithNames(SQLiteDatabase db) {
 		try {
 			String[] colums = { "NAME", "ID as _id" };
 			String[] args = { "1" };
 			Cursor c = db.query("GROUPS", colums, "IS_ACTIVE = ?", args, null,
 					null, "NAME");
 			c.moveToFirst();
+			Log.v("t", "number of selected: " + c.getCount());
 			return c;
 		} catch (SQLException e) {
 			return null;
 		}
 	}
-	
 
+	public static ContentValues addAllGroups(org.json.JSONArray groups) {
+		SQLiteDatabase db = getConnection().getWritableDatabase();
+		ContentValues results = new ContentValues();
+		synchronized (db) {
+			db.beginTransaction();
+			db.execSQL("DELETE FROM GROUPS");
+			
+			try {
+				for (int i = 0; i < groups.length(); i++) {
+					JSONObject group = groups.getJSONObject(i);
+					String query = "INSERT INTO GROUPS (ID, NAME, IS_ACTIVE) VALUES ('"
+							+ String.valueOf(group.getInt("id"))
+							+ "','"
+							+ group.getString("name") + "', 0)";
+					db.execSQL(query);
+
+				}
+				db.setTransactionSuccessful();
+				results.put("code", 0);
+			} catch (JSONException e) {
+				results.put("code", 1);
+				results.put("message", "JSON problem");
+			} catch (SQLException e) {
+				results.put("code", 1);
+				results.put("message", "JSON problem");
+			}
+
+			db.endTransaction();
+			db.close();
+		}
+		return results;
+	}
+
+	public static ContentValues addAllAvtivities(org.json.JSONArray activities) {
+		SQLiteDatabase db = getConnection().getWritableDatabase();
+		synchronized (db) {
+			db.beginTransaction();
+			db.execSQL("DELETE FROM ACTIVITIES");
+			ContentValues results = new ContentValues();
+			try {
+				for (int i = 0; i < activities.length(); i++) {
+					JSONObject activity = activities.getJSONObject(i);
+					Log.v("t", activity.toString());
+					String name = activity.getString("name");
+					if (name.equals("Język obcy")) {
+						continue;
+					}
+					int id = activity.getInt("id");
+					JSONObject group = activity.getJSONObject("group");
+					int groupId = group.getInt("id");
+					String groupName = group.getString("name");
+					JSONObject tutor = activity.getJSONObject("tutor");
+					int tutorId = tutor.getInt("id");
+					String tutorName = tutor.getString("name");
+					String tutorUrl = tutor.getString("moodle_url");
+					String placeLocation = null;
+					int placeId = 0;
+					try {
+						JSONObject place = activity.getJSONObject("place");
+						placeId = place.getInt("id");
+						placeLocation = place.getString("location");
+					} catch (JSONException e) {
+						placeLocation = activity.getString("place");
+					}
+					String categoryName = activity.getString("category");
+					int state = activity.getInt("state");
+					String startAt = activity.getString("starts_at");
+					String endAt = activity.getString("ends_at");
+					String day = activity.getString("date");
+					String notes = activity.getString("notes");
+					String dayOfWeek = activity.getString("day_of_week");
+					Long time = activity.getLong("starts_at_timestamp");
+
+					// DatabaseManager.addActivity(db,
+					// id, groupId, groupName, tutorId, tutorName, tutorUrl,
+					// placeId,
+					// placeLocation, categoryName, notes, name, state, day,
+					// dayOfWeek,
+					// startAt, endAt, time);
+					db.execSQL(
+							"Insert into activities (ID, GROUP_NAME, GROUP_ID, TUTOR_ID, TUTOR_NAME, TUTOR_URL, PLACE_ID, PLACE_LOCATION,"
+									+ "CATEGORY_NAME, NAME, NOTES, STATE, START_AT, END_AT, DAY, DAY_OF_WEEK, TIME) values (?, ?, ?, ?, ?, ?, ?, ?,"
+									+ "? ,? ,? ,? ,? ,?, ?, ?, ?)",
+							new Object[] { id, groupName, groupId, tutorId,
+									tutorName, tutorUrl, placeId,
+									placeLocation, categoryName, name, notes,
+									state, startAt, endAt, day, dayOfWeek, time });
+				}
+				db.setTransactionSuccessful();
+				results.put("code", 0);
+				return results;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				results.put("code", 1);
+				results.put("message", "Database problem");
+				return results;
+			} catch (JSONException e) {
+				e.printStackTrace();
+				results.put("code", 1);
+				results.put("message", "JSON problem");
+				return results;
+			} finally {
+				db.endTransaction();
+				db.close();
+			}
+		}
+	}
+
+	public static String[] getActivitiesNameList() {
+		SQLiteDatabase db = getConnection().getReadableDatabase();
+		String table = "ACTIVITIES";
+		String[] columns = { "NAME", "ID as _id" };
+		LinkedList<String> list = new LinkedList<String>();
+		try {
+			// Cursor c = db.query(true, table, columns, null, null, null, null,
+			// null, null, null);
+			Cursor c = db.query(true, table, columns, null, null, "NAME", null,
+					null, null);
+			while (c.moveToNext()) {
+				String name = c.getString(c.getColumnIndex("NAME"));
+				if (name.equals(" ") || name == null) {
+					continue;
+				} else {
+					list.add(name);
+					Log.v("t", name);
+				}
+			}
+			return list.toArray(new String[list.size()]);
+		} catch (SQLException e) {
+			return null;
+		} finally {
+
+		}
+
+	}
 }

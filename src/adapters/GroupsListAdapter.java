@@ -1,6 +1,5 @@
 package adapters;
 
-import knp.rd.timetable.R;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import dev.rd.devplan.R;
 
 public class GroupsListAdapter extends CursorAdapter{
 

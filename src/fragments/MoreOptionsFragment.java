@@ -2,11 +2,10 @@ package fragments;
 
 import java.util.ArrayList;
 
-import knp.rd.timetable.R;
 import network.GroupsDownloader;
-import network.TimetTableCreator;
 import activities.InfoActivity;
 import activities.MainView;
+import activities.ReportErrorActivity;
 import adapters.OptionsListAdapter;
 import android.app.Activity;
 import android.content.Intent;
@@ -23,13 +22,13 @@ import classes.Option;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-import database.DatabaseManager;
+import dev.rd.devplan.R;
 
 public class MoreOptionsFragment extends SherlockFragment implements OnItemClickListener{
 	private ListView list;
 	private MainView parent;
-	private String[] options = {"Podbierz rozklad", "Wykładowcy", "Sale", "WebVersion", "Sprawdz aktualnosc", "Info", "Aktualizuj grupy"};
-	
+//	private String[] options = {"Podbierz rozklad", "Wykładowcy", "Sale", "WebVersion", "Sprawdz aktualnosc", "Info", "Aktualizuj grupy"};
+//	private String[] options = {"Strona projektu", };
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.options_list, containter,
@@ -39,15 +38,17 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 //		optionsList.addAll(Arrays.asList(options));
 //		list.setAdapter(new ArrayAdapter<String>(parent, R.layout.single_group_row_view, optionsList));
 //		list.setOnItemClickListener(this);
-		ArrayList<Option> items = new ArrayList();
-		items.add(new Option(R.drawable.download, "Pobierz rozkład"));
-		items.add(new Option(R.drawable.person, "Wykładowcy"));
-		items.add(new Option(R.drawable.room, "Sale"));
-		items.add(new Option(R.drawable.internet, "Wersja przeglądarkowa"));
-		items.add(new Option(R.drawable.question, "Sprawdź aktualność"));
-		items.add(new Option(R.drawable.info, "Informacje"));
-		items.add(new Option(R.drawable.groups, "Aktualnizuj listę grup"));
+		ArrayList<Option> items = new ArrayList<Option>();
+//		items.add(new Option(R.drawable.download, "Pobierz rozkład"));
+//		items.add(new Option(R.drawable.person, "Wykładowcy"));
+//		items.add(new Option(R.drawable.room, "Sale"));
+		items.add(new Option(R.drawable.ic_web, "Strona projektu"));
+		items.add(new Option(R.drawable.ic_check, "Sprawdź aktualność"));
+		items.add(new Option(R.drawable.ic_groups, "Aktualizuj listę grup"));
+		items.add(new Option(R.drawable.ic_error, "Zgłoś błąd"));
+		items.add(new Option(R.drawable.ic_info, "O programie"));
 		list.setAdapter(new OptionsListAdapter(parent, items));
+		list.setOnItemClickListener(this);
 		return view;
 	}
 	
@@ -60,33 +61,52 @@ public class MoreOptionsFragment extends SherlockFragment implements OnItemClick
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
 		switch(position){
+//		case 0: {
+//			Toast.makeText(this.parent, "Downloading started", Toast.LENGTH_SHORT).show();
+//			DatabaseManager.removeTimeTable(DatabaseManager.getConnection().getWritableDatabase());
+//			TimetTableCreator tDown = new TimetTableCreator(this.parent);
+//			tDown.execute();
+//		}break;
+//		case 1:{
+//			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/tutors";
+//			openBrowser(url);			
+//		}break;
+//		case 2:{
+//			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/places";
+//			openBrowser(url);		
+//		}break;
+//		case 3:{
+//			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/";
+//			openBrowser(url);
+//		}break;
+//		case 4:{
+//			Toast.makeText(this.parent, "Aktualne", Toast.LENGTH_SHORT).show();
+//		}break;
+//		case 5:{
+//			Intent intent = new Intent(parent.getContext(), InfoActivity.class);
+//			startActivity(intent);
+//		}case 6: {
+//			GroupsDownloader groupDown = new GroupsDownloader(getActivity());
+//			groupDown.execute();
+//		}break;
 		case 0: {
-			Toast.makeText(this.parent, "Downloading started", Toast.LENGTH_SHORT).show();
-			DatabaseManager.removeTimeTable(DatabaseManager.getConnection().getWritableDatabase());
-			TimetTableCreator tDown = new TimetTableCreator(this.parent);
-			tDown.execute();
-		}break;
-		case 1:{
-			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/tutors";
-			openBrowser(url);			
-		}break;
-		case 2:{
-			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/places";
-			openBrowser(url);		
-		}break;
-		case 3:{
-			String url = "http://knp.uek.krakow.pl/~planzajec/index.php/";
+			String url = getString(R.string.home_page);
 			openBrowser(url);
 		}break;
-		case 4:{
-			Toast.makeText(this.parent, "Aktualne", Toast.LENGTH_SHORT).show();
+		case 1:{
+			Toast.makeText(this.parent, "Checkin for update", Toast.LENGTH_LONG).show();			
 		}break;
-		case 5:{
+		case 2:{
+			GroupsDownloader groupDown = new GroupsDownloader(getActivity());
+			groupDown.execute();		
+		}break;
+		case 3:{
+			Intent intent = new Intent(parent.getContext(), ReportErrorActivity.class);
+			startActivity(intent);
+		}break;
+		case 4:{
 			Intent intent = new Intent(parent.getContext(), InfoActivity.class);
 			startActivity(intent);
-		}case 6: {
-			GroupsDownloader groupDown = new GroupsDownloader(getActivity());
-			groupDown.execute();
 		}break;
 		}
 		

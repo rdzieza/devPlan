@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="knp.rd.timetable"
+    package="dev.rd.devplan"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -11,7 +11,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/timetable"
-        android:label="UEK Time Table"
+        android:label="devPlan"
         android:theme="@style/Theme.Sherlock.Light" >
         <activity
             android:name="activities.MainActivity"
@@ -19,7 +19,7 @@
         </activity>
         <activity
             android:name="activities.MainView"
-            android:label="UEK Time Table" >
+            android:label="devPlan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,6 +33,10 @@
         <activity
             android:name="activities.InfoActivity"
             android:label="@string/title_activity_info" >
+        </activity>
+        <activity
+            android:name="activities.ReportErrorActivity"
+            android:label="@string/error_activity_title" >
         </activity>
     </application>
 

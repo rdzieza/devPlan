@@ -1,10 +1,10 @@
 package activities;
 
-import knp.rd.timetable.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
+import dev.rd.devplan.R;
 
 public class InfoActivity extends Activity {
 
@@ -28,5 +28,9 @@ public class InfoActivity extends Activity {
 		getMenuInflater().inflate(R.menu.info, menu);
 		return true;
 	}
+	
+	
 
 }
+
+

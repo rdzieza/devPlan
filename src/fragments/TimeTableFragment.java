@@ -1,6 +1,5 @@
 package fragments;
 
-import knp.rd.timetable.R;
 import adapters.ActivityAdapter;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -20,6 +19,7 @@ import classes.Item;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import database.DatabaseManager;
+import dev.rd.devplan.R;
 
 public class TimeTableFragment extends SherlockFragment implements
 		OnItemClickListener {
