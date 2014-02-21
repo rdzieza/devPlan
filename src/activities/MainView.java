@@ -130,28 +130,7 @@ public class MainView extends SherlockFragmentActivity implements
 
 				@Override
 				public void onClick(View v) {
-					builder.setTitle("name filter");
-					// final EditText name = new
-					// EditText(getApplicationContext());
-					// name.setHint("Wpisz nazwe przedmiotu...");
-					// builder.setPositiveButton("OK",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// String nameText = name.getText().toString();
-					// Log.v("t", "name: " + nameText);
-					// Intent intent = new Intent(
-					// getApplicationContext(),
-					// MainView.class);
-					// intent.putExtra("action", "nameFilter");
-					// intent.putExtra("name", nameText);
-					// startActivity(intent);
-					// }
-					// });
-					// builder.setView(name);
-					// builder.setNegativeButton("Anuluj", null);
+					builder.setTitle("Filtruj po nazwie");
 					final ListView acticitiesNameList = new ListView(
 							getApplicationContext());
 					ArrayAdapter<String> adapter = new ArrayAdapter<String>(

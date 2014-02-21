@@ -524,7 +524,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		synchronized (db) {
 			db.beginTransaction();
 			db.execSQL("DELETE FROM GROUPS");
-			
+
 			try {
 				for (int i = 0; i < groups.length(); i++) {
 					JSONObject group = groups.getJSONObject(i);
@@ -632,13 +632,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		String[] columns = { "NAME", "ID as _id" };
 		LinkedList<String> list = new LinkedList<String>();
 		try {
-			// Cursor c = db.query(true, table, columns, null, null, null, null,
-			// null, null, null);
 			Cursor c = db.query(true, table, columns, null, null, "NAME", null,
 					null, null);
 			while (c.moveToNext()) {
 				String name = c.getString(c.getColumnIndex("NAME"));
-				if (name.equals(" ") || name == null) {
+				Log.v("t", "nazwa: " + name);
+				if (name.equals("") || name == null) {
 					continue;
 				} else {
 					list.add(name);

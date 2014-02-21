@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- MAIN SETTINGS -->
-    <string name="app_name">davPlan</string>
+    <string name="app_name">devPlan</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_settings">SettingsActivity</string>
@@ -41,4 +41,10 @@
     
     <!-- DOWNLOAD TIME TABLE MESSAGES -->
     <string name="download_finished_message">Pobieranie planu zajęć zakończone</string>
+    
+    <string name="app_info">devPlan\nWersja: 1.0\nData wydania: \n</string>
+    <string name="app_sites">Strona projektu: </string>
+    <string name="google_play_site">Google play: </string>
+    <string name="google_play_url">http://something</string>
+    <string name="authors">Autor programu: Robert Dzieża\nEmail: dziezarobert@gmail.com\n\nAplikacja przygotowana przy współracy z członkami koła naukowego >dev działającym przy Uniwersytecie Ekonomicznym w Krakowie.</string>
 </resources>

@@ -915,8 +915,9 @@ containing a value of this type.
         public static final int ic_groups=0x7f020072;
         public static final int ic_info=0x7f020073;
         public static final int ic_launcher=0x7f020074;
-        public static final int ic_web=0x7f020075;
-        public static final int timetable=0x7f020076;
+        public static final int ic_start=0x7f020075;
+        public static final int ic_web=0x7f020076;
+        public static final int timetable=0x7f020077;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040020;
@@ -958,53 +959,56 @@ containing a value of this type.
         public static final int abs__textButton=0x7f040013;
         public static final int abs__title=0x7f04001b;
         public static final int abs__up=0x7f04000b;
-        public static final int action_settings=0x7f040057;
-        public static final int activityRoom=0x7f040052;
-        public static final int activityTopic=0x7f040050;
-        public static final int activityType=0x7f040051;
-        public static final int addGroupFragmentView=0x7f040034;
-        public static final int addGroupsFragmentLayout=0x7f04004c;
-        public static final int addGroupsLabel=0x7f04004b;
-        public static final int dateFrom=0x7f040038;
-        public static final int dateTo=0x7f040039;
-        public static final int detailDate=0x7f04003d;
-        public static final int detailEnd=0x7f040041;
-        public static final int detailName=0x7f04003e;
-        public static final int detailRoom=0x7f040044;
-        public static final int detailStart=0x7f040040;
-        public static final int detailTutor=0x7f040042;
-        public static final int detailTutorUrl=0x7f040043;
-        public static final int detailType=0x7f04003f;
+        public static final int action_settings=0x7f04005a;
+        public static final int activityRoom=0x7f040055;
+        public static final int activityTopic=0x7f040053;
+        public static final int activityType=0x7f040054;
+        public static final int addGroupFragmentView=0x7f040037;
+        public static final int addGroupsFragmentLayout=0x7f04004f;
+        public static final int addGroupsLabel=0x7f04004e;
+        public static final int dateFrom=0x7f04003b;
+        public static final int dateTo=0x7f04003c;
+        public static final int detailDate=0x7f040040;
+        public static final int detailEnd=0x7f040043;
+        public static final int detailRoom=0x7f040047;
+        public static final int detailStart=0x7f040042;
+        public static final int detailTutor=0x7f040044;
+        public static final int detailTutorUrl=0x7f040046;
+        public static final int detailTutorUrlLabel=0x7f040045;
+        public static final int detailType=0x7f040041;
         public static final int disableHome=0x7f040009;
-        public static final int downloadTableButton=0x7f04003a;
+        public static final int downloadTableButton=0x7f04003d;
         public static final int edit_query=0x7f040026;
-        public static final int email_address=0x7f04003b;
-        public static final int endTime=0x7f04004f;
-        public static final int error_description=0x7f04003c;
-        public static final int filterField=0x7f040035;
-        public static final int fragment=0x7f040033;
-        public static final int groupName=0x7f040053;
-        public static final int groupsListView=0x7f040036;
+        public static final int email_address=0x7f04003e;
+        public static final int endTime=0x7f040052;
+        public static final int error_description=0x7f04003f;
+        public static final int filterField=0x7f040038;
+        public static final int fragment=0x7f040036;
+        public static final int google_play_label=0x7f040034;
+        public static final int google_play_url=0x7f040035;
+        public static final int groupName=0x7f040056;
+        public static final int groupsListView=0x7f040039;
         public static final int homeAsUp=0x7f040006;
-        public static final int infoMessage=0x7f040032;
+        public static final int home_page_label=0x7f040032;
+        public static final int home_page_url=0x7f040033;
         public static final int listMode=0x7f040002;
-        public static final int nameFilter=0x7f040045;
-        public static final int noFilter=0x7f040046;
-        public static final int noSelectedLabel=0x7f04004a;
+        public static final int nameFilter=0x7f040048;
+        public static final int noFilter=0x7f040049;
+        public static final int noSelectedLabel=0x7f04004d;
         public static final int normal=0x7f040001;
-        public static final int optionIcon=0x7f040054;
-        public static final int optionTitle=0x7f040055;
-        public static final int selectedGroupsLabel=0x7f040048;
-        public static final int selectedGroupsList=0x7f040049;
-        public static final int separator=0x7f04004d;
+        public static final int optionIcon=0x7f040057;
+        public static final int optionTitle=0x7f040058;
+        public static final int selectedGroupsLabel=0x7f04004b;
+        public static final int selectedGroupsList=0x7f04004c;
+        public static final int separator=0x7f040050;
         public static final int showCustom=0x7f040008;
         public static final int showHome=0x7f040005;
         public static final int showTitle=0x7f040007;
-        public static final int sinceToday=0x7f040047;
-        public static final int startTime=0x7f04004e;
+        public static final int sinceToday=0x7f04004a;
+        public static final int startTime=0x7f040051;
         public static final int tabMode=0x7f040003;
-        public static final int timeTableListView=0x7f040056;
-        public static final int updateTimeTableButton=0x7f040037;
+        public static final int timeTableListView=0x7f040059;
+        public static final int updateTimeTableButton=0x7f04003a;
         public static final int useLogo=0x7f040004;
         public static final int wrap_content=0x7f040000;
     }
@@ -1043,16 +1047,17 @@ containing a value of this type.
         public static final int events_detail=0x7f03001c;
         public static final int filters=0x7f03001d;
         public static final int groups_list_view=0x7f03001e;
-        public static final int options_list=0x7f03001f;
-        public static final int separator=0x7f030020;
-        public static final int settings_view=0x7f030021;
-        public static final int sherlock_spinner_dropdown_item=0x7f030022;
-        public static final int sherlock_spinner_item=0x7f030023;
-        public static final int single_activity_name_view=0x7f030024;
-        public static final int single_event_view_separator=0x7f030025;
-        public static final int single_group_row_view=0x7f030026;
-        public static final int single_option_view=0x7f030027;
-        public static final int time_table_list_view=0x7f030028;
+        public static final int header_view=0x7f03001f;
+        public static final int options_list=0x7f030020;
+        public static final int separator=0x7f030021;
+        public static final int settings_view=0x7f030022;
+        public static final int sherlock_spinner_dropdown_item=0x7f030023;
+        public static final int sherlock_spinner_item=0x7f030024;
+        public static final int single_activity_name_view=0x7f030025;
+        public static final int single_event_view_separator=0x7f030026;
+        public static final int single_group_row_view=0x7f030027;
+        public static final int single_option_view=0x7f030028;
+        public static final int time_table_list_view=0x7f030029;
     }
     public static final class menu {
         public static final int info=0x7f0b0000;
@@ -1103,9 +1108,12 @@ containing a value of this type.
         /**   GROUPS VIEW 
          */
         public static final int add_group_label=0x7f090012;
+        public static final int app_info=0x7f090026;
         /**  MAIN SETTINGS 
          */
         public static final int app_name=0x7f09000d;
+        public static final int app_sites=0x7f090027;
+        public static final int authors=0x7f09002a;
         /**  DOWNLOAD TIME TABLE MESSAGES 
          */
         public static final int download_finished_message=0x7f090025;
@@ -1123,6 +1131,8 @@ containing a value of this type.
         /**  FILTER 
          */
         public static final int filters_title=0x7f09001b;
+        public static final int google_play_site=0x7f090028;
+        public static final int google_play_url=0x7f090029;
         /**  MAIN VIEW  
          */
         public static final int groups_tab_label=0x7f090017;

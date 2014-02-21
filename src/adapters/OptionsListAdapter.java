@@ -13,13 +13,13 @@ import classes.Option;
 import dev.rd.devplan.R;
 
 public class OptionsListAdapter extends ArrayAdapter<Option>{
-	private Context context;
+	//private Context context;
 	private ArrayList<Option> items;
 	private LayoutInflater infl;
 	
 	public OptionsListAdapter(Context context, ArrayList<Option> list) {
 		super(context, 0, list);
-		this.context = context;
+		//this.context = context;
 		this.items = list;
 		infl = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

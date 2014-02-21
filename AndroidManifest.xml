@@ -6,20 +6,25 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/timetable"
+        android:icon="@drawable/ic_start"
         android:label="devPlan"
         android:theme="@style/Theme.Sherlock.Light" >
         <activity
             android:name="activities.MainActivity"
-            android:label="UEK Time Table" >
+            android:label="UEK Time Table"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="activities.MainView"
-            android:label="devPlan" >
+            android:label="devPlan"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,19 +33,19 @@
         </activity>
         <activity
             android:name="activities.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="activities.InfoActivity"
-            android:label="@string/title_activity_info" >
+            android:label="@string/title_activity_info"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="activities.ReportErrorActivity"
-            android:label="@string/error_activity_title" >
+            android:label="@string/error_activity_title"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

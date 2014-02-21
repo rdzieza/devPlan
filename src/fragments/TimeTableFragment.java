@@ -4,10 +4,15 @@ import adapters.ActivityAdapter;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -88,61 +93,99 @@ public class TimeTableFragment extends SherlockFragment implements
 			Cursor cursor = DatabaseManager.getEventDetails(DatabaseManager
 					.getConnection().getReadableDatabase(), event.getId());
 			cursor.moveToFirst();
-			// Log.v("t", cursor.getString(cursor.getColumnIndex("DAY")));
-			// Log.v("t", cursor.getString(cursor.getColumnIndex("NAME")));
 			String name = cursor.getString(cursor.getColumnIndex("NAME"));
 			String day = cursor.getString(cursor.getColumnIndex("DAY"));
 			String weekDay = cursor.getString(cursor
 					.getColumnIndex("DAY_OF_WEEK"));
-			// Log.v("t",
-			// cursor.getString(cursor.getColumnIndex("CATEGORY_NAME")));
 			String type = cursor.getString(cursor
 					.getColumnIndex("CATEGORY_NAME"));
-			// Log.v("t",
-			// cursor.getString(cursor.getColumnIndex("PLACE_LOCATION")));
 			String place = cursor.getString(cursor
 					.getColumnIndex("PLACE_LOCATION"));
-			// Log.v("t", cursor.getString(cursor.getColumnIndex("START_AT")));
 			String startsAt = cursor.getString(cursor
 					.getColumnIndex("START_AT"));
-			// Log.v("t", cursor.getString(cursor.getColumnIndex("END_AT")));
 			String endsAt = cursor.getString(cursor.getColumnIndex("END_AT"));
-			// Log.v("t",
-			// cursor.getString(cursor.getColumnIndex("TUTOR_NAME")));
 			String tutorName = cursor.getString(cursor
 					.getColumnIndex("TUTOR_NAME"));
-			// Log.v("t", cursor.getString(cursor.getColumnIndex("TUTOR_URL")));
 			String tutorUrl = cursor.getString(cursor
 					.getColumnIndex("TUTOR_URL"));
+
 			LayoutInflater infl = (LayoutInflater) parent.getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View dialog = infl.inflate(R.layout.events_detail, null);
-			TextView nameView = (TextView) dialog.findViewById(R.id.detailName);
-			nameView.setText("Subject: " + name);
+
 			TextView endsAtView = (TextView) dialog
 					.findViewById(R.id.detailEnd);
-			endsAtView.setText("Ends at: " + endsAt);
+			endsAtView.setText("Koniec: " + endsAt);
+
 			TextView dateView = (TextView) dialog.findViewById(R.id.detailDate);
-			dateView.setText(day + " " + weekDay);
+			dateView.setText(day + " " + getFullName(weekDay));
+			//
 			TextView roomView = (TextView) dialog.findViewById(R.id.detailRoom);
-			roomView.setText("Room: " + place);
+			roomView.setText("Sala: " + place);
+
 			TextView startView = (TextView) dialog
 					.findViewById(R.id.detailStart);
-			startView.setText("Starts at: " + startsAt);
+			startView.setText("Początek: " + startsAt);
+
 			TextView tutorNameView = (TextView) dialog
 					.findViewById(R.id.detailTutor);
-			tutorNameView.setText("Lecturer: " + tutorName);
+			tutorNameView.setText("Prowadzący: " + tutorName);
+
+			TextView tutorUrlLabel = (TextView) dialog
+					.findViewById(R.id.detailTutorUrlLabel);
+			tutorUrlLabel.setText("Strona prowadzącego: ");
+
 			TextView tutorUrlView = (TextView) dialog
 					.findViewById(R.id.detailTutorUrl);
-			tutorUrlView.setText("Lecturer home page: " + tutorUrl);
+			tutorUrlView.setText(tutorUrl);
+			tutorUrlView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					TextView urlView = (TextView)v;
+					String url = urlView.getText().toString();
+					intent.setData(Uri.parse(url));
+					startActivity(intent);
+
+				}
+			});
+
 			TextView typeView = (TextView) dialog.findViewById(R.id.detailType);
-			typeView.setText("Type: " + type);
+			typeView.setText(type);
+
 			Builder builder = new Builder(parent.getContext());
-			builder.setTitle(name);
+			TextView title = new TextView(this.parent);
+			title.setBackgroundColor(Color.WHITE);
+			title.setGravity(Gravity.CENTER);
+			title.setPadding(10, 10, 10, 10);
+			title.setTextColor(Color.BLACK);
+			title.setText(name);
+			title.setTextSize(20);
+
+			builder.setCustomTitle(title);
 			builder.setView(dialog);
 			builder.show();
 		}
 
 	}
 
+	public String getFullName(String name) {
+		if (name.equals("Pn")) {
+			return "Poniedziałek";
+		} else if (name.equals("Wt")) {
+			return "Wtorek";
+		} else if (name.equals("Śr")) {
+			return "Środa";
+		} else if (name.equals("Cz")) {
+			return "Czwartek";
+		} else if (name.equals("Pt")) {
+			return "Piątek";
+		} else if (name.equals("Sb")) {
+			return "Sobota";
+		} else {
+			return "Niedziela";
+		}
+	}
+	
 }

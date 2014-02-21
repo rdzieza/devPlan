@@ -7,10 +7,10 @@ import android.content.SharedPreferences.Editor;
 public class PreferenceHelper {
 	private static final String NAME = "TIME_TABLE_PREFS";
 	private static SharedPreferences settings;
-	private static Context context;
+	//private static Context context;
 	
 	public static void initialize(Context context){
-		PreferenceHelper.context = context;
+		//PreferenceHelper.context = context;
 		settings = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
 	}
 	
