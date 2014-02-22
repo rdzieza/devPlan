@@ -13,11 +13,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import dev.rd.devplan.R;
+
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class ErrorReporter extends AsyncTask<Void, Void, Void> {
@@ -88,6 +92,11 @@ public class ErrorReporter extends AsyncTask<Void, Void, Void> {
 		if (!isCancelled()) {
 			Log.v("t", "Error reported");
 			Toast.makeText(context, "Zgłoszono błąd! Dziękujemy!", Toast.LENGTH_SHORT).show();
+			Activity activity = (Activity)context;
+			EditText descriptionField = (EditText)activity.findViewById(R.id.error_description);
+			if(descriptionField != null){
+				descriptionField.setText("");
+			}
 		} else {
 			Toast.makeText(context, "Wystąpił problem: " + message, Toast.LENGTH_SHORT)
 					.show();

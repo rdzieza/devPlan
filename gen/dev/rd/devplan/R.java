@@ -911,13 +911,14 @@ containing a value of this type.
         public static final int abs__textfield_searchview_right_holo_light=0x7f02006e;
         public static final int abs__toast_frame=0x7f02006f;
         public static final int ic_check=0x7f020070;
-        public static final int ic_error=0x7f020071;
-        public static final int ic_groups=0x7f020072;
-        public static final int ic_info=0x7f020073;
-        public static final int ic_launcher=0x7f020074;
-        public static final int ic_start=0x7f020075;
-        public static final int ic_web=0x7f020076;
-        public static final int timetable=0x7f020077;
+        public static final int ic_dev=0x7f020071;
+        public static final int ic_error=0x7f020072;
+        public static final int ic_groups=0x7f020073;
+        public static final int ic_info=0x7f020074;
+        public static final int ic_launcher=0x7f020075;
+        public static final int ic_start=0x7f020076;
+        public static final int ic_web=0x7f020077;
+        public static final int timetable=0x7f020078;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040020;
@@ -1114,6 +1115,7 @@ containing a value of this type.
         public static final int app_name=0x7f09000d;
         public static final int app_sites=0x7f090027;
         public static final int authors=0x7f09002a;
+        public static final int dev_note=0x7f09002b;
         /**  DOWNLOAD TIME TABLE MESSAGES 
          */
         public static final int download_finished_message=0x7f090025;
@@ -1144,6 +1146,7 @@ containing a value of this type.
         public static final int options_tab_label=0x7f090019;
         public static final int selected_groups_label=0x7f090013;
         public static final int send_error_raport=0x7f090024;
+        public static final int thanks_note=0x7f09002c;
         public static final int timetable_tab_label=0x7f090018;
         public static final int title_activity_info=0x7f090011;
         public static final int title_activity_settings=0x7f090010;

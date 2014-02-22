@@ -271,6 +271,9 @@ public class MainView extends SherlockFragmentActivity implements
 //			});
 			builder.setView(view);
 			builder.show();
+		}else if(keyCode == KeyEvent.KEYCODE_BACK){
+			Log.v("t", "back clicked");
+			this.finish();
 		}
 
 		return super.onKeyDown(keyCode, event);

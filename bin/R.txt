@@ -242,13 +242,14 @@ int drawable abs__textfield_searchview_right_holo_dark 0x7f02006d
 int drawable abs__textfield_searchview_right_holo_light 0x7f02006e
 int drawable abs__toast_frame 0x7f02006f
 int drawable ic_check 0x7f020070
-int drawable ic_error 0x7f020071
-int drawable ic_groups 0x7f020072
-int drawable ic_info 0x7f020073
-int drawable ic_launcher 0x7f020074
-int drawable ic_start 0x7f020075
-int drawable ic_web 0x7f020076
-int drawable timetable 0x7f020077
+int drawable ic_dev 0x7f020071
+int drawable ic_error 0x7f020072
+int drawable ic_groups 0x7f020073
+int drawable ic_info 0x7f020074
+int drawable ic_launcher 0x7f020075
+int drawable ic_start 0x7f020076
+int drawable ic_web 0x7f020077
+int drawable timetable 0x7f020078
 int id abs__action_bar 0x7f040020
 int id abs__action_bar_container 0x7f04001f
 int id abs__action_bar_subtitle 0x7f040011
@@ -405,6 +406,7 @@ int string app_info 0x7f090026
 int string app_name 0x7f09000d
 int string app_sites 0x7f090027
 int string authors 0x7f09002a
+int string dev_note 0x7f09002b
 int string download_finished_message 0x7f090025
 int string email 0x7f090020
 int string email_hint 0x7f090021
@@ -425,6 +427,7 @@ int string no_selected_groups_text 0x7f090016
 int string options_tab_label 0x7f090019
 int string selected_groups_label 0x7f090013
 int string send_error_raport 0x7f090024
+int string thanks_note 0x7f09002c
 int string timetable_tab_label 0x7f090018
 int string title_activity_info 0x7f090011
 int string title_activity_settings 0x7f090010

@@ -42,9 +42,11 @@
     <!-- DOWNLOAD TIME TABLE MESSAGES -->
     <string name="download_finished_message">Pobieranie planu zajęć zakończone</string>
     
-    <string name="app_info">devPlan\nWersja: 1.0\nData wydania: \n</string>
+    <string name="app_info">Wersja: 1.0\nData wydania: \n</string>
     <string name="app_sites">Strona projektu: </string>
     <string name="google_play_site">Google play: </string>
     <string name="google_play_url">http://something</string>
-    <string name="authors">Autor programu: Robert Dzieża\nEmail: dziezarobert@gmail.com\n\nAplikacja przygotowana przy współracy z członkami koła naukowego >dev działającym przy Uniwersytecie Ekonomicznym w Krakowie.</string>
+    <string name="authors">Autor programu: Robert Dzieża\nEmail: dziezarobert@gmail.com</string>
+    <string name="dev_note">Aplikacja przygotowana przy współracy z członkami koła naukowego >dev działającym przy Uniwersytecie Ekonomicznym w Krakowie.</string>
+    <string name="thanks_note">Dziękujemy za pobranie!</string>
 </resources>
