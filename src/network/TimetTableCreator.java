@@ -18,6 +18,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import classes.DownloadManager;
+
 import prefereces.PreferenceHelper;
 import android.content.Context;
 import android.database.Cursor;
@@ -29,6 +31,14 @@ import android.widget.Toast;
 import database.DatabaseManager;
 import fragments.AddGroupFragment;
 
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         AsyncTask creates time table on the server and saves its hash under
+ *         timeTableUrl in Preferences.
+ * 
+ */
 public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 	private HttpClient client;
 	private int numberOfselected;
@@ -38,7 +48,7 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 	private int code = 1;
 	private String message = "";
 	private boolean isConnected;
-	
+
 	public TimetTableCreator(Context context) {
 		this.context = context;
 	}
@@ -60,11 +70,13 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		isConnected = checkConnection();
-		
+
 		if (!isConnected) {
 			this.cancel(true);
 			message += "Brak połączenia z internetem";
 		}
+		
+		DownloadManager.setDownloadingTimeTable(true);
 		
 		if (numberOfselected == 0) {
 			Log.v("t", "ZEROOOOOOOO");
@@ -74,7 +86,7 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 		} else {
 			HttpPost post = new HttpPost(
 					"http://cash.dev.uek.krakow.pl//v0_1/timetables");
-			
+
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			while (selectedCursor.moveToNext()) {
 				params.add(new BasicNameValuePair("group_id[]", selectedCursor
@@ -133,12 +145,13 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 			Log.v("t", "TimeTable successfully created!");
 			addGroupFragment.downloadTimeTable(code);
 		} else {
-			Toast.makeText(context, "Wystąpił problem: " + message, Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(context, "Wystąpił problem: " + message,
+					Toast.LENGTH_SHORT).show();
+			DownloadManager.setDownloadingTimeTable(false);
 		}
 	}
-	
-	public boolean checkConnection(){
+
+	public boolean checkConnection() {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 

@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import classes.DownloadManager;
+
 import prefereces.PreferenceHelper;
 import adapters.ActivityAdapter;
 import android.app.Activity;
@@ -21,11 +23,22 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         AsynsTask class responsible for downloading time table with given
+ *         hash (can be found in preferences as timeTableUrl)
+ * 
+ */
 public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 	private String url;
 	private HttpClient client;
@@ -54,9 +67,6 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 		isConnected = checkConnection();
 		if (!isConnected) {
 			this.cancel(true);
-			Toast.makeText(context,
-					"There is no internett connection,  turn on the internet!",
-					Toast.LENGTH_SHORT).show();
 			message = "brak połączenia z internetem";
 		}
 
@@ -99,13 +109,13 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected void onPostExecute(Void v) {
+		Activity activity = (Activity) context;
 		if (!isCancelled()) {
 			Log.v("t", context.getString(R.string.download_finished_message));
 			Toast.makeText(context,
 					context.getString(R.string.download_finished_message),
 					Toast.LENGTH_SHORT).show();
 
-			Activity activity = (Activity) context;
 			ListView timeTableList = (ListView) activity
 					.findViewById(R.id.timeTableListView);
 			if (timeTableList != null) {
@@ -115,8 +125,19 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 			}
 
 		} else {
-			Toast.makeText(context, "Sth went wrong: " + message,
+			Toast.makeText(context, "Wystąpił błąd: " + message,
 					Toast.LENGTH_SHORT).show();
+		}
+		DownloadManager.setDownloadingTimeTable(false);
+
+		ProgressBar loadingBar = (ProgressBar) activity
+				.findViewById(R.id.loadingTimeTableBar);
+		TextView label = (TextView) activity
+				.findViewById(R.id.loadingTimeTableText);
+		
+		if (loadingBar != null && label != null) {
+			loadingBar.setVisibility(View.GONE);
+			label.setVisibility(View.GONE);
 		}
 
 	}

@@ -5,7 +5,6 @@ import adapters.SelectedGroupsAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,13 @@ import com.actionbarsherlock.app.SherlockFragment;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         Shows user lists of groups, those selected and those to be added.
+ * 
+ */
 public class GroupsListFragment extends SherlockFragment {
 
 	private Activity parent;
@@ -49,7 +55,7 @@ public class GroupsListFragment extends SherlockFragment {
 				DatabaseManager.getSelectedWithNames(DatabaseManager
 						.getConnection().getReadableDatabase()));
 		noSelectedLabel = (TextView) view.findViewById(R.id.noSelectedLabel);
-		noSelectedLabel.setText("Brak wybranych grup");
+		noSelectedLabel.setText(parent.getString(R.string.no_selected_groups_text));
 		selected.setEmptyView(noSelectedLabel);
 		selected.setAdapter(selectedAdapter);
 		selected.setVisibility(View.GONE);
@@ -58,10 +64,10 @@ public class GroupsListFragment extends SherlockFragment {
 			@Override
 			public void onClick(View v) {
 				if (areSelectedShown) {
-					Log.v("t", "Ukryj wybrane");
+//					Log.v("t", "Ukryj wybrane");
 					hideSelected();
 				} else {
-					Log.v("t", "Pokaz wybrane");
+//					Log.v("t", "Pokaz wybrane");
 					showSelected();
 				}
 
@@ -78,7 +84,6 @@ public class GroupsListFragment extends SherlockFragment {
 						DatabaseManager.getSelectedWithNames(DatabaseManager
 								.getConnection().getReadableDatabase()));
 				selected.setAdapter(selectedAdapter);
-				
 
 			}
 		});
@@ -96,14 +101,14 @@ public class GroupsListFragment extends SherlockFragment {
 				if (areAllShown) {
 					FragmentTransaction trans = getSherlockActivity()
 							.getSupportFragmentManager().beginTransaction();
-					Log.v("t", "Ukryj wszystkie");
+//					Log.v("t", "Ukryj wszystkie");
 					trans.remove(addGroupFragment);
 					trans.commit();
 					areAllShown = false;
 				} else {
 					FragmentTransaction trans = getSherlockActivity()
 							.getSupportFragmentManager().beginTransaction();
-					Log.v("t", "Pokaż wszystkie");
+//					Log.v("t", "Pokaż wszystkie");
 					addGroupFragment = new AddGroupFragment();
 					trans.replace(R.id.addGroupsFragmentLayout,
 							addGroupFragment);

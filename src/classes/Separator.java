@@ -1,8 +1,15 @@
 package classes;
 
-public class Separator implements Item{
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         Model class, representing separator item.
+ * 
+ */
+public class Separator implements Item {
 	private String date;
-	
+
 	public Separator(String date) {
 		super();
 		this.date = date;
@@ -20,6 +27,5 @@ public class Separator implements Item{
 	public boolean isHeaderType() {
 		return true;
 	}
-	
-	
+
 }

@@ -13,6 +13,7 @@ import org.json.JSONException;
 
 import prefereces.PreferenceHelper;
 import adapters.ActivityAdapter;
+import adapters.GroupsListAdapter;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,11 +22,21 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         AsyncTask responsible for downloading list of all available groups.
+ * 
+ */
 public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 	private HttpClient client;
 	private BufferedReader br;
@@ -40,6 +51,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		this.context = context;
 		db = DatabaseManager.getConnection().getWritableDatabase();
 		transactionExists = false;
+		classes.DownloadManager.setDowloadingGroups(true);
 	}
 
 	@Override
@@ -80,7 +92,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 				while ((line = br.readLine()) != null) {
 					sb.append(line);
 				}
-				Log.v("t", sb.toString());
+				// Log.v("t", sb.toString());
 				/**
 				 * Parse JSON
 				 */
@@ -96,7 +108,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 						message = results.getAsString("message");
 						this.cancel(true);
 					} else {
-						Log.v("t", "groups downlaoded - saved in settings");
+						// Log.v("t", "groups downlaoded - saved in settings");
 						PreferenceHelper.saveBoolean("areGroupsDownloaded",
 								true);
 					}
@@ -125,19 +137,21 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected void onPostExecute(Void v) {
+		Activity activity = (Activity) context;
 		if (!isCancelled()) {
-			Log.v("t", "Grupy zostały pobrane");
-			Toast.makeText(context, "Grupy zostały pobrane", Toast.LENGTH_SHORT).show();
-			
-			Activity activity = (Activity) context;
+			// Log.v("t", "Grupy zostały pobrane");
+			Toast.makeText(context, "Grupy zostały pobrane", Toast.LENGTH_SHORT)
+					.show();
+
 			ListView allGroupsList = (ListView) activity
 					.findViewById(R.id.groupsListView);
 			if (allGroupsList != null) {
-				allGroupsList.setAdapter(new ActivityAdapter(context,
-						DatabaseManager.getEventsList(DatabaseManager
+				allGroupsList.setAdapter(new GroupsListAdapter(context,
+						DatabaseManager.getGroupsCursor(DatabaseManager
 								.getConnection().getReadableDatabase())));
+
 			}
-			
+
 		} else {
 			Toast.makeText(
 					context,
@@ -145,6 +159,16 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 							+ message
 							+ "\nW zakładce opcje możesz \nręcznie pobrać listę grup",
 					Toast.LENGTH_SHORT).show();
+		}
+
+		classes.DownloadManager.setDowloadingGroups(false);
+		ProgressBar groupsBar = (ProgressBar) activity
+				.findViewById(R.id.loadingGroupsBar);
+		TextView downloadingLabel = (TextView) activity
+				.findViewById(R.id.loadingGroupText);
+		if (groupsBar != null && downloadingLabel != null) {
+			groupsBar.setVisibility(View.GONE);
+			downloadingLabel.setVisibility(View.GONE);
 		}
 
 	}
@@ -156,7 +180,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		boolean isConnected = activeNetwork != null
 				&& activeNetwork.isConnectedOrConnecting();
-		Log.v("t", "Connected: " + String.valueOf(isConnected));
+		// Log.v("t", "Connected: " + String.valueOf(isConnected));
 		return isConnected;
 	}
 

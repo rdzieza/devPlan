@@ -10,32 +10,37 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 import dev.rd.devplan.R;
 
-public class GroupsListAdapter extends CursorAdapter{
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         Links groups data with group list view.
+ */
+public class GroupsListAdapter extends CursorAdapter {
 
-	
-	
-	
 	public GroupsListAdapter(Context context, Cursor c) {
-		super(context, c,true);
+		super(context, c, true);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		TextView groupName = (TextView)view.findViewById(R.id.groupName);
+		TextView groupName = (TextView) view.findViewById(R.id.groupName);
 		groupName.setText(cursor.getString(cursor.getColumnIndex("NAME")));
-		if(cursor.getInt(cursor.getColumnIndex("IS_ACTIVE")) == 1){
+		if (cursor.getInt(cursor.getColumnIndex("IS_ACTIVE")) == 1) {
 			groupName.setTextColor(Color.parseColor("#0099CC"));
-		}else{
+		} else {
 			groupName.setTextColor(Color.GRAY);
 		}
-		
+
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.single_group_row_view, parent, false);
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.single_group_row_view, parent,
+				false);
 		return view;
 	}
 

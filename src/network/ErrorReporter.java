@@ -13,17 +13,23 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import dev.rd.devplan.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
+import dev.rd.devplan.R;
 
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         AsyncTask responsible for crating POST request in order to report an
+ *         error.
+ * 
+ */
 public class ErrorReporter extends AsyncTask<Void, Void, Void> {
 	private String url = "http://devplan.uek.krakow.pl/devPlanAdmin/index.php/issue/create";
 	private String email;
@@ -86,24 +92,24 @@ public class ErrorReporter extends AsyncTask<Void, Void, Void> {
 		return null;
 	}
 
-	
 	@Override
 	public void onPostExecute(Void v) {
 		if (!isCancelled()) {
-			Log.v("t", "Error reported");
-			Toast.makeText(context, "Zgłoszono błąd! Dziękujemy!", Toast.LENGTH_SHORT).show();
-			Activity activity = (Activity)context;
-			EditText descriptionField = (EditText)activity.findViewById(R.id.error_description);
-			if(descriptionField != null){
+//			Log.v("t", "Error reported");
+			Toast.makeText(context, context.getString(R.string.error_reported),
+					Toast.LENGTH_SHORT).show();
+			Activity activity = (Activity) context;
+			EditText descriptionField = (EditText) activity
+					.findViewById(R.id.error_description);
+			if (descriptionField != null) {
 				descriptionField.setText("");
 			}
 		} else {
-			Toast.makeText(context, "Wystąpił problem: " + message, Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(context, "Wystąpił problem: " + message,
+					Toast.LENGTH_SHORT).show();
 		}
 	}
-	
-	
+
 	public boolean checkConnection() {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -111,9 +117,8 @@ public class ErrorReporter extends AsyncTask<Void, Void, Void> {
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		boolean isConnected = activeNetwork != null
 				&& activeNetwork.isConnectedOrConnecting();
-		Log.v("t", "Connected: " + String.valueOf(isConnected));
+//		Log.v("t", "Connected: " + String.valueOf(isConnected));
 		return isConnected;
 	}
-	
-	
+
 }

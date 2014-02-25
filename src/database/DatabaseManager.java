@@ -15,11 +15,17 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import classes.Event;
 import classes.Item;
 import classes.Separator;
 
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         Database Helper creates, holds connection to databse.
+ * 
+ */
 @SuppressLint("NewApi")
 public class DatabaseManager extends SQLiteOpenHelper {
 	private static Context context;
@@ -48,12 +54,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			+ "NAME VARCHAR(30) NOT NULL,"
 			+ "IS_ACTIVE INT NOT NULL DEFAULT 0)";
 
-	// private static final String CREATE_SELECTED =
-	// "CREATE TABLE IF NOT EXISTS SELECTED ("
-	// + "ID LONG PRIMARY KEY)";
-
-	// private static final Strning CREATE_INDEX = ""
-
 	public DatabaseManager() {
 		super(context, DB_NAME, null, VERSION);
 
@@ -73,12 +73,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// db.execSQL("DROP TABLE IF EXISTS ACTIVITIES");
-		// db.execSQL("DROP TABLE IF EXISTS GROUPS");
 		db.execSQL(CREATE_GROUPS);
 		db.execSQL(CREATE_ACTIVITIES);
-		// db.execSQL(CREATE_SELECTED);
-
 	}
 
 	@Override
@@ -92,7 +88,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			String[] columns = { "NAME", "ID as _id", "IS_ACTIVE" };
 			Cursor c = db.query("GROUPS", columns, null, null, null, null,
 					"NAME");
-			Log.v("t", String.valueOf(c.getCount()));
+			// Log.v("t", String.valueOf(c.getCount()));
 			return c;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -114,7 +110,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 			String lastDay = "00-00";
 			ArrayList<Item> items = new ArrayList<Item>();
-			Log.v("t", String.valueOf(cursor.getCount()));
+			// Log.v("t", String.valueOf(cursor.getCount()));
 			while (cursor.moveToNext()) {
 				String day = cursor.getString(cursor.getColumnIndex("DAY"));
 				if (!lastDay.equals(day)) {
@@ -157,7 +153,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 			String lastDay = "00-00";
 			ArrayList<Item> items = new ArrayList<Item>();
-			Log.v("t", String.valueOf(cursor.getCount()));
+			// Log.v("t", String.valueOf(cursor.getCount()));
 			while (cursor.moveToNext()) {
 				String day = cursor.getString(cursor.getColumnIndex("DAY"));
 				if (!lastDay.equals(day)) {
@@ -197,7 +193,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 			String lastDay = "00-00";
 			ArrayList<Item> items = new ArrayList<Item>();
-			Log.v("t", String.valueOf(cursor.getCount()));
+			// Log.v("t", String.valueOf(cursor.getCount()));
 			while (cursor.moveToNext()) {
 				String day = cursor.getString(cursor.getColumnIndex("DAY"));
 				if (!lastDay.equals(day)) {
@@ -238,7 +234,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					null, null, "TIME");
 
 			ArrayList<Item> items = new ArrayList<Item>();
-			Log.v("t", String.valueOf(cursor.getCount()));
+			// Log.v("t", String.valueOf(cursor.getCount()));
 			int counter = 0;
 			while (cursor.moveToNext()) {
 				if (counter == 0) {
@@ -281,7 +277,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 			String lastDay = "00-00";
 			ArrayList<Item> items = new ArrayList<Item>();
-			Log.v("t", String.valueOf(cursor.getCount()));
+			// Log.v("t", String.valueOf(cursor.getCount()));
 			while (cursor.moveToNext()) {
 				String day = cursor.getString(cursor.getColumnIndex("DAY"));
 				if (!lastDay.equals(day)) {
@@ -328,8 +324,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	public static Cursor getEventsCursor(SQLiteDatabase db) {
 		try {
-			// Long time = new Date().getTime();
-			// String[] args = { String.valueOf(time) };
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
 					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
 					"DAY_OF_WEEK", "TIME" };
@@ -380,7 +374,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	}
 
 	public static void changeStatus(long id, SQLiteDatabase db) {
-		// Log.v("t", "status change, id: " + String.valueOf(id));
 		String[] columns = { "IS_ACTIVE", "ID" };
 		String[] args = { String.valueOf(id) };
 		Cursor c = db.query("GROUPS", columns, " ID = ?", args, null, null,
@@ -388,10 +381,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		c.moveToNext();
 		int isActive = c.getInt(c.getColumnIndex("IS_ACTIVE"));
 		if (isActive == 1) {
-			Log.v("t", "setting as inactive, id: " + String.valueOf(id));
+			// Log.v("t", "setting as inactive, id: " + String.valueOf(id));
 			DatabaseManager.setAsInactive(id, instance.getWritableDatabase());
 		} else {
-			Log.v("t", "setting as active, id: " + String.valueOf(id));
+			// Log.v("t", "setting as active, id: " + String.valueOf(id));
 			DatabaseManager.setAsActive(id, instance.getWritableDatabase());
 		}
 	}
@@ -401,7 +394,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put("IS_ACTIVE", 0);
 		String[] args = { String.valueOf(id) };
 		db.update("GROUPS", values, " ID = ?", args);
-		// removeFromSelected(id, db);
 	}
 
 	public static void setAsActive(long id, SQLiteDatabase db) {
@@ -409,7 +401,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put("IS_ACTIVE", 1);
 		String[] args = { String.valueOf(id) };
 		db.update("GROUPS", values, " ID = ?", args);
-		// addToSelected(id, db);
 	}
 
 	public static boolean insertGroup(int id, String name) {
@@ -425,34 +416,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			// db.close();
 		}
 	}
-
-	// public static void addAllGroups(org.json.JSONArray groups, SQLiteDatabase
-	// db) {
-	// SQLiteDatabase db = instance.getWritableDatabase();
-	// db.beginTransaction();
-	// ContentValues results = new ContentValues();
-	// try {
-	// for (int i = 0; i < groups.length(); i++) {
-	// JSONObject group = groups.getJSONObject(i);
-	// String query = "INSERT INTO GROUPS (ID, NAME, IS_ACTIVE) VALUES ('"
-	// + String.valueOf(group.getInt("id"))
-	// + "','"
-	// + group.getString("name") + "', 0)";
-	// db.execSQL(query);
-	// // Log.v("t", groups.toString());
-	// }
-	// results.put("result", 0);
-	// } catch (JSONException e) {
-	// results.put("result", 1);
-	// results.put("message", "JSON problem");
-	// } catch (SQLException e) {
-	// results.put("result", 1);
-	// results.put("message", "JSON problem");
-	// }
-	// // db.setTransactionSuccessful();
-	// // db.endTransaction();
-	//
-	// }
 
 	public static void removeGroups() {
 		SQLiteDatabase db = instance.getWritableDatabase();
@@ -511,7 +474,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			Cursor c = db.query("GROUPS", colums, "IS_ACTIVE = ?", args, null,
 					null, "NAME");
 			c.moveToFirst();
-			Log.v("t", "number of selected: " + c.getCount());
+			// Log.v("t", "number of selected: " + c.getCount());
 			return c;
 		} catch (SQLException e) {
 			return null;
@@ -560,7 +523,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			try {
 				for (int i = 0; i < activities.length(); i++) {
 					JSONObject activity = activities.getJSONObject(i);
-					Log.v("t", activity.toString());
+					// Log.v("t", activity.toString());
 					String name = activity.getString("name");
 					if (name.equals("Język obcy")) {
 						continue;
@@ -591,12 +554,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					String dayOfWeek = activity.getString("day_of_week");
 					Long time = activity.getLong("starts_at_timestamp");
 
-					// DatabaseManager.addActivity(db,
-					// id, groupId, groupName, tutorId, tutorName, tutorUrl,
-					// placeId,
-					// placeLocation, categoryName, notes, name, state, day,
-					// dayOfWeek,
-					// startAt, endAt, time);
 					db.execSQL(
 							"Insert into activities (ID, GROUP_NAME, GROUP_ID, TUTOR_ID, TUTOR_NAME, TUTOR_URL, PLACE_ID, PLACE_LOCATION,"
 									+ "CATEGORY_NAME, NAME, NOTES, STATE, START_AT, END_AT, DAY, DAY_OF_WEEK, TIME) values (?, ?, ?, ?, ?, ?, ?, ?,"
@@ -636,12 +593,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					null, null);
 			while (c.moveToNext()) {
 				String name = c.getString(c.getColumnIndex("NAME"));
-				Log.v("t", "nazwa: " + name);
+				// Log.v("t", "nazwa: " + name);
 				if (name.equals("") || name == null) {
 					continue;
 				} else {
 					list.add(name);
-					Log.v("t", name);
+					// Log.v("t", name);
 				}
 			}
 			return list.toArray(new String[list.size()]);

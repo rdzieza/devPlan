@@ -12,7 +12,7 @@
     <string name="selected_groups_label">Wybrane grupy</string>
     <string name="update_time_table_button">Aktualizuj plan</string>
     <string name="filter_group_hint">Wprowadź nazwę grupy</string>
-    <string name="no_selected_groups_text">Brak wybranych grup</string>
+    <string name="no_selected_groups_text">Brak wybranych group</string>
 
     <!-- MAIN VIEW -->
     <string name="groups_tab_label">Grupy</string>
@@ -26,7 +26,7 @@
     <string name="filters_title">Filtry</string>
     <string name="filter_by_name">Filtruj po nazwie</string>
     <string name="filter_since_today">Pokaż od dziś</string>
-    <string name="filter_full_semester">Pokaż cały semestr</string>
+    <string name="filter_full_semester">Pokaż calły semestr</string>
 
     <!-- ERROR MESSAGE -->
     <string name="error_activity_title">Zgłoś błąd</string>
@@ -55,8 +55,5 @@
     <string name="option_update_groups">"Aktualizuj listę grup"</string>
     <string name="option_report_error">"Zgłoś błąd"</string>
     <string name="option_info">"O programie"</string>
-    
-    <!-- LOADERS -->
-	<string name="downloading_time_table_info">Pobieranie planu zajęć...</string>
-	<string name="downloading_groups_info">Pobieranie listy grup...</string>
+
 </resources>

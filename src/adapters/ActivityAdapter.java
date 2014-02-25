@@ -13,6 +13,12 @@ import classes.Item;
 import classes.Separator;
 import dev.rd.devplan.R;
 
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         Link between activities data and views.
+ */
 public class ActivityAdapter extends ArrayAdapter<Item> {
 	private Context context;
 	private ArrayList<Item> items;
@@ -24,7 +30,7 @@ public class ActivityAdapter extends ArrayAdapter<Item> {
 		this.items = list;
 		infl = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+
 	}
 
 	@Override
@@ -66,5 +72,4 @@ public class ActivityAdapter extends ArrayAdapter<Item> {
 		return view;
 	}
 
-	
 }

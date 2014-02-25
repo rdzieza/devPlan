@@ -11,20 +11,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import classes.Option;
 import dev.rd.devplan.R;
-
-public class OptionsListAdapter extends ArrayAdapter<Option>{
-	//private Context context;
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ * Links options list with icons and views.
+ *
+ */
+public class OptionsListAdapter extends ArrayAdapter<Option> {
 	private ArrayList<Option> items;
 	private LayoutInflater infl;
-	
+
 	public OptionsListAdapter(Context context, ArrayList<Option> list) {
 		super(context, 0, list);
-		//this.context = context;
 		this.items = list;
 		infl = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
-	
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
@@ -33,16 +37,13 @@ public class OptionsListAdapter extends ArrayAdapter<Option>{
 		} else {
 			view = infl.inflate(R.layout.single_option_view, null);
 		}
-		ImageView icon = (ImageView)view.findViewById(R.id.optionIcon);
-		TextView title = (TextView)view.findViewById(R.id.optionTitle);
+		ImageView icon = (ImageView) view.findViewById(R.id.optionIcon);
+		TextView title = (TextView) view.findViewById(R.id.optionTitle);
 		Option option = items.get(position);
 		icon.setImageResource(option.icon);
 		title.setText(option.title);
-		
 
 		return view;
 	}
-	
-
 
 }

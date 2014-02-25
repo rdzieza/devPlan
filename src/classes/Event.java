@@ -1,6 +1,13 @@
 package classes;
 
-public class Event implements Item{
+/**
+ * 
+ * @author Robert Dzieża
+ * 
+ *         Model class, representing single event, activity.
+ * 
+ */
+public class Event implements Item {
 	private long id;
 	private String subject;
 	private String startHours;
@@ -8,8 +15,6 @@ public class Event implements Item{
 	private Long timestamp;
 	private String room;
 	private String type;
-	
-	
 
 	public Event(long id, String subject, String startHours, String endHour,
 			Long timestamp, String room, String type) {

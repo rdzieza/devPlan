@@ -17,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import classes.DownloadManager;
 import classes.Event;
 import classes.Item;
 
@@ -26,6 +28,12 @@ import com.actionbarsherlock.app.SherlockFragment;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 
+/**
+ * 
+ * @author Robert Dzieża 
+ * 		   Fragment responsible for presenting users time table
+ *         and handle users filter actions.
+ */
 public class TimeTableFragment extends SherlockFragment implements
 		OnItemClickListener {
 	private ListView list;
@@ -36,6 +44,14 @@ public class TimeTableFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.time_table_list_view, containter,
 				false);
 		list = (ListView) view.findViewById(R.id.timeTableListView);
+		
+		if(DownloadManager.isDownloadingTimeTable()){
+			ProgressBar loadingBar = (ProgressBar)view.findViewById(R.id.loadingTimeTableBar);
+			TextView label = (TextView)view.findViewById(R.id.loadingTimeTableText);
+			loadingBar.setVisibility(View.VISIBLE);
+			label.setVisibility(View.VISIBLE);
+		}
+		
 		Bundle extras = this.getArguments();
 		if (extras != null) {
 			String action = extras.getString("action");
@@ -143,7 +159,7 @@ public class TimeTableFragment extends SherlockFragment implements
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent(Intent.ACTION_VIEW);
-					TextView urlView = (TextView)v;
+					TextView urlView = (TextView) v;
 					String url = urlView.getText().toString();
 					intent.setData(Uri.parse(url));
 					startActivity(intent);
@@ -187,5 +203,5 @@ public class TimeTableFragment extends SherlockFragment implements
 			return "Niedziela";
 		}
 	}
-	
+
 }

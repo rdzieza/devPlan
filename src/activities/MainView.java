@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +30,10 @@ import fragments.MoreOptionsFragment;
 import fragments.TimeTableFragment;
 
 /**
- * Main Application view, responsible for users navigation.
  * 
- * @author robert dzieża
+ * @author Robert Dzieża
+ * 
+ *         Main Application view, responsible for users navigation.
  * 
  */
 @SuppressLint("NewApi")
@@ -65,13 +65,13 @@ public class MainView extends SherlockFragmentActivity implements
 				.setTabListener(this));
 
 		if (!PreferenceHelper.getBoolean("areGroupsDownloaded")) {
-			Log.v("t", "no groups downloaded");
+			// Log.v("t", "no groups downloaded");
 			GroupsDownloader down = new GroupsDownloader(this);
 			down.execute();
 			actionBar.setSelectedNavigationItem(0);
 		} else {
 			actionBar.setSelectedNavigationItem(1);
-			Log.v("t", "no need to download anything");
+			// Log.v("t", "no need to download anything");
 		}
 
 	}
@@ -91,7 +91,7 @@ public class MainView extends SherlockFragmentActivity implements
 		case 1: {
 			TimeTableFragment tableFragment = new TimeTableFragment();
 			if (extras != null) {
-				Log.v("t", extras.getString("action"));
+				// Log.v("t", extras.getString("action"));
 				tableFragment.setArguments(extras);
 			}
 			trans.replace(R.id.fragment, tableFragment).commit();
@@ -148,8 +148,8 @@ public class MainView extends SherlockFragmentActivity implements
 									TextView nameView = (TextView) adapter
 											.getChildAt(position);
 									String name = nameView.getText().toString();
-									Log.v("t", name);
-									 Intent intent = new Intent(
+									//Log.v("t", name);
+									Intent intent = new Intent(
 											getApplicationContext(),
 											MainView.class);
 									intent.putExtra("action", "nameFilter");
@@ -162,42 +162,7 @@ public class MainView extends SherlockFragmentActivity implements
 					builder.show();
 				}
 			});
-//			View dayFilter = view.findViewById(R.id.dayFilter);
-//			dayFilter.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					builder.setTitle("day filter");
-//					final DatePicker date = new DatePicker(
-//							getApplicationContext());
-//					int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-//					if (currentapiVersion >= 11) {
-//						date.setCalendarViewShown(false);
-//					}
-//					builder.setPositiveButton("OK",
-//							new DialogInterface.OnClickListener() {
-//
-//								@Override
-//								public void onClick(DialogInterface dialog,
-//										int which) {
-//									String day = date.getYear() + "-"
-//											+ (date.getMonth() + 1) + "-"
-//											+ date.getDayOfMonth();
-//									Log.v("t", "date: " + day);
-//									Intent intent = new Intent(
-//											getApplicationContext(),
-//											MainView.class);
-//									intent.putExtra("action", "dayFilter");
-//									intent.putExtra("day", day);
-//									startActivity(intent);
-//								}
-//							});
-//					builder.setView(date);
-//					builder.setNegativeButton("Anuluj", null);
-//					builder.show();
-//
-//				}
-//			});
+
 			View sinceToday = view.findViewById(R.id.sinceToday);
 			sinceToday.setOnClickListener(new OnClickListener() {
 
@@ -223,56 +188,11 @@ public class MainView extends SherlockFragmentActivity implements
 				}
 
 			});
-//			View daysFilter = view.findViewById(R.id.daysFilter);
-//			daysFilter.setOnClickListener(new OnClickListener() {
-//
-//				@SuppressLint("NewApi")
-//				@Override
-//				public void onClick(View v) {
-//					builder.setTitle("day filter");
-//					View view = infl.inflate(R.layout.days_filter, null);
-//					final DatePicker fromDate = (DatePicker) view
-//							.findViewById(R.id.dateFrom);
-//					final DatePicker toDate = (DatePicker) view
-//							.findViewById(R.id.dateTo);
-//					int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-//					if (currentapiVersion >= 11) {
-//						fromDate.setCalendarViewShown(false);
-//						toDate.setCalendarViewShown(false);
-//					}
-//					builder.setPositiveButton("OK",
-//							new DialogInterface.OnClickListener() {
-//
-//								@Override
-//								public void onClick(DialogInterface dialog,
-//										int which) {
-//									String from = fromDate.getYear() + "-"
-//											+ (fromDate.getMonth() + 1) + "-"
-//											+ fromDate.getDayOfMonth();
-//									String to = toDate.getYear() + "-"
-//											+ (toDate.getMonth() + 1) + "-"
-//											+ toDate.getDayOfMonth();
-//									Log.v("t", "range: " + from + " - " + to);
-//									Intent intent = new Intent(
-//											getApplicationContext(),
-//											MainView.class);
-//									intent.putExtra("action", "daysFilter");
-//									intent.putExtra("from", from);
-//									intent.putExtra("to", to);
-//									startActivity(intent);
-//
-//								}
-//							});
-//					builder.setView(view);
-//					builder.setNegativeButton("Anuluj", null);
-//					builder.show();
-//
-//				}
-//			});
+
 			builder.setView(view);
 			builder.show();
-		}else if(keyCode == KeyEvent.KEYCODE_BACK){
-			Log.v("t", "back clicked");
+		} else if (keyCode == KeyEvent.KEYCODE_BACK) {
+			//Log.v("t", "back clicked");
 			this.finish();
 		}
 
