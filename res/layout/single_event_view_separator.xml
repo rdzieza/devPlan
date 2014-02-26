@@ -2,72 +2,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-
+    android:orientation="horizontal" >
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/startTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="start" />
-
-            <TextView
-                android:id="@+id/endTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="end" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/activityTopic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:ellipsize="marquee"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text="name" />
-
-            <TextView
-                android:id="@+id/activityType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:ellipsize="marquee"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text="type" />
-        </LinearLayout>
+        android:layout_weight="0.2"
+        android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/activityRoom"
-            android:layout_width="0dp"
+            android:id="@+id/startTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="start" />
+
+        <TextView
+            android:id="@+id/endTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="end" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/activityTopic"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_marginRight="2sp"
-            android:layout_weight="0.2"
-            android:lines="2"
-            android:text="room" />
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:text="name" />
+
+        <TextView
+            android:id="@+id/activityType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:text="type" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/activityRoom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginRight="2sp"
+        android:layout_weight="0.2"
+        android:lines="2"
+        android:text="room" />
 
 </LinearLayout>

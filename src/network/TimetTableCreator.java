@@ -62,9 +62,7 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 	public void onPreExecute() {
 		super.onPreExecute();
 		client = new DefaultHttpClient();
-		selectedCursor = DatabaseManager.getSelected(DatabaseManager
-				.getConnection().getReadableDatabase());
-		numberOfselected = selectedCursor.getCount();
+
 	}
 
 	@Override
@@ -72,81 +70,94 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 		isConnected = checkConnection();
 
 		if (!isConnected) {
-			this.cancel(true);
 			message += "Brak połączenia z internetem";
-		}
-		
-		DownloadManager.setDownloadingTimeTable(true);
-		
-		if (numberOfselected == 0) {
-			Log.v("t", "ZEROOOOOOOO");
 			this.cancel(true);
-			message += "Brak wybranych grup!";
-			return null;
 		} else {
-			HttpPost post = new HttpPost(
-					"http://cash.dev.uek.krakow.pl//v0_1/timetables");
+			selectedCursor = DatabaseManager.getSelected(DatabaseManager
+					.getConnection().getReadableDatabase());
+			numberOfselected = selectedCursor.getCount();
 
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			while (selectedCursor.moveToNext()) {
-				params.add(new BasicNameValuePair("group_id[]", selectedCursor
-						.getString(selectedCursor.getColumnIndex("ID"))));
-			}
-			for (NameValuePair pair : params) {
-				Log.v("t", pair.getName() + " : " + pair.getValue());
-			}
-			try {
-				post.setEntity(new UrlEncodedFormEntity(params));
-				HttpResponse response = client.execute(post);
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-						response.getEntity().getContent()));
-				StringBuilder sb = new StringBuilder();
-				String line = "";
-				while ((line = rd.readLine()) != null) {
-					sb.append(line);
+			if (numberOfselected == 0) {
+				// Log.v("t", "ZEROOOOOOOO");
+				message += "Brak wybranych grup!";
+				this.cancel(true);
+				return null;
+			} else {
+				DownloadManager.setDownloadingTimeTable(true);
+				HttpPost post = new HttpPost(
+						"http://cash.dev.uek.krakow.pl/v0_1/timetables");
+
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				while (selectedCursor.moveToNext()) {
+					params.add(new BasicNameValuePair("group_id[]",
+							selectedCursor.getString(selectedCursor
+									.getColumnIndex("ID"))));
 				}
-				line = sb.toString();
-				Log.v("T", line);
-				JSONObject json = new JSONObject(line);
-				String hash = json.getString("_id");
-				Log.v("t", hash);
-				PreferenceHelper.saveString("timeTableUrl", hash);
-				code = 0;
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				this.cancel(true);
-				message += "Błąd kodowania, problem z serwerem";
-				return null;
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				this.cancel(true);
-				message += "Błąd protokołu, problem z serwerem";
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				this.cancel(true);
-				message += "Błąd operacji wejścia-wyjścia";
-				return null;
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				this.cancel(true);
-				message += "Problem z serwerem";
-				return null;
+				for (NameValuePair pair : params) {
+					Log.v("t", pair.getName() + " : " + pair.getValue());
+				}
+
+				try {
+					post.setEntity(new UrlEncodedFormEntity(params));
+					// Log.v("t", post.toString());
+					HttpResponse response = client.execute(post);
+					BufferedReader rd = new BufferedReader(
+							new InputStreamReader(response.getEntity()
+									.getContent()));
+					StringBuilder sb = new StringBuilder();
+					String line = "";
+					while ((line = rd.readLine()) != null) {
+						sb.append(line);
+					}
+					line = sb.toString();
+					Log.v("T", line);
+					JSONObject json = new JSONObject(line);
+					String hash = json.getString("_id");
+					Log.v("t", hash);
+					PreferenceHelper.saveString("timeTableUrl", hash);
+					code = 0;
+				} catch (UnsupportedEncodingException e) {
+					message += "Błąd kodowania, problem z serwerem";
+					e.printStackTrace();
+					this.cancel(true);
+
+					return null;
+				} catch (ClientProtocolException e) {
+					message += "Błąd protokołu, problem z serwerem";
+					e.printStackTrace();
+					this.cancel(true);
+
+					return null;
+				} catch (IOException e) {
+					message += "Błąd operacji wejścia-wyjścia";
+					e.printStackTrace();
+					this.cancel(true);
+
+					return null;
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					message += "Problem z serwerem";
+					e.printStackTrace();
+					this.cancel(true);
+
+					return null;
+				}
 			}
-			return null;
 		}
+		return null;
 
 	}
 
 	@Override
 	public void onPostExecute(Void v) {
+		Log.v("t", "onPostExecute() begins, " + "message: " + message);
+
 		if (!isCancelled()) {
 			Log.v("t", "TimeTable successfully created!");
 			addGroupFragment.downloadTimeTable(code);
 		} else {
 			Toast.makeText(context, "Wystąpił problem: " + message,
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 			DownloadManager.setDownloadingTimeTable(false);
 		}
 	}

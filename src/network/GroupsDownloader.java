@@ -12,7 +12,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 
 import prefereces.PreferenceHelper;
-import adapters.ActivityAdapter;
 import adapters.GroupsListAdapter;
 import android.app.Activity;
 import android.content.ContentValues;

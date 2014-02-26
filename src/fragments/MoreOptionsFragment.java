@@ -3,6 +3,7 @@ package fragments;
 import java.util.ArrayList;
 
 import network.GroupsDownloader;
+import network.VersionChecker;
 import activities.InfoActivity;
 import activities.MainView;
 import activities.ReportErrorActivity;
@@ -68,8 +69,10 @@ public class MoreOptionsFragment extends SherlockFragment implements
 		}
 			break;
 		case 1: {
-			Toast.makeText(this.parent, "Checkin for update", Toast.LENGTH_LONG)
-					.show();
+//			Toast.makeText(this.parent, "Checkin for update", Toast.LENGTH_LONG)
+//					.show();
+			VersionChecker versionChecker = new VersionChecker(this.parent);
+			versionChecker.execute();
 		}
 			break;
 		case 2: {

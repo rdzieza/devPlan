@@ -3,6 +3,12 @@ package network;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -11,8 +17,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import classes.DownloadManager;
 
 import prefereces.PreferenceHelper;
 import adapters.ActivityAdapter;
@@ -28,6 +32,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import classes.DownloadManager;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 
@@ -66,11 +71,12 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 
 		isConnected = checkConnection();
 		if (!isConnected) {
-			this.cancel(true);
 			message = "brak połączenia z internetem";
+			this.cancel(true);
+
 		}
 
-		Log.v("t", url);
+		// Log.v("t", url);
 		HttpGet get = new HttpGet(url);
 		try {
 			HttpResponse response = client.execute(get);
@@ -82,7 +88,39 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 				sb.append(line);
 			}
 
+			// Log.v("t", sb.toString());
+
 			JSONObject object = new JSONObject(sb.toString());
+			Log.v("t", "********************");
+			JSONObject versions = object.getJSONObject("versions");
+			LinkedList<Integer> list = new LinkedList<Integer>();
+			Iterator i = versions.keys();
+			while (i.hasNext()) {
+				String key = i.next().toString();
+				list.add(Integer.valueOf(key.substring(5)));
+			}
+//			for(Integer s : list){
+//				Log.v("t", s.toString());
+//			}
+			Integer[] array = list.toArray(new Integer[list.size()]);
+			Arrays.sort(array);
+			
+			StringBuilder sb = new StringBuilder("{");
+			for(Integer s : array){
+				Log.v("t", s.toString());
+				String groupName = "group" + s.toString();
+				sb.append("\"" + groupName +  "\":\"" + versions.getString(groupName) + "\",");
+			}
+			sb.setLength(sb.length()-1);
+			sb.append("}");
+			Log.v("t", sb.toString());
+			
+			
+//			Log.v("t", sb.toString());
+//			Log.v("downloading versions: ", sb.toString());
+			PreferenceHelper.saveString("versions", sb.toString());
+			Log.v("t", "********************");
+
 			JSONArray activities = object.getJSONArray("activities");
 
 			ContentValues results = DatabaseManager
@@ -114,7 +152,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 			Log.v("t", context.getString(R.string.download_finished_message));
 			Toast.makeText(context,
 					context.getString(R.string.download_finished_message),
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 
 			ListView timeTableList = (ListView) activity
 					.findViewById(R.id.timeTableListView);
@@ -126,7 +164,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 
 		} else {
 			Toast.makeText(context, "Wystąpił błąd: " + message,
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 		}
 		DownloadManager.setDownloadingTimeTable(false);
 
@@ -134,7 +172,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 				.findViewById(R.id.loadingTimeTableBar);
 		TextView label = (TextView) activity
 				.findViewById(R.id.loadingTimeTableText);
-		
+
 		if (loadingBar != null && label != null) {
 			loadingBar.setVisibility(View.GONE);
 			label.setVisibility(View.GONE);
