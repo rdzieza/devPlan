@@ -2,10 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:layout_marginTop="10dp" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
@@ -17,13 +18,13 @@
             android:layout_marginRight="5dp"
             android:maxLines="1"
             android:text="start"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/endTime"
@@ -32,7 +33,20 @@
             android:layout_marginLeft="5dp"
             android:maxLines="1"
             android:text="end"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/activityType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+           	android:textAlignment="viewEnd"
+           	android:gravity="right"
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:text="type"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
@@ -48,18 +62,6 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/activityType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="5dp"
-        android:ellipsize="marquee"
-        android:maxLines="1"
-        android:scrollHorizontally="true"
-        android:text="type"
-        android:textSize="20sp" />
-
-    <TextView
         android:id="@+id/activityRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,6 +70,6 @@
         android:layout_marginRight="2sp"
         android:lines="2"
         android:text="room"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>

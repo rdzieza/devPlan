@@ -246,10 +246,8 @@ int drawable ic_dev 0x7f020071
 int drawable ic_error 0x7f020072
 int drawable ic_groups 0x7f020073
 int drawable ic_info 0x7f020074
-int drawable ic_launcher 0x7f020075
-int drawable ic_start 0x7f020076
-int drawable ic_web 0x7f020077
-int drawable timetable 0x7f020078
+int drawable ic_start 0x7f020075
+int drawable ic_web 0x7f020076
 int id abs__action_bar 0x7f040020
 int id abs__action_bar_container 0x7f04001f
 int id abs__action_bar_subtitle 0x7f040011

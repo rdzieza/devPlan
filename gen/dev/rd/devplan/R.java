@@ -915,10 +915,8 @@ containing a value of this type.
         public static final int ic_error=0x7f020072;
         public static final int ic_groups=0x7f020073;
         public static final int ic_info=0x7f020074;
-        public static final int ic_launcher=0x7f020075;
-        public static final int ic_start=0x7f020076;
-        public static final int ic_web=0x7f020077;
-        public static final int timetable=0x7f020078;
+        public static final int ic_start=0x7f020075;
+        public static final int ic_web=0x7f020076;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040020;
