@@ -26,8 +26,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import classes.DownloadManager;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
+import fragments.AddGroupFragment;
 
 /**
  * 
@@ -59,7 +61,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		client = new DefaultHttpClient();
 		sb = new StringBuilder();
 		Toast.makeText(context,
-				"Pobieranie: lista grup\n po zakonczeniu dodaj swoje grupy!",
+				"Pobieranie: lista grup\npo zakończeniu dodaj swoje grupy!",
 				Toast.LENGTH_LONG).show();
 	}
 
@@ -168,6 +170,15 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		if (groupsBar != null && downloadingLabel != null) {
 			groupsBar.setVisibility(View.GONE);
 			downloadingLabel.setVisibility(View.GONE);
+		}
+		
+		AddGroupFragment adf = DownloadManager.getAddGroupFragment();
+		if(adf != null){
+			Log.v("t", "adf not null");
+			adf.setAdapter();
+			adf.fixFilter();
+		}else{
+			Log.v("t", "adf null");
 		}
 
 	}

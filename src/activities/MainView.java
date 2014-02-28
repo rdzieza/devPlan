@@ -6,9 +6,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -73,6 +76,45 @@ public class MainView extends SherlockFragmentActivity implements
 			actionBar.setSelectedNavigationItem(1);
 			// Log.v("t", "no need to download anything");
 		}
+
+//		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+//			Toast.makeText(this, "Large screen", Toast.LENGTH_LONG).show();
+//
+//		} else if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+//			Toast.makeText(this, "Normal sized screen", Toast.LENGTH_LONG)
+//					.show();
+//
+//		} else if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_SMALL) {
+//			Toast.makeText(this, "Small sized screen", Toast.LENGTH_LONG)
+//					.show();
+//		} else {
+//			Toast.makeText(this,
+//					"Screen size is neither large, normal or small",
+//					Toast.LENGTH_LONG).show();
+//		}
+//		DisplayMetrics metrics = new DisplayMetrics();
+//		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//		int density = metrics.densityDpi;
+//
+//		if (density == DisplayMetrics.DENSITY_HIGH) {
+//			Toast.makeText(this,
+//					"DENSITY_HIGH... Density is " + String.valueOf(density),
+//					Toast.LENGTH_LONG).show();
+//		} else if (density == DisplayMetrics.DENSITY_MEDIUM) {
+//			Toast.makeText(this,
+//					"DENSITY_MEDIUM... Density is " + String.valueOf(density),
+//					Toast.LENGTH_LONG).show();
+//		} else if (density == DisplayMetrics.DENSITY_LOW) {
+//			Toast.makeText(this,
+//					"DENSITY_LOW... Density is " + String.valueOf(density),
+//					Toast.LENGTH_LONG).show();
+//		} else {
+//			Toast.makeText(
+//					this,
+//					"Density is neither HIGH, MEDIUM OR LOW.  Density is "
+//							+ String.valueOf(density), Toast.LENGTH_LONG)
+//					.show();
+//		}
 
 	}
 
@@ -148,7 +190,7 @@ public class MainView extends SherlockFragmentActivity implements
 									TextView nameView = (TextView) adapter
 											.getChildAt(position);
 									String name = nameView.getText().toString();
-									//Log.v("t", name);
+									// Log.v("t", name);
 									Intent intent = new Intent(
 											getApplicationContext(),
 											MainView.class);
@@ -192,7 +234,7 @@ public class MainView extends SherlockFragmentActivity implements
 			builder.setView(view);
 			builder.show();
 		} else if (keyCode == KeyEvent.KEYCODE_BACK) {
-			//Log.v("t", "back clicked");
+			// Log.v("t", "back clicked");
 			this.finish();
 		}
 

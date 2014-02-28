@@ -59,4 +59,8 @@
     <!-- LOADERS -->
 	<string name="downloading_time_table_info">Pobieranie planu zajęć...</string>
 	<string name="downloading_groups_info">Pobieranie listy grup...</string>
+	
+	<!-- CHECK VERSION -->
+	<string name="timetable_up_to_date">Plan zajęć aktualny</string>
+	<string name="timetable_not_up_to_date">Plan zajęć nieaktualny! \nCzy chcesz podbrać nowszą wersje?</string>
 </resources>

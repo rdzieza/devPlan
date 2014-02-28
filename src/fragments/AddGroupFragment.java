@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,7 +23,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import classes.DownloadManager;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -97,7 +97,7 @@ public class AddGroupFragment extends SherlockFragment {
 
 			}
 		});
-
+		DownloadManager.setAddGroupFragment(selfPointer);
 		return view;
 	}
 
@@ -107,6 +107,7 @@ public class AddGroupFragment extends SherlockFragment {
 	}
 
 	public void fixFilter() {
+		Log.v("t", "fixin filter");
 		filterField.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -141,6 +142,9 @@ public class AddGroupFragment extends SherlockFragment {
 			}
 		});
 	}
+	
+	
+	
 
 	public void setAdapter() {
 		String text = filterField.getText().toString();
@@ -158,11 +162,21 @@ public class AddGroupFragment extends SherlockFragment {
 
 	public void downloadTimeTable(int code) {
 		if (code == 0) {
-			TimeTableDownloader tDown = new TimeTableDownloader(parent);
+			TimeTableDownloader tDown = new TimeTableDownloader(parent, selfPointer);
 			tDown.execute();
 		} else {
 //			Log.v("t", "could run downloader - creator returned 0");
 		}
 	}
-
+	
+	@Override
+	public void onDestroyView(){
+		super.onDestroyView();
+		DownloadManager.setAddGroupFragment(null);
+	}
+	
+	public void onDetach(){
+		super.onDetach();
+		DownloadManager.setAddGroupFragment(null);
+	}
 }

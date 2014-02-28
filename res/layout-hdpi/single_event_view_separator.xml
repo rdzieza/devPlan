@@ -16,12 +16,14 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:maxLines="1"
-            android:text="start" />
+            android:text="start"
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="-" />
+            android:text="-"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/endTime"
@@ -29,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:maxLines="1"
-            android:text="end" />
+            android:text="end"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <TextView
@@ -41,7 +44,8 @@
         android:ellipsize="marquee"
         android:maxLines="2"
         android:scrollHorizontally="true"
-        android:text="name" />
+        android:text="name"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/activityType"
@@ -52,7 +56,8 @@
         android:ellipsize="marquee"
         android:maxLines="1"
         android:scrollHorizontally="true"
-        android:text="type" />
+        android:text="type"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/activityRoom"
@@ -62,6 +67,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="2sp"
         android:lines="2"
-        android:text="room" />
+        android:text="room"
+        android:textSize="20sp" />
 
 </LinearLayout>

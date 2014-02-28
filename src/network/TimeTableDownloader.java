@@ -35,6 +35,7 @@ import android.widget.Toast;
 import classes.DownloadManager;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
+import fragments.AddGroupFragment;
 
 /**
  * 
@@ -52,9 +53,15 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 	private Context context;
 	private String message;
 	boolean isConnected;
+	private AddGroupFragment addGroupFragment;
 
 	public TimeTableDownloader(Context context) {
 		this.context = context;
+	}
+	
+	public TimeTableDownloader(Context context, AddGroupFragment addGroupFragment) {
+		this.context = context;
+		this.addGroupFragment = addGroupFragment;
 	}
 
 	@Override
@@ -67,7 +74,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		Log.v("t", "Downloader - do in background - start");
+//		Log.v("t", "Downloader - do in background - start");
 
 		isConnected = checkConnection();
 		if (!isConnected) {
@@ -91,7 +98,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 			// Log.v("t", sb.toString());
 
 			JSONObject object = new JSONObject(sb.toString());
-			Log.v("t", "********************");
+//			Log.v("t", "********************");
 			JSONObject versions = object.getJSONObject("versions");
 			LinkedList<Integer> list = new LinkedList<Integer>();
 			Iterator i = versions.keys();
@@ -107,19 +114,19 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 			
 			StringBuilder sb = new StringBuilder("{");
 			for(Integer s : array){
-				Log.v("t", s.toString());
+//				Log.v("t", s.toString());
 				String groupName = "group" + s.toString();
 				sb.append("\"" + groupName +  "\":\"" + versions.getString(groupName) + "\",");
 			}
 			sb.setLength(sb.length()-1);
 			sb.append("}");
-			Log.v("t", sb.toString());
+//			Log.v("t", sb.toString());
 			
 			
 //			Log.v("t", sb.toString());
 //			Log.v("downloading versions: ", sb.toString());
 			PreferenceHelper.saveString("versions", sb.toString());
-			Log.v("t", "********************");
+//			Log.v("t", "********************");
 
 			JSONArray activities = object.getJSONArray("activities");
 
@@ -134,12 +141,12 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			this.cancel(true);
 			message = "Problem z siecią lub serwerem";
+			this.cancel(true);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			this.cancel(true);
 			message = "Problem z  serwerem";
+			this.cancel(true);
 		}
 
 		return null;
@@ -177,6 +184,8 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 			loadingBar.setVisibility(View.GONE);
 			label.setVisibility(View.GONE);
 		}
+		
+		
 
 	}
 

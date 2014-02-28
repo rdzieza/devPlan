@@ -97,7 +97,7 @@ public class ErrorReporter extends AsyncTask<Void, Void, Void> {
 		if (!isCancelled()) {
 //			Log.v("t", "Error reported");
 			Toast.makeText(context, context.getString(R.string.error_reported),
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 			Activity activity = (Activity) context;
 			EditText descriptionField = (EditText) activity
 					.findViewById(R.id.error_description);
@@ -106,7 +106,7 @@ public class ErrorReporter extends AsyncTask<Void, Void, Void> {
 			}
 		} else {
 			Toast.makeText(context, "Wystąpił problem: " + message,
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 		}
 	}
 

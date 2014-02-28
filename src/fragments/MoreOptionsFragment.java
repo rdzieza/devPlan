@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 import classes.Option;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -39,8 +38,8 @@ public class MoreOptionsFragment extends SherlockFragment implements
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.options_list, containter, false);
-		list = (ListView) view.findViewById(R.id.groupsListView);
+		View view = inflater.inflate(R.layout.options_list_view, containter, false);
+		list = (ListView) view.findViewById(R.id.optionsList);
 
 		ArrayList<Option> items = new ArrayList<Option>();
 
