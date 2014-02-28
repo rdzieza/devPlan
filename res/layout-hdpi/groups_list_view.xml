@@ -10,10 +10,10 @@
         android:layout_height="wrap_content"
         android:background="#787878"
         android:gravity="center"
-        android:padding="5dp"
         android:text="@string/selected_groups_label"
+        android:textSize="20sp"
         android:textColor="#FFFFFF"
-        android:textSize="20sp" />
+        android:padding="8dp" />
 
     <ListView
         android:id="@+id/selectedGroupsList"
@@ -40,14 +40,12 @@
         android:layout_height="wrap_content"
         android:background="#787878"
         android:gravity="center"
-        android:padding="5dp"
         android:text="@string/add_group_label"
+        android:textSize="20sp"
         android:textColor="#FFFFFF"
-        android:textSize="20sp" />
-
-    <FrameLayout
-        android:id="@+id/addGroupsFragmentLayout"
+        android:padding="8dp" />
+	<FrameLayout 
+	    android:id="@+id/addGroupsFragmentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 </LinearLayout>

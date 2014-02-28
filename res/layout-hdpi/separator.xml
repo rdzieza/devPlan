@@ -10,9 +10,10 @@
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:text="SEPARATOR"
-        android:textColor="#FFFFFF"
-        android:padding="5dp"
         android:background="#787878"
-        android:clickable="false" />
+        android:clickable="false"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:padding="8dp" />
 
 </LinearLayout>
