@@ -8,9 +8,8 @@
         android:id="@+id/selectedGroupsLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#787878"
+        android:background="#60787878"
         android:gravity="center"
-        android:padding="5dp"
         android:text="@string/selected_groups_label"
         android:textColor="#FFFFFF"
         android:textSize="20sp" />
@@ -38,9 +37,8 @@
         android:id="@+id/addGroupsLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#787878"
+        android:background="#60787878"
         android:gravity="center"
-        android:padding="5dp"
         android:text="@string/add_group_label"
         android:textColor="#FFFFFF"
         android:textSize="20sp" />
@@ -51,3 +49,4 @@
         android:layout_height="wrap_content" />
 
 </LinearLayout>
+<!--  -->

@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -26,7 +23,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -53,7 +49,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 	private Context context;
 	private String message;
 	boolean isConnected;
-	private AddGroupFragment addGroupFragment;
+//	private AddGroupFragment addGroupFragment;
 
 	public TimeTableDownloader(Context context) {
 		this.context = context;
@@ -61,7 +57,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 	
 	public TimeTableDownloader(Context context, AddGroupFragment addGroupFragment) {
 		this.context = context;
-		this.addGroupFragment = addGroupFragment;
+//		this.addGroupFragment = addGroupFragment;
 	}
 
 	@Override
@@ -156,7 +152,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void v) {
 		Activity activity = (Activity) context;
 		if (!isCancelled()) {
-			Log.v("t", context.getString(R.string.download_finished_message));
+//			Log.v("t", context.getString(R.string.download_finished_message));
 			Toast.makeText(context,
 					context.getString(R.string.download_finished_message),
 					Toast.LENGTH_LONG).show();
@@ -165,7 +161,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 					.findViewById(R.id.timeTableListView);
 			if (timeTableList != null) {
 				timeTableList.setAdapter(new ActivityAdapter(context,
-						DatabaseManager.getEventsList(DatabaseManager
+						DatabaseManager.getEventsListSincetToday(DatabaseManager
 								.getConnection().getReadableDatabase())));
 			}
 
@@ -196,7 +192,7 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		boolean isConnected = activeNetwork != null
 				&& activeNetwork.isConnectedOrConnecting();
-		Log.v("t", "Connected: " + String.valueOf(isConnected));
+//		Log.v("t", "Connected: " + String.valueOf(isConnected));
 		return isConnected;
 	}
 }

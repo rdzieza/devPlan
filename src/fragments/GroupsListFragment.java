@@ -1,5 +1,6 @@
 package fragments;
 
+import prefereces.PreferenceHelper;
 import adapters.GroupsListAdapter;
 import adapters.SelectedGroupsAdapter;
 import android.app.Activity;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import classes.SelectedCounter;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -30,9 +32,11 @@ public class GroupsListFragment extends SherlockFragment {
 	private Activity parent;
 	private SelectedGroupsAdapter selectedAdapter;
 	GroupsListAdapter adapter;
+
 	// Boolean values
 	private boolean areSelectedShown;
 	private boolean areAllShown;
+
 	// Views
 	private ListView selected;
 	// Labels
@@ -40,22 +44,31 @@ public class GroupsListFragment extends SherlockFragment {
 	private TextView addGroupsLabel;
 	// Empty list view
 	private TextView noSelectedLabel;
+	AddGroupFragment addGroupFragment;
+	
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.groups_list_view, containter,
 				false);
-
 		// Selected groups section
-
 		selected = (ListView) view.findViewById(R.id.selectedGroupsList);
+
 		selectedLabel = (TextView) view.findViewById(R.id.selectedGroupsLabel);
+		// //////////////////////////////////////////////////////////////////////////////////////////////////
+		if (parent != null) {
+			SelectedCounter selectedCounter = new SelectedCounter(parent,
+					selectedLabel);
+			selectedCounter.execute();
+		}
+		// //////////////////////////////////////////////////////////////////////////////////////////////////
 		areSelectedShown = false;
 		selectedAdapter = new SelectedGroupsAdapter(parent,
 				DatabaseManager.getSelectedWithNames(DatabaseManager
 						.getConnection().getReadableDatabase()));
 		noSelectedLabel = (TextView) view.findViewById(R.id.noSelectedLabel);
-		noSelectedLabel.setText(parent.getString(R.string.no_selected_groups_text));
+		noSelectedLabel.setText(parent
+				.getString(R.string.no_selected_groups_text));
 		selected.setEmptyView(noSelectedLabel);
 		selected.setAdapter(selectedAdapter);
 		selected.setVisibility(View.GONE);
@@ -64,10 +77,10 @@ public class GroupsListFragment extends SherlockFragment {
 			@Override
 			public void onClick(View v) {
 				if (areSelectedShown) {
-//					Log.v("t", "Ukryj wybrane");
+					// Log.v("t", "Ukryj wybrane");
 					hideSelected();
 				} else {
-//					Log.v("t", "Pokaz wybrane");
+					// Log.v("t", "Pokaz wybrane");
 					showSelected();
 				}
 
@@ -84,6 +97,14 @@ public class GroupsListFragment extends SherlockFragment {
 						DatabaseManager.getSelectedWithNames(DatabaseManager
 								.getConnection().getReadableDatabase()));
 				selected.setAdapter(selectedAdapter);
+				if (addGroupFragment != null) {
+					addGroupFragment.update();
+				}
+				if (PreferenceHelper.getBoolean("isDatabaseCreated")) {
+					SelectedCounter selectedCounter = new SelectedCounter(
+							parent, selectedLabel);
+					selectedCounter.execute();
+				}
 
 			}
 		});
@@ -94,21 +115,20 @@ public class GroupsListFragment extends SherlockFragment {
 		areAllShown = false;
 		addGroupsLabel.setOnClickListener(new View.OnClickListener() {
 
-			AddGroupFragment addGroupFragment;
-
 			@Override
 			public void onClick(View v) {
 				if (areAllShown) {
 					FragmentTransaction trans = getSherlockActivity()
 							.getSupportFragmentManager().beginTransaction();
-//					Log.v("t", "Ukryj wszystkie");
+					// Log.v("t", "Ukryj wszystkie");
 					trans.remove(addGroupFragment);
 					trans.commit();
 					areAllShown = false;
 				} else {
 					FragmentTransaction trans = getSherlockActivity()
 							.getSupportFragmentManager().beginTransaction();
-//					Log.v("t", "Pokaż wszystkie");
+					// Log.v("t", "Pokaż wszystkie");
+					
 					addGroupFragment = new AddGroupFragment();
 					trans.replace(R.id.addGroupsFragmentLayout,
 							addGroupFragment);
@@ -127,6 +147,13 @@ public class GroupsListFragment extends SherlockFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		parent = activity;
+		// isAdded = true;
+	}
+
+	public void onDetach() {
+		super.onDetach();
+		parent = null;
+		// isAdded = false;
 	}
 
 	public void hideSelected() {

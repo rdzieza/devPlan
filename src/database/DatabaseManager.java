@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import prefereces.PreferenceHelper;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,10 +16,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import classes.Event;
 import classes.Item;
 import classes.Separator;
+import fragments.TimeTableFragment;
 
 /**
  * 
@@ -71,11 +72,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 		return instance;
 	}
+	
+	public static synchronized SQLiteDatabase getReadable(){
+		SQLiteDatabase db = getConnection().getReadableDatabase();
+		if(db.isOpen()){
+//			Log.v("t", "Was open");
+			return db;
+		}else{
+//			Log.v("t", "Was not open");
+			return getConnection().getReadableDatabase();
+		}
+	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_GROUPS);
 		db.execSQL(CREATE_ACTIVITIES);
+		PreferenceHelper.saveBoolean("isDatabaseCreated", true);
 	}
 
 	@Override
@@ -98,6 +111,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 		return null;
 	}
+	
+	public static Cursor getUnselectedGroupsCursor(SQLiteDatabase db) {
+		try { 
+			String[] columns = { "NAME", "ID as _id", "IS_ACTIVE" };
+			Cursor c = db.query("GROUPS", columns, "IS_ACTIVE = ?",
+					new String[] { "0" }, null, null, null);
+			return c;
+		} catch (SQLException e) {
+			return null;
+		} catch (IllegalStateException e){
+			return null;
+		}
+	}
+	
+	
 
 	public static ArrayList<Item> getEventsListFromRange(SQLiteDatabase db,
 			String from, String to) {
@@ -118,7 +146,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					lastDay = day;
 					String weekDay = cursor.getString(cursor
 							.getColumnIndex("DAY_OF_WEEK"));
-					Separator separator = new Separator(day + " " + weekDay);
+					Separator separator = new Separator(day + " " + TimeTableFragment.getFullName(weekDay));
 					items.add(separator);
 				}
 				Event event = new Event(
@@ -183,7 +211,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		}
 		return null;
 	}
-
+	
+	public static int getSelectedCount(SQLiteDatabase db){
+		try{
+			String table = "GROUPS";
+			String[] columns = {"ID"};
+			Cursor c = db.query(table, columns, "IS_ACTIVE = ?", new String[]{"1"}, null, null, null);
+			return c.getCount();
+		}catch(SQLException e){
+			return -1;
+		}
+		
+	}
+	
 	public static ArrayList<Item> getEventsList(SQLiteDatabase db) {
 		try {
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
@@ -242,7 +282,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					String day = cursor.getString(cursor.getColumnIndex("DAY"));
 					String weekDay = cursor.getString(cursor
 							.getColumnIndex("DAY_OF_WEEK"));
-					Separator separator = new Separator(day + " " + weekDay);
+					Separator separator = new Separator(day + " " + TimeTableFragment.getFullName(weekDay));
 					items.add(separator);
 				}
 				Event event = new Event(
@@ -312,7 +352,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		try {
 			String[] columns = { "ID as _id", "NAME", "PLACE_LOCATION",
 					"START_AT", "END_AT", "CATEGORY_NAME", "DAY",
-					"DAY_OF_WEEK", "TUTOR_NAME", "TUTOR_URL" };
+					"DAY_OF_WEEK", "TUTOR_NAME", "TUTOR_URL", "NOTES" };
 			String[] args = { String.valueOf(id) };
 			Cursor cursor = db.query("ACTIVITIES", columns, "ID = ?", args,
 					null, null, null);
@@ -395,6 +435,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put("IS_ACTIVE", 0);
 		String[] args = { String.valueOf(id) };
 		db.update("GROUPS", values, " ID = ?", args);
+		////////////////////////////////////////////////////////////////////////////////////
+//		SelectedCounter selectedCounter = new SelectedCounter(context);
+//		selectedCounter.execute();
 	}
 
 	public static void setAsActive(long id, SQLiteDatabase db) {
@@ -402,6 +445,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		values.put("IS_ACTIVE", 1);
 		String[] args = { String.valueOf(id) };
 		db.update("GROUPS", values, " ID = ?", args);
+		//////////////////////////////////////////////////////////////////////////////////
+//		SelectedCounter selectedCounter = new SelectedCounter(context);
+//		selectedCounter.execute();
 	}
 
 	public static boolean insertGroup(int id, String name) {
@@ -458,8 +504,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public static Cursor getWhereName(SQLiteDatabase db, String name) {
 		try {
 			String[] colums = { "NAME", "ID as _id", "IS_ACTIVE" };
-			String[] args = { "%" + name + "%" };
-			Cursor c = db.query("GROUPS", colums, "NAME like ?", args, null,
+			String[] args = { "%" + name + "%", "0" };
+			Cursor c = db.query("GROUPS", colums, "NAME like ? AND IS_ACTIVE = ?", args, null,
 					null, "NAME");
 			c.moveToFirst();
 			return c;

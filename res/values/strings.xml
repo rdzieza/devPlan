@@ -10,7 +10,7 @@
     <!-- GROUPS VIEW -->
     <string name="add_group_label">Dodaj grupę</string>
     <string name="selected_groups_label">Wybrane grupy</string>
-    <string name="update_time_table_button">Aktualizuj plan</string>
+    <string name="update_time_table_button">Pobierz plan</string>
     <string name="filter_group_hint">Wprowadź nazwę grupy</string>
     <string name="no_selected_groups_text">Brak wybranych grup</string>
 
@@ -20,8 +20,9 @@
     <string name="options_tab_label">Opcje</string>
 
     <!-- URLs -->
-    <string name="home_page">http://devplan.uek.krakow.pl/</string>
-
+    <string name="home_page">http://devplan.uek.krakow.pl</string>
+	<string name="google_play_url">https://play.google.com/store/apps/details?id=dev.rd.devplan</string>
+	
     <!-- FILTER -->
     <string name="filters_title">Filtry</string>
     <string name="filter_by_name">Filtruj po nazwie</string>
@@ -41,10 +42,10 @@
     <!-- DOWNLOAD TIME TABLE MESSAGES -->
     <string name="download_finished_message">Pobieranie planu zajęć zakończone</string>
     <string name="download_started">Rozpoczęto pobieranie planu zajęć</string>
-    <string name="app_info">Wersja: 1.0\nData wydania: \n</string>
-    <string name="app_sites">Strona projektu: </string>
-    <string name="google_play_site">Google play: </string>
-    <string name="google_play_url">http://something</string>
+    <string name="app_info">Wersja: 1.0\nData wydania: 10.03.2014\n</string>
+    <string name="app_sites">Strona projektu </string>
+    <string name="google_play_site">Google play </string>
+    
     <string name="authors">Autor programu: Robert Dzieża\nEmail: dziezarobert@gmail.com</string>
     <string name="dev_note">Aplikacja przygotowana przy współpracy z członkami koła naukowego >dev działającym przy Uniwersytecie Ekonomicznym w Krakowie.</string>
     <string name="thanks_note">Dziękujemy za pobranie!</string>

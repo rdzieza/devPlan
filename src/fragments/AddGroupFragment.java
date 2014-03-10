@@ -2,17 +2,19 @@ package fragments;
 
 import network.TimeTableDownloader;
 import network.TimetTableCreator;
+import prefereces.PreferenceHelper;
 import adapters.GroupsListAdapter;
 import adapters.SelectedGroupsAdapter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -24,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import classes.DownloadManager;
+import classes.SelectedCounter;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -44,6 +47,8 @@ public class AddGroupFragment extends SherlockFragment {
 	private Button updateTimetable;
 	private EditText filterField;
 	private AddGroupFragment selfPointer;
+	Handler handler;
+	
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
@@ -54,16 +59,38 @@ public class AddGroupFragment extends SherlockFragment {
 		updateTimetable = (Button) view
 				.findViewById(R.id.updateTimeTableButton);
 		filterField = (EditText) view.findViewById(R.id.filterField);
+		filterField.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(hasFocus){
+					ListView selected = (ListView) parent.findViewById(R.id.selectedGroupsList);
+					if(selected != null){
+						selected.setVisibility(View.GONE);
+					}
+					TextView noSelectedLabel = (TextView) parent.findViewById(R.id.noSelectedLabel);
+					if(noSelectedLabel != null){
+						noSelectedLabel.setVisibility(View.GONE);
+					}
+				}
+				
+			}
+		});
+		handler = new Handler();
 		
-		if(DownloadManager.isDowloadingGroups()){
-			ProgressBar groupsBar = (ProgressBar)view.findViewById(R.id.loadingGroupsBar);
+		
+		
+		
+		if (DownloadManager.isDowloadingGroups()) {
+			ProgressBar groupsBar = (ProgressBar) view
+					.findViewById(R.id.loadingGroupsBar);
 			groupsBar.setVisibility(View.VISIBLE);
-			TextView downloadingLabel = (TextView)view.findViewById(R.id.loadingGroupText);
+			TextView downloadingLabel = (TextView) view
+					.findViewById(R.id.loadingGroupText);
 			downloadingLabel.setVisibility(View.VISIBLE);
 		}
-		
-		setAdapter();
-		fixFilter();
+
+		update();
 
 		allGroupsList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -82,6 +109,9 @@ public class AddGroupFragment extends SherlockFragment {
 										.getConnection().getReadableDatabase()));
 				selected.setAdapter(selectedAdapter);
 				selected.setVisibility(View.GONE);
+				////////////////////////////////////////////////////////////////////////////////////////////////////
+				SelectedCounter selectedCounter = new SelectedCounter(parent);
+				selectedCounter.execute();
 			}
 		});
 
@@ -89,7 +119,8 @@ public class AddGroupFragment extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(parent, parent.getString(R.string.download_started),
+				Toast.makeText(parent,
+						parent.getString(R.string.download_started),
 						Toast.LENGTH_SHORT).show();
 				TimetTableCreator tDown = new TimetTableCreator(parent,
 						selfPointer);
@@ -100,14 +131,17 @@ public class AddGroupFragment extends SherlockFragment {
 		DownloadManager.setAddGroupFragment(selfPointer);
 		return view;
 	}
-
+	
+	
+	
+	
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		parent = activity;
 	}
 
 	public void fixFilter() {
-		Log.v("t", "fixin filter");
+//		Log.v("t", "fixin filter");
 		filterField.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -127,6 +161,7 @@ public class AddGroupFragment extends SherlockFragment {
 			@Override
 			public void afterTextChanged(Editable s) {
 				adapter.getFilter().filter(s.toString());
+				PreferenceHelper.saveString("filterString", s.toString());
 
 			}
 		});
@@ -142,16 +177,28 @@ public class AddGroupFragment extends SherlockFragment {
 			}
 		});
 	}
-	
-	
-	
 
 	public void setAdapter() {
 		String text = filterField.getText().toString();
+
 		if (text == null || text.equals("")) {
-			adapter = new GroupsListAdapter(parent,
-					DatabaseManager.getGroupsCursor(DatabaseManager
-							.getConnection().getReadableDatabase()));
+			text = PreferenceHelper.getString("filterString");
+			if (text.equals("brak")) {
+//				adapter = new GroupsListAdapter(parent,
+//						DatabaseManager
+//								.getUnselectedGroupsCursor(DatabaseManager
+//										.getConnection().getReadableDatabase()));
+				adapter = new GroupsListAdapter(parent,
+						DatabaseManager
+								.getUnselectedGroupsCursor(DatabaseManager
+										.getReadable()));
+			}else{
+				filterField.setText(text);
+//				Log.v("t", "setting filter field text");
+				adapter = new GroupsListAdapter(parent,
+						DatabaseManager.getWhereName(DatabaseManager
+								.getConnection().getReadableDatabase(), text));
+			}
 		} else {
 			adapter = new GroupsListAdapter(parent,
 					DatabaseManager.getWhereName(DatabaseManager
@@ -162,21 +209,39 @@ public class AddGroupFragment extends SherlockFragment {
 
 	public void downloadTimeTable(int code) {
 		if (code == 0) {
-			TimeTableDownloader tDown = new TimeTableDownloader(parent, selfPointer);
+			TimeTableDownloader tDown = new TimeTableDownloader(parent,
+					selfPointer);
 			tDown.execute();
 		} else {
-//			Log.v("t", "could run downloader - creator returned 0");
+			// Log.v("t", "could run downloader - creator returned 0");
 		}
 	}
-	
+
 	@Override
-	public void onDestroyView(){
+	public void onDestroyView() {
 		super.onDestroyView();
 		DownloadManager.setAddGroupFragment(null);
 	}
-	
-	public void onDetach(){
+
+	public void onDetach() {
 		super.onDetach();
 		DownloadManager.setAddGroupFragment(null);
+	}
+	
+	public void update(){
+		handler.post(new AdapterUpdator());
+	}
+	
+	
+	private class AdapterUpdator implements Runnable{
+
+		
+		@Override
+		public void run() {
+			setAdapter();
+			fixFilter();
+			
+		}
+		
 	}
 }

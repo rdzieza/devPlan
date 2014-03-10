@@ -3,7 +3,6 @@
  */
 package classes;
 
-import android.util.Log;
 import fragments.AddGroupFragment;
 
 /**
@@ -33,11 +32,11 @@ public class DownloadManager {
 	
 	public static void setAddGroupFragment(AddGroupFragment addGroupFragment){
 		DownloadManager.addGroupFragment = addGroupFragment;
-		Log.v("t", "setting reference");
+//		Log.v("t", "setting reference");
 	}
 	
 	public static AddGroupFragment getAddGroupFragment(){
-		Log.v("t", "getting reference");
+//		Log.v("t", "getting reference");
 		return DownloadManager.addGroupFragment;
 	}
 

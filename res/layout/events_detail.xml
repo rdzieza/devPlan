@@ -4,10 +4,16 @@
     android:layout_height="match_parent"
     android:layout_margin="5dp"
     android:background="#FFFFFF"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="5dp" >
 
     <TextView
         android:id="@+id/detailDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:id="@+id/detailTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal" />
@@ -18,30 +24,17 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal" />
 
+    
+
     <TextView
-        android:id="@+id/detailStart"
+        android:id="@+id/detailTutor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp" />
 
     <TextView
-        android:id="@+id/detailEnd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/detailTutor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
         android:id="@+id/detailTutorUrlLabel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/detailTutorUrl"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#800099CC" />
 
@@ -50,4 +43,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-</LinearLayout>
+</LinearLayout><!--
+<TextView
+        android:id="@+id/detailStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+    
+    <TextView
+        android:id="@+id/detailEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+        
+        <TextView
+        android:id="@+id/detailTutorUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#800099CC" />
+-->

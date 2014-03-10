@@ -122,6 +122,7 @@ public class VersionChecker extends AsyncTask<Void, Void, Void> {
 				text.setBackgroundColor(Color.WHITE);
 				text.setGravity(Gravity.CENTER);
 				text.setTextSize(18);
+				text.setPadding(5, 5, 5, 5);
 				String info = "";
 				builder.setTitle("Wersja planu");
 				info = activity.getString(R.string.timetable_not_up_to_date);

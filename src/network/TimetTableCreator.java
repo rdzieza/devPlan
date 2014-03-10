@@ -18,16 +18,14 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import classes.DownloadManager;
-
 import prefereces.PreferenceHelper;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
+import classes.DownloadManager;
 import database.DatabaseManager;
 import fragments.AddGroupFragment;
 
@@ -93,9 +91,9 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 							selectedCursor.getString(selectedCursor
 									.getColumnIndex("ID"))));
 				}
-				for (NameValuePair pair : params) {
-					Log.v("t", pair.getName() + " : " + pair.getValue());
-				}
+//				for (NameValuePair pair : params) {
+//					Log.v("t", pair.getName() + " : " + pair.getValue());
+//				}
 
 				try {
 					post.setEntity(new UrlEncodedFormEntity(params));
@@ -110,10 +108,10 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 						sb.append(line);
 					}
 					line = sb.toString();
-					Log.v("T", line);
+//					Log.v("T", line);
 					JSONObject json = new JSONObject(line);
 					String hash = json.getString("_id");
-					Log.v("t", hash);
+//					Log.v("t", hash);
 					PreferenceHelper.saveString("timeTableUrl", hash);
 					code = 0;
 				} catch (UnsupportedEncodingException e) {
@@ -150,10 +148,10 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	public void onPostExecute(Void v) {
-		Log.v("t", "onPostExecute() begins, " + "message: " + message);
+//		Log.v("t", "onPostExecute() begins, " + "message: " + message);
 
 		if (!isCancelled()) {
-			Log.v("t", "TimeTable successfully created!");
+//			Log.v("t", "TimeTable successfully created!");
 			addGroupFragment.downloadTimeTable(code);
 		} else {
 			Toast.makeText(context, "Wystąpił problem: " + message,
@@ -169,7 +167,7 @@ public class TimetTableCreator extends AsyncTask<Void, Void, Void> {
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		boolean isConnected = activeNetwork != null
 				&& activeNetwork.isConnectedOrConnecting();
-		Log.v("t", "Connected: " + String.valueOf(isConnected));
+//		Log.v("t", "Connected: " + String.valueOf(isConnected));
 		return isConnected;
 	}
 

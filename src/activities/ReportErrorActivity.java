@@ -1,5 +1,6 @@
 package activities;
 
+import classes.ActivitiesStack;
 import network.ErrorReporter;
 import android.app.Activity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ public class ReportErrorActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.error_message_view);
+		ActivitiesStack.add(this);
 		emailField = (EditText) findViewById(R.id.email_address);
 		descriptionField = (EditText) findViewById(R.id.error_description);
 

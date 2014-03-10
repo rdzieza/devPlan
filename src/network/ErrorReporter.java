@@ -57,8 +57,8 @@ public class ErrorReporter extends AsyncTask<Void, Void, Void> {
 		isConnected = checkConnection();
 
 		if (!isConnected) {
-			this.cancel(true);
 			message += "Brak połączenia z internetem";
+			this.cancel(true);
 		} else {
 
 			client = new DefaultHttpClient();
@@ -73,19 +73,19 @@ public class ErrorReporter extends AsyncTask<Void, Void, Void> {
 				httpPost.setEntity(new UrlEncodedFormEntity(parameters));
 				client.execute(httpPost);
 			} catch (UnsupportedEncodingException e) {
+				message += "Błąd kodowania, problem z serwerem";
 				e.printStackTrace();
 				this.cancel(true);
-				message += "Błąd kodowania, problem z serwerem";
 				return null;
 			} catch (ClientProtocolException e) {
+				message += "Błąd protokołu, problem z serwerem";
 				e.printStackTrace();
 				this.cancel(true);
-				message += "Błąd protokołu, problem z serwerem";
 				return null;
 			} catch (IOException e) {
+				message += "Błąd operacji wejścia-wyjścia";
 				e.printStackTrace();
 				this.cancel(true);
-				message += "Błąd operacji wejścia-wyjścia";
 				return null;
 			}
 		}

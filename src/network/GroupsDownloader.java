@@ -3,7 +3,6 @@ package network;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -13,6 +12,7 @@ import org.json.JSONException;
 
 import prefereces.PreferenceHelper;
 import adapters.GroupsListAdapter;
+import adapters.SelectedGroupsAdapter;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,6 +30,7 @@ import classes.DownloadManager;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 import fragments.AddGroupFragment;
+import fragments.MoreOptionsFragment;
 
 /**
  * 
@@ -47,12 +48,21 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 	boolean transactionExists;
 	private String message = "";
 	private boolean isConnected;
+	MoreOptionsFragment mof;
 
 	public GroupsDownloader(Context context) {
 		this.context = context;
 		db = DatabaseManager.getConnection().getWritableDatabase();
 		transactionExists = false;
 		classes.DownloadManager.setDowloadingGroups(true);
+	}
+	
+	public GroupsDownloader(Context context, MoreOptionsFragment mof) {
+		this.context = context;
+		db = DatabaseManager.getConnection().getWritableDatabase();
+		transactionExists = false;
+		classes.DownloadManager.setDowloadingGroups(true);
+		this.mof = mof;
 	}
 
 	@Override
@@ -97,7 +107,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 				/**
 				 * Parse JSON
 				 */
-				Long startTime = new Date().getTime();
+//				Long startTime = new Date().getTime();
 				try {
 					org.json.JSONArray groups = new org.json.JSONArray(
 							sb.toString());
@@ -117,10 +127,10 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 					e.printStackTrace();
 					message = message + " " + "server problem";
 				}
-				Long endTime = new Date().getTime();
-				Log.v("t",
-						"TIME DIFF: : : : "
-								+ String.valueOf(endTime - startTime));
+//				Long endTime = new Date().getTime();
+//				Log.v("t",
+//						"TIME DIFF: : : : "
+//								+ String.valueOf(endTime - startTime));
 			} catch (IOException e) {
 				e.printStackTrace();
 				this.cancel(true);
@@ -141,6 +151,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		Activity activity = (Activity) context;
 		if (!isCancelled()) {
 			// Log.v("t", "Grupy zostały pobrane");
+			PreferenceHelper.saveString("filterString", "brak");
 			Toast.makeText(context, "Grupy zostały pobrane", Toast.LENGTH_SHORT)
 					.show();
 
@@ -152,6 +163,16 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 								.getConnection().getReadableDatabase())));
 
 			}
+			ListView selected = (ListView) activity.findViewById(R.id.selectedGroupsList);
+			if(selected != null){
+				selected.setAdapter(new SelectedGroupsAdapter(activity,
+						DatabaseManager.getSelectedWithNames(DatabaseManager
+								.getConnection().getReadableDatabase())));
+			}
+			if(mof != null){
+				mof.updateGroupsInformation();
+			}
+			
 
 		} else {
 			Toast.makeText(
@@ -159,7 +180,7 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 					"Wystąpił problem: "
 							+ message
 							+ "\nW zakładce opcje możesz \nręcznie pobrać listę grup",
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 		}
 
 		classes.DownloadManager.setDowloadingGroups(false);
@@ -175,10 +196,11 @@ public class GroupsDownloader extends AsyncTask<Void, Void, Void> {
 		AddGroupFragment adf = DownloadManager.getAddGroupFragment();
 		if(adf != null){
 			Log.v("t", "adf not null");
-			adf.setAdapter();
-			adf.fixFilter();
+//			adf.setAdapter();
+//			adf.fixFilter();
+			adf.update();
 		}else{
-			Log.v("t", "adf null");
+//			Log.v("t", "adf null");
 		}
 
 	}
