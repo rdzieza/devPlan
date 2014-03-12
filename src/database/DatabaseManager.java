@@ -572,9 +572,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					JSONObject activity = activities.getJSONObject(i);
 					// Log.v("t", activity.toString());
 					String name = activity.getString("name");
-					if (name.equals("Język obcy")) {
-						continue;
-					}
+//					if (name.equals("Język obcy")) {
+//						continue;
+//					}
 					int id = activity.getInt("id");
 					JSONObject group = activity.getJSONObject("group");
 					int groupId = group.getInt("id");
@@ -594,9 +594,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 					}
 					String categoryName = activity.getString("category");
 //					Log.v("t", "category name: " + categoryName);
-					if(categoryName.equals("lektorat")){
-						continue;
-					}
+//					if(categoryName.equals("lektorat")){
+//						continue;
+//					}
 					int state = activity.getInt("state");
 					String startAt = activity.getString("starts_at");
 					String endAt = activity.getString("ends_at");
