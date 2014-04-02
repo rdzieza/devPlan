@@ -17,11 +17,6 @@
         android:label="devPlan"
         android:theme="@style/Theme.Sherlock.Light" >
         <activity
-            android:name="activities.MainActivity"
-            android:label="UEK Time Table"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name="activities.MainView"
             android:label="devPlan"
             android:screenOrientation="portrait" >
@@ -32,13 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="activities.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name="activities.InfoActivity"
-            
             android:screenOrientation="portrait" >
         </activity>
         <activity

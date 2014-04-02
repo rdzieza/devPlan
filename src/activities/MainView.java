@@ -1,6 +1,6 @@
 package activities;
 
-import network.GroupsDownloader;
+import network.NewGroupsDownloader;
 import prefereces.PreferenceHelper;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -25,6 +25,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
+import database.DatabaseConnectionManager;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 import fragments.GroupsListFragment;
@@ -50,13 +51,32 @@ public class MainView extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		PreferenceHelper.initialize(getApplicationContext());
 		DatabaseManager.initialize(getApplicationContext());
+		DatabaseConnectionManager.initialize(getApplicationContext());
+		
 		ActivitiesStack.add(this);
+		
 		setContentView(R.layout.activity_main);
+		
 		extras = getIntent().getExtras();
+		
 		PreferenceHelper.saveString("filterString", "brak");
-		// Utworzenie action bar'a
+		
+		createActionBar();
+
+		if (!PreferenceHelper.getBoolean("areGroupsDownloaded")) {
+			NewGroupsDownloader down = new NewGroupsDownloader(this);
+			down.execute();
+			actionBar.setSelectedNavigationItem(0);
+		} else {
+			actionBar.setSelectedNavigationItem(1);
+		}
+
+	}
+	
+	public void createActionBar() {
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.addTab(actionBar.newTab()
@@ -68,17 +88,6 @@ public class MainView extends SherlockFragmentActivity implements
 		actionBar.addTab(actionBar.newTab()
 				.setText(getString(R.string.options_tab_label))
 				.setTabListener(this));
-
-		if (!PreferenceHelper.getBoolean("areGroupsDownloaded")) {
-			// Log.v("t", "no groups downloaded");
-			GroupsDownloader down = new GroupsDownloader(this);
-			down.execute();
-			actionBar.setSelectedNavigationItem(0);
-		} else {
-			actionBar.setSelectedNavigationItem(1);
-			// Log.v("t", "no need to download anything");
-		}
-
 	}
 
 	@Override
@@ -125,92 +134,103 @@ public class MainView extends SherlockFragmentActivity implements
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU && fragmentAttached == 1) {
-			final Builder builder = new Builder(this);
-			builder.setTitle(getString(R.string.filters_title));
-			final LayoutInflater infl = (LayoutInflater) this
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View view = infl.inflate(R.layout.filters, null);
-			View nameFilter = view.findViewById(R.id.nameFilter);
-			nameFilter.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					builder.setTitle("Filtruj po nazwie");
-					final ListView acticitiesNameList = new ListView(
-							getApplicationContext());
-					ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-							getApplicationContext(),
-							R.layout.single_group_row_view, DatabaseManager
-									.getActivitiesNameList());
-					acticitiesNameList.setAdapter(adapter);
-					acticitiesNameList.setBackgroundColor(Color.WHITE);
-					acticitiesNameList
-							.setOnItemClickListener(new OnItemClickListener() {
-
-								@Override
-								public void onItemClick(AdapterView<?> adapter,
-										View view, int position, long id) {
-									TextView nameView = (TextView) adapter
-											.getChildAt(position);
-									String name = nameView.getText().toString();
-									// Log.v("t", name);
-									Intent intent = new Intent(
-											getApplicationContext(),
-											MainView.class);
-									intent.putExtra("action", "nameFilter");
-									intent.putExtra("name", name);
-									startActivity(intent);
-								}
-
-							});
-					builder.setView(acticitiesNameList);
-					nameFfilterDialog = builder.create();
-					nameFfilterDialog.show();
-				}
-			});
-
-			View sinceToday = view.findViewById(R.id.sinceToday);
-			sinceToday.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					Intent intent = new Intent(getApplicationContext(),
-							MainView.class);
-					startActivity(intent);
-
-				}
-
-			});
-			View fullTable = view.findViewById(R.id.noFilter);
-			fullTable.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					Intent intent = new Intent(getApplicationContext(),
-							MainView.class);
-					intent.putExtra("action", "noFilter");
-					startActivity(intent);
-
-				}
-
-			});
-
-			builder.setView(view);
-			filterDialog = builder.create();
-			filterDialog.show();
-		} 
+			createFilterDialog();
+		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	@Override
-	public void onPause(){
-		if(filterDialog != null){
+	public void onPause() {
+		if (filterDialog != null) {
 			filterDialog.dismiss();
 		}
-		if(nameFfilterDialog != null){
+		if (nameFfilterDialog != null) {
 			nameFfilterDialog.dismiss();
 		}
 		super.onPause();
 	}
 
+	
+
+	public void createFilterDialog() {
+		final Builder builder = new Builder(this);
+		builder.setTitle(getString(R.string.filters_title));
+		final LayoutInflater infl = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = infl.inflate(R.layout.filters, null);
+		View nameFilter = view.findViewById(R.id.nameFilter);
+		
+		nameFilter.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				nameFfilterDialog = createFilterByNameDialog(builder);
+				nameFfilterDialog.show();
+			}
+		});
+
+		View sinceToday = view.findViewById(R.id.sinceToday);
+		sinceToday.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(getApplicationContext(),
+						MainView.class);
+				startActivity(intent);
+
+			}
+
+		});
+		
+		View fullTable = view.findViewById(R.id.noFilter);
+		fullTable.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(getApplicationContext(),
+						MainView.class);
+				intent.putExtra("action", "noFilter");
+				startActivity(intent);
+
+			}
+
+		});
+
+		builder.setView(view);
+		filterDialog = builder.create();
+		filterDialog.show();
+	}
+
+	public AlertDialog createFilterByNameDialog(Builder builder) {
+		builder.setTitle("Filtruj po nazwie");
+		ListView activitiesListView = createActivitiesListView();
+		builder.setView(activitiesListView);
+		return builder.create();
+	}
+	
+	public ListView createActivitiesListView() {
+		ListView activitiesNameList = new ListView(
+				getApplicationContext());
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				getApplicationContext(), R.layout.single_group_row_view,
+				DatabaseManager.getActivitiesNameList());
+		activitiesNameList.setAdapter(adapter);
+		activitiesNameList.setBackgroundColor(Color.WHITE);
+		activitiesNameList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View view,
+					int position, long id) {
+				TextView nameView = (TextView) adapter.getChildAt(position);
+				String name = nameView.getText().toString();
+				// Log.v("t", name);
+				Intent intent = new Intent(getApplicationContext(),
+						MainView.class);
+				intent.putExtra("action", "nameFilter");
+				intent.putExtra("name", name);
+				startActivity(intent);
+			}
+		});
+		return activitiesNameList;
+	}
 }

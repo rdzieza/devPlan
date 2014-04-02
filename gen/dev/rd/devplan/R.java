@@ -1109,38 +1109,39 @@ containing a value of this type.
         /**  GROUPS VIEW 
          */
         public static final int add_group_label=0x7f090011;
-        public static final int app_info=0x7f090029;
+        public static final int app_info=0x7f09002a;
         /**  MAIN SETTINGS 
          */
         public static final int app_name=0x7f09000d;
-        public static final int app_sites=0x7f09002a;
-        public static final int authors=0x7f09002c;
-        public static final int dev_note=0x7f09002d;
+        public static final int app_sites=0x7f09002b;
+        public static final int authors=0x7f09002d;
+        public static final int dev_note=0x7f09002e;
         /**  DOWNLOAD TIME TABLE MESSAGES 
          */
-        public static final int download_finished_message=0x7f090027;
-        public static final int download_started=0x7f090028;
-        public static final int downloading_groups_info=0x7f090035;
+        public static final int download_finished_message=0x7f090028;
+        public static final int download_started=0x7f090029;
+        public static final int downloading_groups_info=0x7f090036;
         /**  LOADERS 
          */
-        public static final int downloading_time_table_info=0x7f090034;
-        public static final int email=0x7f090020;
-        public static final int email_hint=0x7f090021;
+        public static final int downloading_time_table_info=0x7f090035;
+        public static final int email=0x7f090021;
+        public static final int email_hint=0x7f090022;
         /**  ERROR MESSAGE 
          */
-        public static final int error_activity_title=0x7f09001f;
-        public static final int error_description=0x7f090022;
-        public static final int error_description_hint=0x7f090023;
-        public static final int error_reported=0x7f090026;
-        public static final int filter_by_name=0x7f09001c;
-        public static final int filter_full_semester=0x7f09001e;
+        public static final int error_activity_title=0x7f090020;
+        public static final int error_description=0x7f090023;
+        public static final int error_description_hint=0x7f090024;
+        public static final int error_reported=0x7f090027;
+        public static final int filter_by_name=0x7f09001d;
+        public static final int filter_full_semester=0x7f09001f;
         public static final int filter_group_hint=0x7f090014;
-        public static final int filter_since_today=0x7f09001d;
+        public static final int filter_since_today=0x7f09001e;
         /**  FILTER 
          */
-        public static final int filters_title=0x7f09001b;
-        public static final int google_play_site=0x7f09002b;
+        public static final int filters_title=0x7f09001c;
+        public static final int google_play_site=0x7f09002c;
         public static final int google_play_url=0x7f09001a;
+        public static final int groups_download_url=0x7f09001b;
         /**  MAIN VIEW 
          */
         public static final int groups_tab_label=0x7f090016;
@@ -1148,26 +1149,26 @@ containing a value of this type.
          */
         public static final int home_page=0x7f090019;
         public static final int no_selected_groups_text=0x7f090015;
-        public static final int option_check_update=0x7f090030;
+        public static final int option_check_update=0x7f090031;
         /**  OPTIONS FRAGMENT 
          */
-        public static final int option_homepage=0x7f09002f;
-        public static final int option_info=0x7f090033;
-        public static final int option_report_error=0x7f090032;
-        public static final int option_update_groups=0x7f090031;
+        public static final int option_homepage=0x7f090030;
+        public static final int option_info=0x7f090034;
+        public static final int option_report_error=0x7f090033;
+        public static final int option_update_groups=0x7f090032;
         public static final int options_tab_label=0x7f090018;
         public static final int selected_groups_label=0x7f090012;
-        public static final int send_error_raport=0x7f090024;
-        public static final int thanks_note=0x7f09002e;
-        public static final int timetable_not_up_to_date=0x7f090037;
+        public static final int send_error_raport=0x7f090025;
+        public static final int thanks_note=0x7f09002f;
+        public static final int timetable_not_up_to_date=0x7f090038;
         public static final int timetable_tab_label=0x7f090017;
         /**  CHECK VERSION 
          */
-        public static final int timetable_up_to_date=0x7f090036;
+        public static final int timetable_up_to_date=0x7f090037;
         public static final int title_activity_info=0x7f090010;
         public static final int title_activity_settings=0x7f09000f;
         public static final int update_time_table_button=0x7f090013;
-        public static final int wrong_data=0x7f090025;
+        public static final int wrong_data=0x7f090026;
     }
     public static final class style {
         /** 
