@@ -1,6 +1,6 @@
 package activities;
 
-import network.NewGroupsDownloader;
+import network.GroupsDownloader;
 import prefereces.PreferenceHelper;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -67,7 +67,7 @@ public class MainView extends SherlockFragmentActivity implements
 		createActionBar();
 
 		if (!PreferenceHelper.getBoolean("areGroupsDownloaded")) {
-			NewGroupsDownloader down = new NewGroupsDownloader(this);
+			GroupsDownloader down = new GroupsDownloader(this);
 			down.execute();
 			actionBar.setSelectedNavigationItem(0);
 		} else {

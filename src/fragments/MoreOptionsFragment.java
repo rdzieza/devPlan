@@ -84,8 +84,7 @@ public class MoreOptionsFragment extends SherlockFragment implements
 		}
 			break;
 		case 2: {
-			GroupsDownloader groupDown = new GroupsDownloader(getActivity(),
-					this);
+			GroupsDownloader groupDown = new GroupsDownloader(this.getActivity());
 			groupDown.execute();
 		}
 			break;
