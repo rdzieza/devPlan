@@ -1,5 +1,6 @@
 package database;
 
+import database.table.GroupsTable;
 import prefereces.PreferenceHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,10 +28,7 @@ public class DatabaseConnectionManager extends SQLiteOpenHelper{
 			+ "END_AT  VARCHAR(20),"
 			+ "DAY  VARCHAR(20)," + "DAY_OF_WEEK VARCHAR(20)," + "TIME LONG)";
 
-	private static final String CREATE_GROUPS = "CREATE TABLE IF NOT EXISTS GROUPS("
-			+ "ID LONG PRIMARY KEY,"
-			+ "NAME VARCHAR(30) NOT NULL,"
-			+ "IS_ACTIVE INT NOT NULL DEFAULT 0)";
+	
 
 	public DatabaseConnectionManager() {
 		super(context, DB_NAME, null, VERSION);
@@ -51,7 +49,7 @@ public class DatabaseConnectionManager extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(CREATE_GROUPS);
+		db.execSQL(GroupsTable.CREATE_GROUPS_QUERY);
 		db.execSQL(CREATE_ACTIVITIES);
 		PreferenceHelper.saveBoolean("isDatabaseCreated", true);
 		

@@ -44,7 +44,6 @@ public class GroupsDownloader extends BaseNetworkConnector {
 			try {
 				HttpResponse response = client.execute(get);
 				String responseContent = readResponse(response);
-				Log.v("t", "content has been read");
 				DatabaseInserQueryExecutor.addAllGroups(
 						DatabaseConnectionManager.getConnection()
 								.getWritableDatabase(), responseContent);
