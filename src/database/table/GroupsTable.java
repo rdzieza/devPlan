@@ -4,7 +4,6 @@ package database.table;
 public class GroupsTable {
 	public static final String TABLE_NAME="GROUPS";
 	public static final String ID_FIELD_NAME = "ID";
-	public static final int ID_FIELD_INDEX = 0;
 	public static final String NAME_FIELD = "NAME";
 	public static final String IS_ACTIVE_FIELD = "IS_ACTIVE";
 	

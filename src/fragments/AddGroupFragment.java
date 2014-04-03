@@ -1,6 +1,6 @@
 package fragments;
 
-import network.NewTimeTableCreator;
+import network.TimeTableCreator;
 import network.TimeTableDownloader;
 import prefereces.PreferenceHelper;
 import adapters.GroupsListAdapter;
@@ -124,7 +124,7 @@ public class AddGroupFragment extends SherlockFragment {
 						Toast.LENGTH_SHORT).show();
 //				TimetTableCreator tDown = new TimetTableCreator(parent,
 //						selfPointer);
-				NewTimeTableCreator tDown = new NewTimeTableCreator(getActivity().getApplicationContext());
+				TimeTableCreator tDown = new TimeTableCreator(getActivity());
 				tDown.execute();
 
 			}

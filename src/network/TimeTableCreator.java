@@ -9,40 +9,43 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import prefereces.PreferenceHelper;
 import android.content.Context;
 import android.database.SQLException;
 import android.net.ParseException;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import classes.DownloadManager;
+import classes.JSONProvider;
 import database.DatabaseConnectionManager;
 import database.DatabaseDataProvider;
 
-public class NewTimeTableCreator extends BaseNetworkConnector {
-	private Context context;
-
-	public NewTimeTableCreator(Context context) {
+public class TimeTableCreator extends BaseNetworkConnector {
+	private HttpPost post;
+	public TimeTableCreator(Context context) {
 		super(context);
-		this.context = context;
+
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
 		if (checkPreConditions()) {
+			Log.v("t", "PreConditions have been met");
 			List<NameValuePair> postParams = DatabaseDataProvider
 					.getSelectedAsNameValuePairsList(DatabaseConnectionManager
 							.getConnection().getReadableDatabase());
 			DownloadManager.setDownloadingTimeTable(true);
-			HttpPost post = new HttpPost(
+			post = new HttpPost(
 					"http://cash.dev.uek.krakow.pl/v0_1/timetables");
 			try {
 				post.setEntity(new UrlEncodedFormEntity(postParams));
 				HttpResponse response = client.execute(post);
 				String responseContent = readResponse(response);
-				String hash = getHash(responseContent);
+				String hash = JSONProvider.getHashFromString(responseContent);
 				PreferenceHelper.saveString("timeTableUrl", hash);
+				Log.v("t", hash);
 			} catch (Exception e) {
 				handleException(e);
 			}
@@ -52,7 +55,8 @@ public class NewTimeTableCreator extends BaseNetworkConnector {
 
 		return null;
 	}
-
+	
+	
 	public boolean checkPreConditions() {
 		Log.v("t", "checkPreConditions()");
 		return checkConnection() && checkNumberOfSelectedGroups();
@@ -63,11 +67,26 @@ public class NewTimeTableCreator extends BaseNetworkConnector {
 		int number = DatabaseDataProvider
 				.getNumberOfSelectedGroups(DatabaseConnectionManager
 						.getConnection().getReadableDatabase());
+		Log.v("t", String.valueOf(number));
 		if (number != 0) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	protected void onPostExecute(Void result) {
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+			@Override
+			public void run() {
+				TimeTableDownloader tdown = new TimeTableDownloader(context);
+				tdown.execute();
+				
+			}
+			
+		});
 	}
 	
 	@Override
@@ -84,13 +103,11 @@ public class NewTimeTableCreator extends BaseNetworkConnector {
 			message += "Problem with database";
 		}else {
 			message += "Something is wrong";
+			Log.v("t", "Exception class: " + e.getClass().toString());
 		}
 		cancelWithMessage(message);
 		DownloadManager.setDownloadingTimeTable(false);
 	}
 	
-	private String getHash(String responseContent) throws JSONException {
-		JSONObject json = new JSONObject(responseContent);
-		return json.getString("_id");
-	}
+	
 }

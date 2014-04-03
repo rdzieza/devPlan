@@ -56,9 +56,10 @@ public class DatabaseDataProvider {
 		String[] args = { "1" };
 		Cursor c = db.query(GroupsTable.TABLE_NAME, columns, GroupsTable.IS_ACTIVE_FIELD + " = ?", args, null, null, null);
 		List<NameValuePair> params = new ArrayList<NameValuePair>(c.getCount());
+		int index = c.getColumnIndex(GroupsTable.ID_FIELD_NAME);
 		while(c.moveToNext()) {
-			params.add(new BasicNameValuePair("group_id[]", String.valueOf(c.getLong(GroupsTable.ID_FIELD_INDEX))));
+			params.add(new BasicNameValuePair("group_id[]", String.valueOf(c.getLong(index))));
 		}
-		return null;
+		return params;
 	}
 }
