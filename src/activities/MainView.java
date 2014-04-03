@@ -92,10 +92,13 @@ public class MainView extends SherlockFragmentActivity implements
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		int position = tab.getPosition();
+		loadFragment(position, extras);
+	}
+	
+	public void loadFragment(int position, Bundle extras) {
 		FragmentTransaction trans = getSupportFragmentManager()
 				.beginTransaction();
-		int position = tab.getPosition();
-
 		switch (position) {
 		case 0: {
 			GroupsListFragment groupsFragment = new GroupsListFragment();
@@ -105,7 +108,6 @@ public class MainView extends SherlockFragmentActivity implements
 		case 1: {
 			TimeTableFragment tableFragment = new TimeTableFragment();
 			if (extras != null) {
-				// Log.v("t", extras.getString("action"));
 				tableFragment.setArguments(extras);
 			}
 			trans.replace(R.id.fragment, tableFragment).commit();
@@ -117,7 +119,6 @@ public class MainView extends SherlockFragmentActivity implements
 		}
 		}
 		fragmentAttached = position;
-
 	}
 
 	@Override
@@ -223,7 +224,6 @@ public class MainView extends SherlockFragmentActivity implements
 					int position, long id) {
 				TextView nameView = (TextView) adapter.getChildAt(position);
 				String name = nameView.getText().toString();
-				// Log.v("t", name);
 				Intent intent = new Intent(getApplicationContext(),
 						MainView.class);
 				intent.putExtra("action", "nameFilter");

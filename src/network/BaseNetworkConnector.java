@@ -67,5 +67,10 @@ public class BaseNetworkConnector extends AsyncTask<Void, Void, Void> {
 		this.message += msg;
 		this.cancel(true);
 	}
+	
+	public void handleException(Exception e) {
+		cancelWithMessage("Something is wrong");
+	}
+	}
 
 }

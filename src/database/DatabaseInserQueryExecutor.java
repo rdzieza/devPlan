@@ -23,7 +23,7 @@ public class DatabaseInserQueryExecutor {
 				for (int i = 0; i < groups.length(); i++) {
 					JSONObject group = groups.getJSONObject(i);
 					String query = "INSERT INTO " + GroupsTable.TABLE_NAME
-							+ " (" + GroupsTable.ID_FIELD + ", "
+							+ " (" + GroupsTable.ID_FIELD_NAME + ", "
 							+ GroupsTable.NAME_FIELD + ","
 							+ GroupsTable.IS_ACTIVE_FIELD + ") VALUES ('"
 							+ String.valueOf(group.getInt("id")) + "','"
