@@ -123,8 +123,9 @@ public class TimeTableDownloader extends AsyncTask<Void, Void, Void> {
 //			Log.v("downloading versions: ", sb.toString());
 			PreferenceHelper.saveString("versions", sb.toString());
 //			Log.v("t", "********************");
-
+//*********************************************************************************************JSONPROVIDER!!
 			JSONArray activities = object.getJSONArray("activities");
+//***********************************************************************************************************			
 
 			ContentValues results = DatabaseManager
 					.addAllAvtivities(activities);

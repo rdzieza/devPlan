@@ -15,63 +15,44 @@ import android.database.SQLException;
 import android.util.Log;
 import android.widget.Toast;
 import classes.DownloadManager;
-import classes.GroupsContentUiUpdator;
 import classes.JSONProvider;
 import database.DatabaseConnectionManager;
 import database.DatabaseQueryExecutor;
 import database.DatabaseQueryFactory;
 import dev.rd.devplan.R;
 
-public class GroupsDownloader extends BaseNetworkConnector {
+public class NewTimeTableDownloader extends BaseNetworkConnector{
 	private HttpGet get;
-
-	public GroupsDownloader(Context context) {
+	
+	public NewTimeTableDownloader(Context context) {
 		super(context);
-		this.context = context;
 	}
-
+	
 	@Override
 	protected Void doInBackground(Void... params) {
-		Log.v("t", "NewGroups - doInBackground()");
-		if (checkConnection()) {
-			DownloadManager.setDowloadingGroups(true);
-			String url = context.getResources().getString(
-					R.string.groups_download_url);
-			get = new HttpGet(url);
-
-			try {
-				HttpResponse response = client.execute(get);
-				String responseContent = readResponse(response);
-				JSONArray groups = JSONProvider.getJSONArrayFromString(responseContent);
-				List<String> queries = DatabaseQueryFactory
-						.getInsertGroupsQueriesList(groups);
-				if(DatabaseQueryExecutor.runAllInsertGroupsQueries(DatabaseConnectionManager
-						.getConnection().getWritableDatabase(), queries)) {
-				}else {
-					cancelWithMessage("Database problem");
-				}
-			} catch (Exception e) {
-				handleException(e);
+		Log.v("t", "TimeTableDownloader - doInBackground()");
+		String url = context.getResources().getString(R.string.timetable_download_url) + PreferenceHelper.getString("timeTableUrl");
+		get = new HttpGet(url);
+		if(checkConnection()) {
+		try {
+			HttpResponse response = client.execute(get);
+			String responseContent = readResponse(response);
+			JSONArray groups = JSONProvider.getActivitiesArray(responseContent);
+			List<String> queries = DatabaseQueryFactory.getInsertActivitiesQueriesList(groups);
+			if(DatabaseQueryExecutor.runAllInsertActivitiesQueries(DatabaseConnectionManager
+					.getConnection().getWritableDatabase(), queries)) {
+			}else {
+				cancelWithMessage("Database problem");
 			}
-
-		} else {
+		}catch(Exception e) {
+			handleException(e);
+		}
+		}else {
 			cancelWithMessage("No internet connection");
 		}
 		return null;
 	}
-
-	@Override
-	protected void onPostExecute(Void result) {
-		Log.v("t", "onPostExecute()");
-		PreferenceHelper.saveBoolean("areGroupsDownloaded", true);
-		DownloadManager.setDowloadingGroups(false);
-		Toast.makeText(context, "Groups has been downloaded", Toast.LENGTH_LONG)
-				.show();
-		GroupsContentUiUpdator updator = new GroupsContentUiUpdator(context);
-		updator.updateUI();
-
-	}
-
+	
 	@Override
 	public void handleException(Exception e) {
 		if (e instanceof ClientProtocolException) {
@@ -84,9 +65,21 @@ public class GroupsDownloader extends BaseNetworkConnector {
 			message += "Problem with database";
 		} else {
 			message += "Something is wrong";
+			e.printStackTrace();
 		}
 		cancelWithMessage(message);
 		DownloadManager.setDowloadingGroups(false);
+	}
+	
+	@Override
+	protected void onPostExecute(Void result) {
+		Log.v("t", "TimeTableDownloader - onPostExecute()");
+		Toast.makeText(context,
+				context.getString(R.string.download_finished_message),
+				Toast.LENGTH_LONG).show();
+		DownloadManager.setDownloadingTimeTable(false);
+		
+
 	}
 
 }

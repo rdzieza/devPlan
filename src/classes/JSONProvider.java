@@ -15,4 +15,9 @@ public class JSONProvider {
 		return json.getString("_id");
 	}
 	
+	public static JSONArray getActivitiesArray(String content) throws JSONException{
+		JSONObject object = new JSONObject(content);
+		return object.getJSONArray("activities");
+	}
+	
 }
