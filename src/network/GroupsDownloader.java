@@ -1,10 +1,12 @@
 package network;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.json.JSONArray;
 import org.json.JSONException;
 
 import prefereces.PreferenceHelper;
@@ -14,8 +16,10 @@ import android.util.Log;
 import android.widget.Toast;
 import classes.DownloadManager;
 import classes.GroupsContentUiUpdator;
+import classes.JSONProvider;
 import database.DatabaseConnectionManager;
-import database.DatabaseInserQueryExecutor;
+import database.DatabaseQueryExecutor;
+import database.DatabaseQueryFactory;
 import dev.rd.devplan.R;
 
 public class GroupsDownloader extends BaseNetworkConnector {
@@ -38,10 +42,13 @@ public class GroupsDownloader extends BaseNetworkConnector {
 			try {
 				HttpResponse response = client.execute(get);
 				String responseContent = readResponse(response);
-				DatabaseInserQueryExecutor.addAllGroups(
-						DatabaseConnectionManager.getConnection()
-								.getWritableDatabase(), responseContent);
-
+				JSONArray groups = JSONProvider.getJSONArrayFromString(responseContent);
+				List<String> queries = DatabaseQueryFactory
+						.getInsertGroupsQueriesList(groups);
+				if(!DatabaseQueryExecutor.addAllQueries(DatabaseConnectionManager
+						.getConnection().getWritableDatabase(), queries)) {
+					cancelWithMessage("Database problem");
+				}
 			} catch (Exception e) {
 				handleException(e);
 			}
@@ -61,7 +68,7 @@ public class GroupsDownloader extends BaseNetworkConnector {
 				.show();
 		GroupsContentUiUpdator updator = new GroupsContentUiUpdator(context);
 		updator.updateUI();
-		
+
 	}
 
 	@Override
@@ -74,7 +81,7 @@ public class GroupsDownloader extends BaseNetworkConnector {
 			message += "Problems with server response content";
 		} else if (e instanceof SQLException) {
 			message += "Problem with database";
-		}else {
+		} else {
 			message += "Something is wrong";
 		}
 		cancelWithMessage(message);
