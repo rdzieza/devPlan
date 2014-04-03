@@ -20,6 +20,10 @@ public class BaseNetworkConnector extends AsyncTask<Void, Void, Void> {
 	protected Context context;
 	protected HttpClient client;
 	
+	public BaseNetworkConnector(Context context) {
+		this.context = context;
+	}
+	
 	@Override
 	protected void onPreExecute() {
 		Log.v("t", "Base - onPreExecute()");
@@ -33,6 +37,7 @@ public class BaseNetworkConnector extends AsyncTask<Void, Void, Void> {
 	}
 
 	protected boolean checkConnection() {
+		Log.v("t", "checkConnection()");
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -71,6 +76,6 @@ public class BaseNetworkConnector extends AsyncTask<Void, Void, Void> {
 	public void handleException(Exception e) {
 		cancelWithMessage("Something is wrong");
 	}
-	}
+	
 
 }

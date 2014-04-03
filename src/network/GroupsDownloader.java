@@ -22,6 +22,7 @@ public class GroupsDownloader extends BaseNetworkConnector {
 	private HttpGet get;
 
 	public GroupsDownloader(Context context) {
+		super(context);
 		this.context = context;
 	}
 

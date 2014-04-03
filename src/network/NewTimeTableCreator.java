@@ -12,12 +12,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import prefereces.PreferenceHelper;
-
-import classes.DownloadManager;
-
 import android.content.Context;
 import android.database.SQLException;
 import android.net.ParseException;
+import android.util.Log;
+import classes.DownloadManager;
 import database.DatabaseConnectionManager;
 import database.DatabaseDataProvider;
 
@@ -25,6 +24,7 @@ public class NewTimeTableCreator extends BaseNetworkConnector {
 	private Context context;
 
 	public NewTimeTableCreator(Context context) {
+		super(context);
 		this.context = context;
 	}
 
@@ -54,10 +54,12 @@ public class NewTimeTableCreator extends BaseNetworkConnector {
 	}
 
 	public boolean checkPreConditions() {
+		Log.v("t", "checkPreConditions()");
 		return checkConnection() && checkNumberOfSelectedGroups();
 	}
 
 	private boolean checkNumberOfSelectedGroups() {
+		Log.v("t", "checkNumberOfSelected()");
 		int number = DatabaseDataProvider
 				.getNumberOfSelectedGroups(DatabaseConnectionManager
 						.getConnection().getReadableDatabase());
