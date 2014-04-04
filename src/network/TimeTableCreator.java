@@ -81,7 +81,7 @@ public class TimeTableCreator extends BaseNetworkConnector {
 
 			@Override
 			public void run() {
-				NewTimeTableDownloader tdown = new NewTimeTableDownloader(context);
+				TimeTableDownloader tdown = new TimeTableDownloader(context);
 				tdown.execute();
 				
 			}

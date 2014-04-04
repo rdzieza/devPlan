@@ -210,8 +210,7 @@ public class AddGroupFragment extends SherlockFragment {
 
 	public void downloadTimeTable(int code) {
 		if (code == 0) {
-			TimeTableDownloader tDown = new TimeTableDownloader(parent,
-					selfPointer);
+			TimeTableDownloader tDown = new TimeTableDownloader(parent);
 			tDown.execute();
 		} else {
 			// Log.v("t", "could run downloader - creator returned 0");
