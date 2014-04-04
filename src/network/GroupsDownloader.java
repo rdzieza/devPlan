@@ -47,6 +47,7 @@ public class GroupsDownloader extends BaseNetworkConnector {
 						.getInsertGroupsQueriesList(groups);
 				if(DatabaseQueryExecutor.runAllInsertGroupsQueries(DatabaseConnectionManager
 						.getConnection().getWritableDatabase(), queries)) {
+					return null;
 				}else {
 					cancelWithMessage("Database problem");
 				}

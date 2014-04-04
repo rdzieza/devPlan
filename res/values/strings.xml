@@ -23,6 +23,7 @@
     <string name="home_page">http://devplan.uek.krakow.pl</string>
 	<string name="google_play_url">https://play.google.com/store/apps/details?id=dev.rd.devplan</string>
 	<string name="groups_download_url">http://cash.dev.uek.krakow.pl/v0_1/groups</string>
+	<string name="timetable_download_url">http://cash.dev.uek.krakow.pl:3000/v0_1/timetables/</string>
 	
     <!-- FILTER -->
     <string name="filters_title">Filtry</string>

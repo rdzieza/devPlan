@@ -24,10 +24,10 @@ public class ActivityAdapter extends ArrayAdapter<Item> {
 	private ArrayList<Item> items;
 	private LayoutInflater infl;
 
-	public ActivityAdapter(Context context, ArrayList<Item> list) {
-		super(context, 0, list);
+	public ActivityAdapter(Context context, ArrayList<Item> data) {
+		super(context, 0, data);
 		this.context = context;
-		this.items = list;
+		this.items = data;
 		infl = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

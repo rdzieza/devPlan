@@ -16,43 +16,50 @@ import android.util.Log;
 import android.widget.Toast;
 import classes.DownloadManager;
 import classes.JSONProvider;
+import classes.TimeTableUiUpdator;
 import database.DatabaseConnectionManager;
 import database.DatabaseQueryExecutor;
 import database.DatabaseQueryFactory;
 import dev.rd.devplan.R;
 
-public class NewTimeTableDownloader extends BaseNetworkConnector{
+public class NewTimeTableDownloader extends BaseNetworkConnector {
 	private HttpGet get;
-	
+
 	public NewTimeTableDownloader(Context context) {
 		super(context);
 	}
-	
+
 	@Override
 	protected Void doInBackground(Void... params) {
 		Log.v("t", "TimeTableDownloader - doInBackground()");
-		String url = context.getResources().getString(R.string.timetable_download_url) + PreferenceHelper.getString("timeTableUrl");
+		String url = context.getResources().getString(
+				R.string.timetable_download_url)
+				+ PreferenceHelper.getString("timeTableUrl");
 		get = new HttpGet(url);
-		if(checkConnection()) {
-		try {
-			HttpResponse response = client.execute(get);
-			String responseContent = readResponse(response);
-			JSONArray groups = JSONProvider.getActivitiesArray(responseContent);
-			List<String> queries = DatabaseQueryFactory.getInsertActivitiesQueriesList(groups);
-			if(DatabaseQueryExecutor.runAllInsertActivitiesQueries(DatabaseConnectionManager
-					.getConnection().getWritableDatabase(), queries)) {
-			}else {
-				cancelWithMessage("Database problem");
+		if (checkConnection()) {
+			try {
+				HttpResponse response = client.execute(get);
+				String responseContent = readResponse(response);
+				JSONArray groups = JSONProvider
+						.getActivitiesArray(responseContent);
+				List<String> queries = DatabaseQueryFactory
+						.getInsertActivitiesQueriesList(groups);
+				if (DatabaseQueryExecutor.runAllInsertActivitiesQueries(
+						DatabaseConnectionManager.getConnection()
+								.getWritableDatabase(), queries)) {
+					return null;
+				} else {
+					cancelWithMessage("Database problem");
+				}
+			} catch (Exception e) {
+				handleException(e);
 			}
-		}catch(Exception e) {
-			handleException(e);
-		}
-		}else {
+		} else {
 			cancelWithMessage("No internet connection");
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void handleException(Exception e) {
 		if (e instanceof ClientProtocolException) {
@@ -70,7 +77,7 @@ public class NewTimeTableDownloader extends BaseNetworkConnector{
 		cancelWithMessage(message);
 		DownloadManager.setDowloadingGroups(false);
 	}
-	
+
 	@Override
 	protected void onPostExecute(Void result) {
 		Log.v("t", "TimeTableDownloader - onPostExecute()");
@@ -78,8 +85,9 @@ public class NewTimeTableDownloader extends BaseNetworkConnector{
 				context.getString(R.string.download_finished_message),
 				Toast.LENGTH_LONG).show();
 		DownloadManager.setDownloadingTimeTable(false);
-		
 
+		TimeTableUiUpdator updator = new TimeTableUiUpdator(context);
+		updator.updateUI();
 	}
 
 }

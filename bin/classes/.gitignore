@@ -1,7 +1,5 @@
 /com
 /dev
-/database
 /classes
-/network
-/activities
-/fragments
+/adapters
+/database
