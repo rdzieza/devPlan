@@ -47,6 +47,8 @@ public class NewTimeTableDownloader extends BaseNetworkConnector {
 				if (DatabaseQueryExecutor.runAllInsertActivitiesQueries(
 						DatabaseConnectionManager.getConnection()
 								.getWritableDatabase(), queries)) {
+					String versionHash = JSONProvider.getVersionHash(responseContent);
+					PreferenceHelper.saveString("versions", versionHash);
 					return null;
 				} else {
 					cancelWithMessage("Database problem");

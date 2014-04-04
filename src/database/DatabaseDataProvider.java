@@ -93,7 +93,7 @@ public class DatabaseDataProvider {
 			final int timeFieldIndex = cursor.getColumnIndex(ActivitiesTable.TIME_FIELD);
 			final int placeLocationFieldIndex = cursor.getColumnIndex(ActivitiesTable.PLACE_LOCATION_FIELD);
 			final int categoryNameFieldIndex = cursor.getColumnIndex(ActivitiesTable.CATEGORY_NAME_FIELD);
-			// Log.v("t", String.valueOf(cursor.getCount()));
+
 			String today = getTodaysDate();
 			
 			while (cursor.moveToNext()) {
@@ -123,9 +123,7 @@ public class DatabaseDataProvider {
 			return items;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			// db.close();
-		}
+		} 
 		return null;
 	}
 	
