@@ -81,54 +81,74 @@ public class DatabaseDataProvider {
 					ActivitiesTable.DAY_OF_WEEK_FIELD, ActivitiesTable.TIME_FIELD };
 			Cursor cursor = db.query(ActivitiesTable.TABLE_NAME, columns, null, null, null,
 					null, ActivitiesTable.TIME_FIELD);
-
-			String lastDay = "00-00";
-			ArrayList<Item> items = new ArrayList<Item>();
-			
-			final int dayFieldIndex = cursor.getColumnIndex(ActivitiesTable.DAY_FIELD);
-			final int dayOfWeekFieldIndex = cursor.getColumnIndex(ActivitiesTable.DAY_OF_WEEK_FIELD);
-			final int nameFieldIndex = cursor.getColumnIndex(ActivitiesTable.NAME_FIELD);
-			final int startAtIndex = cursor.getColumnIndex(ActivitiesTable.START_AT_FIELD);
-			final int endAtIndex = cursor.getColumnIndex(ActivitiesTable.END_AT_FIELD);
-			final int timeFieldIndex = cursor.getColumnIndex(ActivitiesTable.TIME_FIELD);
-			final int placeLocationFieldIndex = cursor.getColumnIndex(ActivitiesTable.PLACE_LOCATION_FIELD);
-			final int categoryNameFieldIndex = cursor.getColumnIndex(ActivitiesTable.CATEGORY_NAME_FIELD);
-
-			String today = getTodaysDate();
-			
-			while (cursor.moveToNext()) {
-				String day = cursor.getString(dayFieldIndex);
-				
-				if (!lastDay.equals(day)) {
-					lastDay = day;
-					String weekDay = cursor.getString(dayOfWeekFieldIndex);
-					Separator separator = new Separator(day + " " + weekDay);
-					items.add(separator);
-					if(day.equals(today)) {
-						PreferenceHelper.saveInt("todaysPosition", items.size());
-						Log.v("t", "position: " + items.size());
-						Log.v("t", "today is: " + today);
-					}
-				}
-				Event event = new Event(
-						cursor.getInt(cursor.getColumnIndex("_id")),
-						cursor.getString(nameFieldIndex),
-						cursor.getString(startAtIndex),
-						cursor.getString(endAtIndex),
-						cursor.getLong(timeFieldIndex),
-						cursor.getString(placeLocationFieldIndex),
-						cursor.getString(categoryNameFieldIndex));
-				items.add(event);
-			}
-			return items;
+			return transformtToItemList(cursor);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		} 
-		return null;
 	}
 	
 	public static String getTodaysDate() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(new Date());
+	}
+
+	public static ArrayList<Item> getActivitiesListByName(SQLiteDatabase db,
+			String name) {
+		try {
+			String[] columns = { ActivitiesTable.ID_FIELD + " as _id", ActivitiesTable.NAME_FIELD, ActivitiesTable.PLACE_LOCATION_FIELD,
+					ActivitiesTable.START_AT_FIELD, ActivitiesTable.END_AT_FIELD, ActivitiesTable.CATEGORY_NAME_FIELD, ActivitiesTable.DAY_FIELD,
+					ActivitiesTable.DAY_OF_WEEK_FIELD, ActivitiesTable.TIME_FIELD };
+			String[] args = { "%" + name + "%" };
+			Cursor cursor = db.query("ACTIVITIES", columns, "NAME like ?",
+					args, null, null, ActivitiesTable.TIME_FIELD);
+			return transformtToItemList(cursor);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		} 
+		
+	}
+	
+	private static ArrayList<Item> transformtToItemList(Cursor cursor){
+		String lastDay = "00-00";
+		ArrayList<Item> items = new ArrayList<Item>();
+		
+		final int dayFieldIndex = cursor.getColumnIndex(ActivitiesTable.DAY_FIELD);
+		final int dayOfWeekFieldIndex = cursor.getColumnIndex(ActivitiesTable.DAY_OF_WEEK_FIELD);
+		final int nameFieldIndex = cursor.getColumnIndex(ActivitiesTable.NAME_FIELD);
+		final int startAtIndex = cursor.getColumnIndex(ActivitiesTable.START_AT_FIELD);
+		final int endAtIndex = cursor.getColumnIndex(ActivitiesTable.END_AT_FIELD);
+		final int timeFieldIndex = cursor.getColumnIndex(ActivitiesTable.TIME_FIELD);
+		final int placeLocationFieldIndex = cursor.getColumnIndex(ActivitiesTable.PLACE_LOCATION_FIELD);
+		final int categoryNameFieldIndex = cursor.getColumnIndex(ActivitiesTable.CATEGORY_NAME_FIELD);
+
+		String today = getTodaysDate();
+		
+		while (cursor.moveToNext()) {
+			String day = cursor.getString(dayFieldIndex);
+			
+			if (!lastDay.equals(day)) {
+				lastDay = day;
+				String weekDay = cursor.getString(dayOfWeekFieldIndex);
+				Separator separator = new Separator(day + " " + weekDay);
+				items.add(separator);
+				if(day.equals(today)) {
+					PreferenceHelper.saveInt("todaysPosition", items.size());
+					Log.v("t", "position: " + items.size());
+					Log.v("t", "today is: " + today);
+				}
+			}
+			Event event = new Event(
+					cursor.getInt(cursor.getColumnIndex("_id")),
+					cursor.getString(nameFieldIndex),
+					cursor.getString(startAtIndex),
+					cursor.getString(endAtIndex),
+					cursor.getLong(timeFieldIndex),
+					cursor.getString(placeLocationFieldIndex),
+					cursor.getString(categoryNameFieldIndex));
+			items.add(event);
+		}
+		return items;
 	}
 }

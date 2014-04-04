@@ -151,8 +151,6 @@ public class MainView extends SherlockFragmentActivity implements
 		super.onPause();
 	}
 
-	
-
 	public void createFilterDialog() {
 		final Builder builder = new Builder(this);
 		builder.setTitle(getString(R.string.filters_title));

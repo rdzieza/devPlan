@@ -44,7 +44,6 @@ public class InfoActivity extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		String url = v.getTag().toString();
-//		Log.v("t", url);
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse(url));
 		startActivity(intent);

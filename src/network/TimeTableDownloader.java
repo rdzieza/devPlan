@@ -10,11 +10,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import prefereces.PreferenceHelper;
+import activities.MainView;
+import android.app.Activity;
 import android.content.Context;
 import android.database.SQLException;
 import android.util.Log;
 import android.widget.Toast;
+import classes.ActivitiesStack;
 import classes.DownloadManager;
+import classes.EmptyListException;
 import classes.JSONProvider;
 import classes.TimeTableUiUpdator;
 import database.DatabaseConnectionManager;
@@ -90,6 +94,22 @@ public class TimeTableDownloader extends BaseNetworkConnector {
 
 		TimeTableUiUpdator updator = new TimeTableUiUpdator(context);
 		updator.updateUI();
+		switchToTimeTableTab();
+		
+	}
+	
+	private void switchToTimeTableTab() {
+		Log.v("t", "switchToTimeTableTab()");
+		try {
+			Activity activity = ActivitiesStack.getFromTop();
+			if(activity instanceof MainView) {
+				activity = (MainView)activity;
+				((MainView) activity).loadFragment(1, null);
+			}
+		}catch(EmptyListException e) {
+			Log.v("t", "EmptyListException");
+			e.printStackTrace();
+		}
 	}
 
 }

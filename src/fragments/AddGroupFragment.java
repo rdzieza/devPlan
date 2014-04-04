@@ -185,17 +185,12 @@ public class AddGroupFragment extends SherlockFragment {
 		if (text == null || text.equals("")) {
 			text = PreferenceHelper.getString("filterString");
 			if (text.equals("brak")) {
-//				adapter = new GroupsListAdapter(parent,
-//						DatabaseManager
-//								.getUnselectedGroupsCursor(DatabaseManager
-//										.getConnection().getReadableDatabase()));
 				adapter = new GroupsListAdapter(parent,
 						DatabaseManager
 								.getUnselectedGroupsCursor(DatabaseManager
 										.getReadable()));
 			}else{
 				filterField.setText(text);
-//				Log.v("t", "setting filter field text");
 				adapter = new GroupsListAdapter(parent,
 						DatabaseManager.getWhereName(DatabaseManager
 								.getConnection().getReadableDatabase(), text));

@@ -1,5 +1,6 @@
 package fragments;
 
+import prefereces.PreferenceHelper;
 import adapters.ActivityAdapter;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -26,6 +27,8 @@ import classes.Item;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import database.DatabaseConnectionManager;
+import database.DatabaseDataProvider;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 
@@ -46,15 +49,8 @@ public class TimeTableFragment extends SherlockFragment implements
 				false);
 		list = (ListView) view.findViewById(R.id.timeTableListView);
 
-		if (DownloadManager.isDownloadingTimeTable()) {
-			ProgressBar loadingBar = (ProgressBar) view
-					.findViewById(R.id.loadingTimeTableBar);
-			TextView label = (TextView) view
-					.findViewById(R.id.loadingTimeTableText);
-			loadingBar.setVisibility(View.VISIBLE);
-			label.setVisibility(View.VISIBLE);
-		}
-		
+		setProgressBarVisibility(view);
+
 		handler = new Handler();
 		Bundle extras = this.getArguments();
 		handler.post(new AdapterUpdator(extras));
@@ -107,18 +103,16 @@ public class TimeTableFragment extends SherlockFragment implements
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View dialog = infl.inflate(R.layout.events_detail, null);
 
-
-
 			TextView dateView = (TextView) dialog.findViewById(R.id.detailDate);
 			dateView.setText(day + " " + getFullName(weekDay));
 
 			TextView roomView = (TextView) dialog.findViewById(R.id.detailRoom);
 			roomView.setText("Sala: " + place);
 
-			
-			TextView detailTime = (TextView)dialog.findViewById(R.id.detailTime);
+			TextView detailTime = (TextView) dialog
+					.findViewById(R.id.detailTime);
 			detailTime.setText(startsAt + " - " + endsAt);
-			
+
 			TextView tutorNameView = (TextView) dialog
 					.findViewById(R.id.detailTutor);
 			tutorNameView.setText("Prowadzący: " + tutorName);
@@ -128,18 +122,17 @@ public class TimeTableFragment extends SherlockFragment implements
 			tutorUrlLabel.setText("E-wizytówka prowadzącego ");
 			tutorUrlLabel.setTag(tutorUrl);
 			tutorUrlLabel.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					String url = tutorUrlLabel.getTag().toString();
-//					Log.v("t", url);
+					// Log.v("t", url);
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.parse(url));
 					startActivity(intent);
-					
+
 				}
 			});
-
 
 			TextView typeView = (TextView) dialog.findViewById(R.id.detailType);
 			typeView.setText(type);
@@ -180,42 +173,50 @@ public class TimeTableFragment extends SherlockFragment implements
 
 	private class AdapterUpdator implements Runnable {
 		private Bundle extras;
-		
-		public AdapterUpdator(Bundle extras){
+
+		public AdapterUpdator(Bundle extras) {
 			this.extras = extras;
 		}
-		
+
 		public void run() {
 			if (this.extras != null) {
 				String action = extras.getString("action");
 				if (action.equals("nameFilter")) {
 					String name = extras.getString("name");
-					list.setAdapter(new ActivityAdapter(parent, DatabaseManager
-							.getEventsListByName(DatabaseManager.getConnection()
-									.getReadableDatabase(), name)));
-				} else if (action.equals("dayFilter")) {
-					String day = extras.getString("day");
-					list.setAdapter(new ActivityAdapter(parent, DatabaseManager
-							.getEventsListByDay(DatabaseManager.getConnection()
-									.getReadableDatabase(), day)));
-				} else if (action.equals("daysFilter")) {
-					String from = extras.getString("from");
-					String to = extras.getString("to");
-					list.setAdapter(new ActivityAdapter(parent, DatabaseManager
-							.getEventsListFromRange(DatabaseManager.getConnection()
-									.getReadableDatabase(), from, to)));
+					list.setAdapter(new ActivityAdapter(parent,
+							DatabaseDataProvider.getActivitiesListByName(
+									DatabaseConnectionManager.getConnection()
+											.getReadableDatabase(), name)));
+
 				} else if (action.equals("noFilter")) {
-					list.setAdapter(new ActivityAdapter(parent, DatabaseManager
-							.getEventsList(DatabaseManager.getConnection()
-									.getReadableDatabase())));
+					list.setAdapter(new ActivityAdapter(
+							parent,
+							DatabaseDataProvider
+									.getActivitiesList(DatabaseConnectionManager
+											.getConnection()
+											.getReadableDatabase())));
+					list.setSelection(0);
 				}
 			} else {
-				list.setAdapter(new ActivityAdapter(parent, DatabaseManager
-						.getEventsListSincetToday(DatabaseManager.getConnection()
-								.getReadableDatabase())));
+				list.setAdapter(new ActivityAdapter(parent,
+						DatabaseDataProvider
+								.getActivitiesList(DatabaseConnectionManager
+										.getConnection().getReadableDatabase())));
+				// Sets list position on header with todays date
+				list.setSelection(PreferenceHelper.getInt("todaysPosition") - 1);
 			}
-			
 
+		}
+	}
+
+	public void setProgressBarVisibility(View view) {
+		if (DownloadManager.isDownloadingTimeTable()) {
+			ProgressBar loadingBar = (ProgressBar) view
+					.findViewById(R.id.loadingTimeTableBar);
+			TextView label = (TextView) view
+					.findViewById(R.id.loadingTimeTableText);
+			loadingBar.setVisibility(View.VISIBLE);
+			label.setVisibility(View.VISIBLE);
 		}
 	}
 

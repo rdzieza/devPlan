@@ -22,4 +22,12 @@ public class ActivitiesStack {
 			}
 		}
 	}
+	
+	public static Activity getFromTop() throws EmptyListException{
+		if(!activities.isEmpty()) {
+			return activities.get(activities.size() - 1);
+		}else {
+			throw new EmptyListException();
+		}
+	}
 }
