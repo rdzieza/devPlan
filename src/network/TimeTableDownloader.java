@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONArray;
 
 import prefereces.PreferenceHelper;
 import activities.MainView;
@@ -103,8 +103,8 @@ public class TimeTableDownloader extends BaseNetworkConnector {
 		try {
 			Activity activity = ActivitiesStack.getFromTop();
 			if(activity instanceof MainView) {
-				activity = (MainView)activity;
-				((MainView) activity).loadFragment(1, null);
+				MainView mainView = (MainView)activity;
+				mainView.getActionBar().setSelectedNavigationItem(1);
 			}
 		}catch(EmptyListException e) {
 			Log.v("t", "EmptyListException");

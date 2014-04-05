@@ -231,4 +231,6 @@ public class MainView extends SherlockFragmentActivity implements
 		});
 		return activitiesNameList;
 	}
+	
+	
 }
