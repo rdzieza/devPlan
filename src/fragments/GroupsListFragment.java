@@ -131,7 +131,7 @@ public class GroupsListFragment extends SherlockFragment {
 					
 					addGroupFragment = new AddGroupFragment();
 					trans.replace(R.id.addGroupsFragmentLayout,
-							addGroupFragment);
+							addGroupFragment, "add_group_fragment");
 					trans.commit();
 					areAllShown = true;
 					noSelectedLabel.setVisibility(View.GONE);

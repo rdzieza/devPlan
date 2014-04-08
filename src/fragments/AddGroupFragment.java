@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -122,8 +123,6 @@ public class AddGroupFragment extends SherlockFragment {
 				Toast.makeText(parent,
 						parent.getString(R.string.download_started),
 						Toast.LENGTH_SHORT).show();
-//				TimetTableCreator tDown = new TimetTableCreator(parent,
-//						selfPointer);
 				TimeTableCreator tDown = new TimeTableCreator(getActivity());
 				tDown.execute();
 
@@ -142,7 +141,7 @@ public class AddGroupFragment extends SherlockFragment {
 	}
 
 	public void fixFilter() {
-//		Log.v("t", "fixin filter");
+		Log.v("t", "fixi filter from adf");
 		filterField.addTextChangedListener(new TextWatcher() {
 
 			@Override

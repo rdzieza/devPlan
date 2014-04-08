@@ -1,5 +1,6 @@
 package classes;
 
+import activities.MainView;
 import adapters.GroupsListAdapter;
 import adapters.SelectedGroupsAdapter;
 import android.app.Activity;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import database.DatabaseConnectionManager;
 import database.DatabaseDataProvider;
 import dev.rd.devplan.R;
+import fragments.AddGroupFragment;
+import fragments.GroupsListFragment;
 
 public class GroupsContentUiUpdator implements UiUpdator {
 	private Context context;
@@ -26,31 +29,17 @@ public class GroupsContentUiUpdator implements UiUpdator {
 	public void updateUI() {
 		Log.v("t", "GroupsContentUiUpdator - updateUI()");
 		final Activity activity = (Activity) context;
-		
+
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			public void run() {
-				updateUnselectedListViewContent(activity);
 				updateSelectedListViewContent(activity);
 				hideProgressBar(activity);
+				updateUnselectedGroupsList();
 			}
 		});
 
 	}
 
-	private void updateUnselectedListViewContent(Activity activity) {
-		ListView allGroupsList = (ListView) activity
-				.findViewById(R.id.groupsListView);
-		if (allGroupsList != null) {
-			allGroupsList
-					.setAdapter(new GroupsListAdapter(
-							context,
-							DatabaseDataProvider
-									.getUnselectedGroupsCursor(DatabaseConnectionManager
-											.getConnection()
-											.getReadableDatabase())));
-
-		}
-	}
 
 	private void updateSelectedListViewContent(Activity activity) {
 		ListView selected = (ListView) activity
@@ -73,6 +62,23 @@ public class GroupsContentUiUpdator implements UiUpdator {
 				.findViewById(R.id.loadingGroupText);
 		if (downloadingLabel != null) {
 			downloadingLabel.setVisibility(View.GONE);
+		}
+	}
+
+	private void updateUnselectedGroupsList() {
+		try {
+			Activity activity = ActivitiesStack.getFromTop();
+			if (activity instanceof MainView) {
+				MainView main = (MainView) activity;
+				AddGroupFragment addGroupFragment = (AddGroupFragment) main
+						.getSupportFragmentManager().findFragmentByTag(
+								"add_group_fragment");
+				if (addGroupFragment != null) {
+					addGroupFragment.update();
+				}
+			}
+		} catch (EmptyListException e) {
+
 		}
 	}
 

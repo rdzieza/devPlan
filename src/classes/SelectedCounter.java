@@ -15,21 +15,16 @@ import dev.rd.devplan.R;
  * 
  */
 public class SelectedCounter extends AsyncTask<Void, Void, String> {
-	// private Context context;
+
 	TextView label;
 	private Activity parent;
 
 	public SelectedCounter(Activity parent) {
-//		Log.v("t", "construct with parent");
 		this.parent = parent;
 	}
 
-	// public SelectedCounter(Context context) {
-	// this.context = context;
-	// }
 
 	public SelectedCounter(Activity parent, TextView label) {
-//		Log.v("t", "construct with parent and text view");
 		this.parent = parent;
 		this.label = label;
 	}
@@ -50,7 +45,6 @@ public class SelectedCounter extends AsyncTask<Void, Void, String> {
 			text = parent.getResources().getString(
 					R.string.selected_groups_label)
 					+ " (" + String.valueOf(numberOfSelected) + ")";
-//			Log.v("t", "text: " + text);
 			return text;
 		} else {
 			return parent.getResources().getString(
@@ -61,7 +55,6 @@ public class SelectedCounter extends AsyncTask<Void, Void, String> {
 
 	@Override
 	protected void onPostExecute(String text) {
-//		Log.v("t", "onpost");
 		if (!isCancelled()) {
 			if (label != null) {
 				label.setText(text);
@@ -70,7 +63,6 @@ public class SelectedCounter extends AsyncTask<Void, Void, String> {
 					TextView selectedLabel = (TextView) parent
 							.findViewById(R.id.selectedGroupsLabel);
 					if (selectedLabel != null) {
-//						Log.v("t", "setting text: " + text);
 						selectedLabel.setText(text);
 					}
 				}

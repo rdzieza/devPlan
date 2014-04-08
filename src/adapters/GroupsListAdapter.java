@@ -26,11 +26,6 @@ public class GroupsListAdapter extends CursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		TextView groupName = (TextView) view.findViewById(R.id.groupName);
 		groupName.setText(cursor.getString(cursor.getColumnIndex("NAME")));
-//		if (cursor.getInt(cursor.getColumnIndex("IS_ACTIVE")) == 1) {
-//			groupName.setTextColor(Color.parseColor("#0099CC"));
-//		} else {
-//			groupName.setTextColor(Color.GRAY);
-//		}
 
 	}
 
