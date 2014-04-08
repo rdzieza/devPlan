@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -189,6 +190,7 @@ public class TimeTableFragment extends SherlockFragment implements
 											.getReadableDatabase(), name)));
 
 				} else if (action.equals("noFilter")) {
+					Log.v("t", "No filter view");
 					list.setAdapter(new ActivityAdapter(
 							parent,
 							DatabaseDataProvider
@@ -198,6 +200,7 @@ public class TimeTableFragment extends SherlockFragment implements
 					list.setSelection(0);
 				}
 			} else {
+				Log.v("t", "Since today filter view");
 				list.setAdapter(new ActivityAdapter(parent,
 						DatabaseDataProvider
 								.getActivitiesList(DatabaseConnectionManager
