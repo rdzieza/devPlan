@@ -11,11 +11,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import prefereces.PreferenceHelper;
-
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.format.DateFormat;
 import android.util.Log;
 import classes.Event;
 import classes.Item;
@@ -219,12 +217,26 @@ public class DatabaseDataProvider {
 	}
 	
 	private static void getNextDayIndex(String today, ArrayList<Item> items) {
+
 		boolean isFound = false;
 		String day = today;
 		while(!isFound) {
 			String tomorow = findNextDay(day);
 			day = tomorow;
 			isFound = findDatesIndex(items, tomorow);
+		}
+	}
+
+	public static Cursor getGroupsWithNameContaining(SQLiteDatabase db, String name) {
+		try {
+			String[] colums = { "NAME", "ID as _id", "IS_ACTIVE" };
+			String[] args = { "%" + name + "%", "0" };
+			Cursor c = db.query("GROUPS", colums, "NAME like ? AND IS_ACTIVE = ?", args, null,
+					null, "NAME");
+			c.moveToFirst();
+			return c;
+		} catch (SQLException e) {
+			return null;
 		}
 	}
 }

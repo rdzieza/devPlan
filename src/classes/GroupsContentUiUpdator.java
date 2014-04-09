@@ -74,7 +74,7 @@ public class GroupsContentUiUpdator implements UiUpdator {
 						.getSupportFragmentManager().findFragmentByTag(
 								"add_group_fragment");
 				if (addGroupFragment != null) {
-					addGroupFragment.update();
+					addGroupFragment.updateAllGroupsList();
 				}
 			}
 		} catch (EmptyListException e) {

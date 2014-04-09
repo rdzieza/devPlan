@@ -98,7 +98,7 @@ public class GroupsListFragment extends SherlockFragment {
 								.getConnection().getReadableDatabase()));
 				selected.setAdapter(selectedAdapter);
 				if (addGroupFragment != null) {
-					addGroupFragment.update();
+					addGroupFragment.updateAllGroupsList();
 				}
 				if (PreferenceHelper.getBoolean("isDatabaseCreated")) {
 					SelectedCounter selectedCounter = new SelectedCounter(
