@@ -53,4 +53,16 @@ public class DatabaseQueryExecutor {
 			return false;
 		}
 	}
+	
+	public static boolean setGroupAsInactive(SQLiteDatabase db, long groupId) {
+		ContentValues values = new ContentValues();
+		values.put("IS_ACTIVE", 0);
+		String[] args = { String.valueOf(groupId) };
+		try {
+			db.update("GROUPS", values, " ID = ?", args);
+			return true;
+		}catch(SQLException e) {
+			return false;
+		}
+	}
 }

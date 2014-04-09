@@ -1,7 +1,6 @@
 package fragments;
 
 import prefereces.PreferenceHelper;
-import adapters.GroupsListAdapter;
 import adapters.SelectedGroupsAdapter;
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,7 +16,9 @@ import classes.SelectedCounter;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-import database.DatabaseManager;
+import database.DatabaseConnectionManager;
+import database.DatabaseDataProvider;
+import database.DatabaseQueryExecutor;
 import dev.rd.devplan.R;
 
 /**
@@ -31,134 +32,155 @@ public class GroupsListFragment extends SherlockFragment {
 
 	private Activity parent;
 	private SelectedGroupsAdapter selectedAdapter;
-	GroupsListAdapter adapter;
-
-	// Boolean values
 	private boolean areSelectedShown;
 	private boolean areAllShown;
-
-	// Views
-	private ListView selected;
-	// Labels
+	private ListView selectedGroupsListView;
 	private TextView selectedLabel;
 	private TextView addGroupsLabel;
-	// Empty list view
 	private TextView noSelectedLabel;
-	AddGroupFragment addGroupFragment;
-	
+	private AddGroupFragment addGroupFragment;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup containter,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.groups_list_view, containter,
 				false);
-		// Selected groups section
-		selected = (ListView) view.findViewById(R.id.selectedGroupsList);
 
+		initializeFields(view);
+		updateViewsData();
+		addAddGroupsLabelListener();
+
+		return view;
+	}
+
+	public void initializeFields(View view) {
+		selectedGroupsListView = (ListView) view
+				.findViewById(R.id.selectedGroupsList);
 		selectedLabel = (TextView) view.findViewById(R.id.selectedGroupsLabel);
-		// //////////////////////////////////////////////////////////////////////////////////////////////////
+		areSelectedShown = false;
+		noSelectedLabel = (TextView) view.findViewById(R.id.noSelectedLabel);
+		addGroupsLabel = (TextView) view.findViewById(R.id.addGroupsLabel);
+		areAllShown = false;
+	}
+
+	public void updateViewsData() {
+		updateSelectedCount();
+		updateSelectedListViewDataAndHide();
+		addSelectedLabelListener();
+		addSelectedListViewListener();
+		noSelectedLabel.setText(parent
+				.getString(R.string.no_selected_groups_text));
+
+	}
+
+	public void updateSelectedCount() {
 		if (parent != null) {
 			SelectedCounter selectedCounter = new SelectedCounter(parent,
 					selectedLabel);
 			selectedCounter.execute();
 		}
-		// //////////////////////////////////////////////////////////////////////////////////////////////////
-		areSelectedShown = false;
-		selectedAdapter = new SelectedGroupsAdapter(parent,
-				DatabaseManager.getSelectedWithNames(DatabaseManager
-						.getConnection().getReadableDatabase()));
-		noSelectedLabel = (TextView) view.findViewById(R.id.noSelectedLabel);
-		noSelectedLabel.setText(parent
-				.getString(R.string.no_selected_groups_text));
-		selected.setEmptyView(noSelectedLabel);
-		selected.setAdapter(selectedAdapter);
-		selected.setVisibility(View.GONE);
+	}
+
+	public void updateSelectedListViewDataAndHide() {
+		updateSelectedListViewData();
+		selectedGroupsListView.setVisibility(View.GONE);
+
+	}
+
+	public void addSelectedLabelListener() {
 		selectedLabel.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				if (areSelectedShown) {
-					// Log.v("t", "Ukryj wybrane");
 					hideSelected();
 				} else {
-					// Log.v("t", "Pokaz wybrane");
 					showSelected();
 				}
 
 			}
 		});
-		selected.setOnItemClickListener(new OnItemClickListener() {
+	}
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long id) {
-				DatabaseManager.setAsInactive(id, DatabaseManager
-						.getConnection().getWritableDatabase());
-				selectedAdapter = new SelectedGroupsAdapter(parent,
-						DatabaseManager.getSelectedWithNames(DatabaseManager
+	public void addSelectedListViewListener() {
+		selectedGroupsListView
+				.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long id) {
+						boolean result = DatabaseQueryExecutor
+								.setGroupAsInactive(DatabaseConnectionManager
+										.getConnection().getWritableDatabase(),
+										id);
+						if (result) {
+							updateSelectedListViewData();
+							if (addGroupFragment != null) {
+								addGroupFragment.updateAllGroupsList();
+							}
+							if (PreferenceHelper
+									.getBoolean("isDatabaseCreated")) {
+								updateSelectedCount();
+							}
+						}
+					}
+				});
+	}
+
+	public void updateSelectedListViewData() {
+		selectedAdapter = new SelectedGroupsAdapter(parent,
+				DatabaseDataProvider
+						.getSelectedGroupsCursor(DatabaseConnectionManager
 								.getConnection().getReadableDatabase()));
-				selected.setAdapter(selectedAdapter);
-				if (addGroupFragment != null) {
-					addGroupFragment.updateAllGroupsList();
-				}
-				if (PreferenceHelper.getBoolean("isDatabaseCreated")) {
-					SelectedCounter selectedCounter = new SelectedCounter(
-							parent, selectedLabel);
-					selectedCounter.execute();
-				}
 
-			}
-		});
+		selectedGroupsListView.setEmptyView(noSelectedLabel);
+		selectedGroupsListView.setAdapter(selectedAdapter);
 
-		// Add group section
+	}
 
-		addGroupsLabel = (TextView) view.findViewById(R.id.addGroupsLabel);
-		areAllShown = false;
+	public void addAddGroupsLabelListener() {
 		addGroupsLabel.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				FragmentTransaction trans = getSherlockActivity()
+						.getSupportFragmentManager().beginTransaction();
 				if (areAllShown) {
-					FragmentTransaction trans = getSherlockActivity()
-							.getSupportFragmentManager().beginTransaction();
-					// Log.v("t", "Ukryj wszystkie");
 					trans.remove(addGroupFragment);
 					trans.commit();
 					areAllShown = false;
 				} else {
-					FragmentTransaction trans = getSherlockActivity()
-							.getSupportFragmentManager().beginTransaction();
-					// Log.v("t", "Pokaż wszystkie");
-					
-					addGroupFragment = new AddGroupFragment();
-					trans.replace(R.id.addGroupsFragmentLayout,
-							addGroupFragment, "add_group_fragment");
-					trans.commit();
-					areAllShown = true;
-					noSelectedLabel.setVisibility(View.GONE);
-					selected.setVisibility(View.GONE);
-					areSelectedShown = false;
+					showAllGroups(trans);
 				}
 			}
 		});
+	}
 
-		return view;
+	public void showAllGroups(FragmentTransaction trans) {
+		if (trans != null) {
+			addGroupFragment = new AddGroupFragment();
+			trans.replace(R.id.addGroupsFragmentLayout, addGroupFragment,
+					"add_group_fragment");
+			trans.commit();
+			areAllShown = true;
+			noSelectedLabel.setVisibility(View.GONE);
+			selectedGroupsListView.setVisibility(View.GONE);
+			areSelectedShown = false;
+		}
 	}
 
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		parent = activity;
-		// isAdded = true;
 	}
 
 	public void onDetach() {
 		super.onDetach();
 		parent = null;
-		// isAdded = false;
 	}
 
 	public void hideSelected() {
 		if (areSelectedShown) {
-			selected.setVisibility(View.GONE);
+			selectedGroupsListView.setVisibility(View.GONE);
 			areSelectedShown = false;
 		}
 		if (noSelectedLabel.getVisibility() == View.VISIBLE) {
@@ -168,10 +190,9 @@ public class GroupsListFragment extends SherlockFragment {
 
 	public void showSelected() {
 		if (!areSelectedShown) {
-			selected.setVisibility(View.VISIBLE);
-			// areSelectedShown = true;
+			selectedGroupsListView.setVisibility(View.VISIBLE);
 		}
-		if (selected.getAdapter().getCount() == 0) {
+		if (selectedGroupsListView.getAdapter().getCount() == 0) {
 			noSelectedLabel.setVisibility(View.VISIBLE);
 		}
 		areSelectedShown = true;
