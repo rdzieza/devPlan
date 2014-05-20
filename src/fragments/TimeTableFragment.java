@@ -3,7 +3,9 @@ package fragments;
 import prefereces.PreferenceHelper;
 import adapters.ActivityAdapter;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,7 +32,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import database.DatabaseConnectionManager;
 import database.DatabaseDataProvider;
-import database.DatabaseManager;
 import dev.rd.devplan.R;
 
 /**
@@ -40,7 +41,7 @@ import dev.rd.devplan.R;
  */
 public class TimeTableFragment extends SherlockFragment implements
 		OnItemClickListener {
-	private ListView list;
+	private ListView timeTableListView;
 	private Activity parent;
 	private Handler handler;
 
@@ -48,7 +49,7 @@ public class TimeTableFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.time_table_list_view, containter,
 				false);
-		list = (ListView) view.findViewById(R.id.timeTableListView);
+		timeTableListView = (ListView) view.findViewById(R.id.timeTableListView);
 
 		setProgressBarVisibility(view);
 
@@ -56,7 +57,7 @@ public class TimeTableFragment extends SherlockFragment implements
 		Bundle extras = this.getArguments();
 		handler.post(new AdapterUpdator(extras));
 
-		list.setOnItemClickListener(this);
+		timeTableListView.setOnItemClickListener(this);
 		return view;
 	}
 
@@ -67,12 +68,10 @@ public class TimeTableFragment extends SherlockFragment implements
 
 	public void onDetach() {
 		super.onDetach();
-		// dbHelper.close();
 	}
 
 	public void onDestroy() {
 		super.onDestroy();
-		// dbHelper.close();
 	}
 
 	@Override
@@ -81,75 +80,78 @@ public class TimeTableFragment extends SherlockFragment implements
 		Item item = (Item) parent.getAdapter().getItem(position);
 		if (!item.isHeaderType()) {
 			Event event = (Event) item;
-			Cursor cursor = DatabaseManager.getEventDetails(DatabaseManager
-					.getConnection().getReadableDatabase(), event.getId());
-			cursor.moveToFirst();
-			String name = cursor.getString(cursor.getColumnIndex("NAME"));
-			String day = cursor.getString(cursor.getColumnIndex("DAY"));
-			String weekDay = cursor.getString(cursor
-					.getColumnIndex("DAY_OF_WEEK"));
-			String type = cursor.getString(cursor
-					.getColumnIndex("CATEGORY_NAME"));
-			String place = cursor.getString(cursor
-					.getColumnIndex("PLACE_LOCATION"));
-			String startsAt = cursor.getString(cursor
-					.getColumnIndex("START_AT"));
-			String endsAt = cursor.getString(cursor.getColumnIndex("END_AT"));
-			String tutorName = cursor.getString(cursor
-					.getColumnIndex("TUTOR_NAME"));
-			String tutorUrl = cursor.getString(cursor
-					.getColumnIndex("TUTOR_URL"));
-
-			LayoutInflater infl = (LayoutInflater) parent.getContext()
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View dialog = infl.inflate(R.layout.events_detail, null);
-
-			TextView dateView = (TextView) dialog.findViewById(R.id.detailDate);
-			dateView.setText(day + " " + getFullName(weekDay));
-
-			TextView roomView = (TextView) dialog.findViewById(R.id.detailRoom);
-			roomView.setText("Sala: " + place);
-
-			TextView detailTime = (TextView) dialog
-					.findViewById(R.id.detailTime);
-			detailTime.setText(startsAt + " - " + endsAt);
-
-			TextView tutorNameView = (TextView) dialog
-					.findViewById(R.id.detailTutor);
-			tutorNameView.setText("Prowadzący: " + tutorName);
-
-			final TextView tutorUrlLabel = (TextView) dialog
-					.findViewById(R.id.detailTutorUrlLabel);
-			tutorUrlLabel.setText("E-wizytówka prowadzącego ");
-			tutorUrlLabel.setTag(tutorUrl);
-			tutorUrlLabel.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					String url = tutorUrlLabel.getTag().toString();
-					// Log.v("t", url);
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-					intent.setData(Uri.parse(url));
-					startActivity(intent);
-
-				}
-			});
-
-			TextView typeView = (TextView) dialog.findViewById(R.id.detailType);
-			typeView.setText(type);
-
-			Builder builder = new Builder(parent.getContext());
-			TextView title = new TextView(this.parent);
-			title.setBackgroundColor(Color.WHITE);
-			title.setGravity(Gravity.CENTER);
-			title.setPadding(10, 10, 10, 10);
-			title.setTextColor(Color.BLACK);
-			title.setText(name);
-			title.setTextSize(20);
-
-			builder.setCustomTitle(title);
-			builder.setView(dialog);
-			builder.show();
+			Cursor cursor = DatabaseDataProvider.getSingleActivityCursorById(
+					DatabaseConnectionManager.getConnection()
+							.getReadableDatabase(), event.getId());
+//			
+//			String name = cursor.getString(cursor.getColumnIndex("NAME"));
+//			String day = cursor.getString(cursor.getColumnIndex("DAY"));
+//			String weekDay = cursor.getString(cursor
+//					.getColumnIndex("DAY_OF_WEEK"));
+//			String type = cursor.getString(cursor
+//					.getColumnIndex("CATEGORY_NAME"));
+//			String place = cursor.getString(cursor
+//					.getColumnIndex("PLACE_LOCATION"));
+//			String startsAt = cursor.getString(cursor
+//					.getColumnIndex("START_AT"));
+//			String endsAt = cursor.getString(cursor.getColumnIndex("END_AT"));
+//			String tutorName = cursor.getString(cursor
+//					.getColumnIndex("TUTOR_NAME"));
+//			String tutorUrl = cursor.getString(cursor
+//					.getColumnIndex("TUTOR_URL"));
+//
+//			LayoutInflater infl = (LayoutInflater) parent.getContext()
+//					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//			View dialog = infl.inflate(R.layout.events_detail, null);
+//
+//			TextView dateView = (TextView) dialog.findViewById(R.id.detailDate);
+//			dateView.setText(day + " " + getFullName(weekDay));
+//
+//			TextView roomView = (TextView) dialog.findViewById(R.id.detailRoom);
+//			roomView.setText("Sala: " + place);
+//
+//			TextView detailTime = (TextView) dialog
+//					.findViewById(R.id.detailTime);
+//			detailTime.setText(startsAt + " - " + endsAt);
+//
+//			TextView tutorNameView = (TextView) dialog
+//					.findViewById(R.id.detailTutor);
+//			tutorNameView.setText("Prowadzący: " + tutorName);
+//
+//			final TextView tutorUrlLabel = (TextView) dialog
+//					.findViewById(R.id.detailTutorUrlLabel);
+//			tutorUrlLabel.setText("E-wizytówka prowadzącego ");
+//			tutorUrlLabel.setTag(tutorUrl);
+//			tutorUrlLabel.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					String url = tutorUrlLabel.getTag().toString();
+//					// Log.v("t", url);
+//					Intent intent = new Intent(Intent.ACTION_VIEW);
+//					intent.setData(Uri.parse(url));
+//					startActivity(intent);
+//
+//				}
+//			});
+//
+//			TextView typeView = (TextView) dialog.findViewById(R.id.detailType);
+//			typeView.setText(type);
+//
+//			Builder builder = new Builder(parent.getContext());
+//			TextView title = new TextView(this.parent);
+//			title.setBackgroundColor(Color.WHITE);
+//			title.setGravity(Gravity.CENTER);
+//			title.setPadding(10, 10, 10, 10);
+//			title.setTextColor(Color.BLACK);
+//			title.setText(name);
+//			title.setTextSize(20);
+//
+//			builder.setCustomTitle(title);
+//			builder.setView(dialog);
+//			builder.show();
+			Dialog dialog = createDialog(cursor);
+			dialog.show();
 		}
 
 	}
@@ -184,29 +186,29 @@ public class TimeTableFragment extends SherlockFragment implements
 				String action = extras.getString("action");
 				if (action.equals("nameFilter")) {
 					String name = extras.getString("name");
-					list.setAdapter(new ActivityAdapter(parent,
+					timeTableListView.setAdapter(new ActivityAdapter(parent,
 							DatabaseDataProvider.getActivitiesListByName(
 									DatabaseConnectionManager.getConnection()
 											.getReadableDatabase(), name)));
 
 				} else if (action.equals("noFilter")) {
 					Log.v("t", "No filter view");
-					list.setAdapter(new ActivityAdapter(
+					timeTableListView.setAdapter(new ActivityAdapter(
 							parent,
 							DatabaseDataProvider
 									.getActivitiesList(DatabaseConnectionManager
 											.getConnection()
 											.getReadableDatabase())));
-					list.setSelection(0);
+					timeTableListView.setSelection(0);
 				}
 			} else {
 				Log.v("t", "Since today filter view");
-				list.setAdapter(new ActivityAdapter(parent,
+				timeTableListView.setAdapter(new ActivityAdapter(parent,
 						DatabaseDataProvider
 								.getActivitiesList(DatabaseConnectionManager
 										.getConnection().getReadableDatabase())));
 				// Sets list position on header with todays date
-				list.setSelection(PreferenceHelper.getInt("todaysPosition") - 1);
+				timeTableListView.setSelection(PreferenceHelper.getInt("todaysPosition") - 1);
 			}
 
 		}
@@ -221,6 +223,76 @@ public class TimeTableFragment extends SherlockFragment implements
 			loadingBar.setVisibility(View.VISIBLE);
 			label.setVisibility(View.VISIBLE);
 		}
+	}
+	
+	public AlertDialog createDialog(Cursor cursor) {
+
+		String name = cursor.getString(cursor.getColumnIndex("NAME"));
+		String day = cursor.getString(cursor.getColumnIndex("DAY"));
+		String weekDay = cursor.getString(cursor
+				.getColumnIndex("DAY_OF_WEEK"));
+		String type = cursor.getString(cursor
+				.getColumnIndex("CATEGORY_NAME"));
+		String place = cursor.getString(cursor
+				.getColumnIndex("PLACE_LOCATION"));
+		String startsAt = cursor.getString(cursor
+				.getColumnIndex("START_AT"));
+		String endsAt = cursor.getString(cursor.getColumnIndex("END_AT"));
+		String tutorName = cursor.getString(cursor
+				.getColumnIndex("TUTOR_NAME"));
+		String tutorUrl = cursor.getString(cursor
+				.getColumnIndex("TUTOR_URL"));
+
+		LayoutInflater infl = (LayoutInflater) parent
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View dialog = infl.inflate(R.layout.events_detail, null);
+
+		TextView dateView = (TextView) dialog.findViewById(R.id.detailDate);
+		dateView.setText(day + " " + getFullName(weekDay));
+
+		TextView roomView = (TextView) dialog.findViewById(R.id.detailRoom);
+		roomView.setText("Sala: " + place);
+
+		TextView detailTime = (TextView) dialog
+				.findViewById(R.id.detailTime);
+		detailTime.setText(startsAt + " - " + endsAt);
+
+		TextView tutorNameView = (TextView) dialog
+				.findViewById(R.id.detailTutor);
+		tutorNameView.setText("Prowadzący: " + tutorName);
+
+		final TextView tutorUrlLabel = (TextView) dialog
+				.findViewById(R.id.detailTutorUrlLabel);
+		tutorUrlLabel.setText("E-wizytówka prowadzącego ");
+		tutorUrlLabel.setTag(tutorUrl);
+		tutorUrlLabel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String url = tutorUrlLabel.getTag().toString();
+				// Log.v("t", url);
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse(url));
+				startActivity(intent);
+
+			}
+		});
+
+		TextView typeView = (TextView) dialog.findViewById(R.id.detailType);
+		typeView.setText(type);
+
+		Builder builder = new Builder(parent);
+		TextView title = new TextView(this.parent);
+		title.setBackgroundColor(Color.WHITE);
+		title.setGravity(Gravity.CENTER);
+		title.setPadding(10, 10, 10, 10);
+		title.setTextColor(Color.BLACK);
+		title.setText(name);
+		title.setTextSize(20);
+
+		builder.setCustomTitle(title);
+		builder.setView(dialog);
+		return builder.create();
 	}
 
 }

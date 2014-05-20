@@ -43,21 +43,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-</LinearLayout><!--
-<TextView
-        android:id="@+id/detailStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
-    
-    <TextView
-        android:id="@+id/detailEnd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-        
-        <TextView
-        android:id="@+id/detailTutorUrl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#800099CC" />
--->
+</LinearLayout>

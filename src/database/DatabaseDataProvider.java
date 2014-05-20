@@ -205,10 +205,9 @@ public class DatabaseDataProvider {
 				if(item instanceof Separator) {
 					Separator separator = (Separator)item;
 					String day = separator.getDate().substring(0, 10);
-//					Log.v("t", day);
 					if (date.equals(day)) {
-						PreferenceHelper.saveInt("todaysPosition", i+1);
-						Log.v("t", "position: " + i);
+//						PreferenceHelper.saveInt("todaysPosition", i+1);
+//						Log.v("t", "position: " + i);
 						return true;
 					}
 				}
@@ -239,4 +238,22 @@ public class DatabaseDataProvider {
 			return null;
 		}
 	}
+	
+	public static Cursor getSingleActivityCursorById(SQLiteDatabase db, Long id) {
+		try {
+			String[] columns = { ActivitiesTable.ID_FIELD + " as _id", ActivitiesTable.NAME_FIELD, ActivitiesTable.PLACE_LOCATION_FIELD,
+					ActivitiesTable.START_AT_FIELD, ActivitiesTable.END_AT_FIELD, ActivitiesTable.CATEGORY_NAME_FIELD, ActivitiesTable.DAY_FIELD,
+					ActivitiesTable.DAY_OF_WEEK_FIELD, ActivitiesTable.TUTOR_NAME_FIELD, ActivitiesTable.TUTOR_URL_FIELD, ActivitiesTable.NOTES_FIELD };
+			String[] args = { String.valueOf(id) };
+			Cursor cursor = db.query(ActivitiesTable.TABLE_NAME, columns, "ID = ?", args,
+					null, null, null);
+			cursor.moveToNext();
+			return cursor;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 }

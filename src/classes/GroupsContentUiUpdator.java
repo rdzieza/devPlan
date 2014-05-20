@@ -1,7 +1,6 @@
 package classes;
 
 import activities.MainView;
-import adapters.GroupsListAdapter;
 import adapters.SelectedGroupsAdapter;
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +15,6 @@ import database.DatabaseConnectionManager;
 import database.DatabaseDataProvider;
 import dev.rd.devplan.R;
 import fragments.AddGroupFragment;
-import fragments.GroupsListFragment;
 
 public class GroupsContentUiUpdator implements UiUpdator {
 	private Context context;

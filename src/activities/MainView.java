@@ -29,7 +29,7 @@ import database.DatabaseConnectionManager;
 import database.DatabaseManager;
 import dev.rd.devplan.R;
 import fragments.GroupsListFragment;
-import fragments.MoreOptionsFragment;
+import fragments.OptionsListFragment;
 import fragments.TimeTableFragment;
 
 /**
@@ -114,7 +114,7 @@ public class MainView extends SherlockFragmentActivity implements
 		}
 			break;
 		case 2: {
-			MoreOptionsFragment optionsFragment = new MoreOptionsFragment();
+			OptionsListFragment optionsFragment = new OptionsListFragment();
 			trans.replace(R.id.fragment, optionsFragment).commit();
 		}
 		}

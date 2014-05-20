@@ -2,6 +2,8 @@ package database;
 
 import java.util.List;
 
+import database.table.GroupsTable;
+
 import android.content.ContentValues;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,10 +46,10 @@ public class DatabaseQueryExecutor {
 
 	public static boolean setGroupAsActive(SQLiteDatabase db, long groupId) {
 		ContentValues values = new ContentValues();
-		values.put("IS_ACTIVE", 1);
+		values.put(GroupsTable.IS_ACTIVE_FIELD, 1);
 		String[] args = { String.valueOf(groupId) };
 		try {
-			db.update("GROUPS", values, " ID = ?", args);
+			db.update(GroupsTable.TABLE_NAME, values, " ID = ?", args);
 			return true;
 		}catch(SQLException e) {
 			return false;
@@ -56,10 +58,10 @@ public class DatabaseQueryExecutor {
 	
 	public static boolean setGroupAsInactive(SQLiteDatabase db, long groupId) {
 		ContentValues values = new ContentValues();
-		values.put("IS_ACTIVE", 0);
+		values.put(GroupsTable.IS_ACTIVE_FIELD, 0);
 		String[] args = { String.valueOf(groupId) };
 		try {
-			db.update("GROUPS", values, " ID = ?", args);
+			db.update(GroupsTable.TABLE_NAME, values, " ID = ?", args);
 			return true;
 		}catch(SQLException e) {
 			return false;

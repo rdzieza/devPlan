@@ -1,5 +1,6 @@
 package database;
 
+import database.table.ActivitiesTable;
 import database.table.GroupsTable;
 import prefereces.PreferenceHelper;
 import android.content.Context;
@@ -11,23 +12,7 @@ public class DatabaseConnectionManager extends SQLiteOpenHelper{
 	private static final String DB_NAME = "TIME_TABLE.db";
 	private static final int VERSION = 3;
 	private static DatabaseConnectionManager instance;
-	private final static String CREATE_ACTIVITIES = "CREATE TABLE IF NOT EXISTS ACTIVITIES("
-			+ "ID LONG PRIMARY KEY,"
-			+ "GROUP_NAME VARCHAR(60),"
-			+ "GROUP_ID LONG,"
-			+ "TUTOR_ID LONG,"
-			+ "TUTOR_NAME VARCHAR(60),"
-			+ "TUTOR_URL VARCHAR(60),"
-			+ "PLACE_ID LONG,"
-			+ "PLACE_LOCATION VARCHAR(30),"
-			+ "CATEGORY_NAME VARCHAR(30),"
-			+ "NAME VARCHAR(60),"
-			+ "NOTES VARCHAR(60),"
-			+ "STATE INT,"
-			+ "START_AT VARCHAR(20),"
-			+ "END_AT  VARCHAR(20),"
-			+ "DAY  VARCHAR(20)," + "DAY_OF_WEEK VARCHAR(20)," + "TIME LONG)";
-
+	
 	
 
 	public DatabaseConnectionManager() {
@@ -50,7 +35,7 @@ public class DatabaseConnectionManager extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(GroupsTable.CREATE_GROUPS_QUERY);
-		db.execSQL(CREATE_ACTIVITIES);
+		db.execSQL(ActivitiesTable.CREATE_ACTIVITIES_QUERY);
 		PreferenceHelper.saveBoolean("isDatabaseCreated", true);
 		
 	}
